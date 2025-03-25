@@ -10,6 +10,10 @@ deploymentTarget = "static"
 build = ["npm", "run", "build"]
 publicDir = "dist"
 
+[[deployment.rewrites]]
+from = "/*"
+to = "/public/*"
+
 [[ports]]
 localPort = 5000
 externalPort = 80
