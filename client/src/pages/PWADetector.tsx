@@ -65,25 +65,25 @@ const PWADetector = () => {
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
       {/* Navigation Bar */}
       <div className="bg-blue-700 text-white">
-        <div className="container mx-auto px-4 py-1">
+        <div className="container mx-auto px-0">
           <div className="flex items-center justify-between">
             <div>
               <Link href="/">
-                <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded hover:bg-blue-500 transition-colors flex items-center justify-center cursor-pointer whitespace-nowrap min-w-20">
-                  <span className="material-icons text-xs mr-1">home</span>
+                <div className="text-white h-10 px-4 flex items-center justify-center cursor-pointer whitespace-nowrap min-w-20 hover:bg-blue-600/40 transition-colors">
+                  <span className="material-icons text-sm mr-1">arrow_back</span>
                   {t('back_to_home')}
                 </div>
               </Link>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center">
               <button 
                 onClick={handleRefresh}
-                className={`bg-blue-600 text-white h-6 w-6 flex items-center justify-center rounded hover:bg-blue-500 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
+                className={`text-white h-10 w-10 flex items-center justify-center hover:bg-blue-600/40 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
                 aria-label="Refresh detection"
               >
                 <span className="material-icons text-sm">refresh</span>
               </button>
-              <LanguageSwitcher />
+              <LanguageSwitcher className="h-10" />
             </div>
           </div>
         </div>

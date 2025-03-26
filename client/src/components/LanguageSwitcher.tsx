@@ -8,8 +8,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from "@/lib/utils";
 
-const LanguageSwitcher: React.FC = () => {
+interface LanguageSwitcherProps {
+  className?: string;
+}
+
+const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
   const { t, i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   
@@ -38,9 +43,12 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="bg-blue-600 text-white text-xs px-2 py-1 flex items-center justify-center rounded hover:bg-blue-500 transition-colors cursor-pointer whitespace-nowrap h-6 min-w-10">
-          <Globe className="h-3 w-3 mr-1" />
-          <span>{getCurrentLanguageDisplay()}</span>
+        <div className={cn(
+          "text-white flex items-center justify-center cursor-pointer whitespace-nowrap", 
+          "w-10 hover:bg-blue-600/40 transition-colors",
+          className
+        )}>
+          <Globe className="h-4 w-4" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
