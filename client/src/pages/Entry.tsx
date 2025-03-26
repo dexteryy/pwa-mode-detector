@@ -2,7 +2,14 @@ import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import { useEffect } from "react";
-import { Globe, Layout, Smartphone, Maximize, ArrowRight, Code } from "lucide-react";
+import {
+  Globe,
+  Layout,
+  Smartphone,
+  Maximize,
+  ArrowRight,
+  Code,
+} from "lucide-react";
 
 // Define PWA display mode options
 interface DisplayMode {
@@ -17,26 +24,26 @@ const getDisplayModes = (t: any): DisplayMode[] => [
     name: "browser",
     displayName: t("browser_name"),
     description: t("browser_description"),
-    Icon: Globe
+    Icon: Globe,
   },
   {
     name: "minimal-ui",
-    displayName: t("minimal_ui_name"), 
+    displayName: t("minimal_ui_name"),
     description: t("minimal_ui_description"),
-    Icon: Layout
+    Icon: Layout,
   },
   {
     name: "standalone",
     displayName: t("standalone_name"),
     description: t("standalone_description"),
-    Icon: Smartphone
+    Icon: Smartphone,
   },
   {
     name: "fullscreen",
     displayName: t("fullscreen_name"),
     description: t("fullscreen_description"),
-    Icon: Maximize
-  }
+    Icon: Maximize,
+  },
 ];
 
 const Entry = () => {
@@ -49,19 +56,16 @@ const Entry = () => {
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
     if (existingLinks.length > 0) {
       // Remove all existing manifest links to ensure no PWA installation is possible
-      existingLinks.forEach(link => {
+      existingLinks.forEach((link) => {
         if (link.parentNode) {
           link.parentNode.removeChild(link);
         }
       });
-      console.log('[Entry] Removed manifest links to prevent PWA installation on entry page');
-    } else {
-      console.log('[Entry] No manifest links found, entry page is correctly configured');
     }
-    
+
     // No longer adding empty manifest - this was causing unintended behavior
   }, []);
-  
+
   return (
     <div className="bg-gray-100 dark:bg-gray-900 font-sans min-h-screen flex flex-col">
       {/* Integrated App Header - Native UI Style */}
@@ -75,12 +79,12 @@ const Entry = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Title area */}
         <div className="container mx-auto px-4 py-5">
           <div className="text-center">
-            <h1 className="text-2xl font-bold">{t('entry_title')}</h1>
-            <p className="mt-2 text-blue-100">{t('entry_subtitle')}</p>
+            <h1 className="text-2xl font-bold">{t("entry_title")}</h1>
+            <p className="mt-2 text-blue-100">{t("entry_subtitle")}</p>
           </div>
         </div>
       </header>
@@ -90,29 +94,37 @@ const Entry = () => {
         <div className="max-w-3xl mx-auto w-full">
           {/* Introduction */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t('what_is_pwa_display_mode')}</h2>
-            <p 
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+              {t("what_is_pwa_display_mode")}
+            </h2>
+            <p
               className="text-gray-600 dark:text-gray-300 mb-4"
-              dangerouslySetInnerHTML={{ __html: t('pwa_display_mode_description') }}
+              dangerouslySetInnerHTML={{
+                __html: t("pwa_display_mode_description"),
+              }}
             ></p>
             <p className="text-gray-600 dark:text-gray-300">
-              {t('click_card_instruction')}
+              {t("click_card_instruction")}
             </p>
           </div>
 
           {/* Display Mode Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {displayModes.map(mode => (
+            {displayModes.map((mode) => (
               <Link key={mode.name} href={`/${mode.name}`} className="h-full">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-500 dark:hover:border-blue-400 cursor-pointer h-full flex flex-col">
                   <div className="flex items-center mb-4">
                     <mode.Icon className="h-8 w-8 text-blue-500 dark:text-blue-400 mr-3" />
-                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{mode.displayName}</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      {mode.displayName}
+                    </h3>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 flex-grow">{mode.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 flex-grow">
+                    {mode.description}
+                  </p>
                   <div className="mt-4 flex justify-end">
                     <span className="text-blue-500 dark:text-blue-400 font-medium flex items-center">
-                      {t('view_demo')}
+                      {t("view_demo")}
                       <ArrowRight className="h-4 w-4 ml-1" />
                     </span>
                   </div>
@@ -125,17 +137,17 @@ const Entry = () => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
               <Code className="h-5 w-5 mr-2" />
-              {t('technical_details')}
+              {t("technical_details")}
             </h2>
-            <p 
+            <p
               className="text-gray-600 dark:text-gray-300 mb-4"
-              dangerouslySetInnerHTML={{ __html: t('technical_description') }}
+              dangerouslySetInnerHTML={{ __html: t("technical_description") }}
             ></p>
             <p className="text-gray-600 dark:text-gray-300">
-              {t('browser_support_note')}
+              {t("browser_support_note")}
             </p>
           </div>
-          
+
           {/* Spacer to push footer to bottom when content is short */}
           <div className="flex-grow"></div>
         </div>
@@ -144,7 +156,7 @@ const Entry = () => {
       {/* Footer */}
       <footer className="bg-gray-800 dark:bg-gray-950 text-white py-4 mt-auto">
         <div className="container mx-auto px-4 text-center text-sm">
-          <p>{t('footer_text')}</p>
+          <p>{t("footer_text")}</p>
         </div>
       </footer>
     </div>

@@ -6,14 +6,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// 为PWA应用提供基本的请求日志
+// Provide basic request logging for PWA application
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
   
   res.on("finish", () => {
     const duration = Date.now() - start;
-    // 仅记录非静态资源请求以减少日志噪音
+    // Only log non-static resource requests to reduce log noise
     if (!path.match(/\.(js|css|png|jpg|svg|ico|json)$/)) {
       log(`${req.method} ${path} ${res.statusCode} in ${duration}ms`);
     }

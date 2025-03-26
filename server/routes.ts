@@ -5,10 +5,10 @@ import fs from "fs";
 import express from "express";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // 提供静态文件 - 确保能够访问客户端公共资源
+  // Provide static files - ensure client public resources are accessible
   app.use(express.static(path.join(process.cwd(), 'client/public')));
   
-  // 记录所有请求
+  // Log all requests
   app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.path.includes('manifest')) {
       console.log(`[Server] Request received: ${req.method} ${req.path}`);
@@ -16,17 +16,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   });
 
-  // 添加路由处理所有的 manifest 文件
+  // Add route to handle all manifest files
   app.get('/manifests/:name.json', (req: Request, res: Response) => {
     const manifestName = req.params.name;
-    // 注意：Replit的工作目录是项目根目录，所以路径需要从根目录开始
+    // Note: Replit's working directory is the project root, so paths need to start from the root
     const manifestPath = path.join(process.cwd(), 'client/public/manifests', `${manifestName}.json`);
     
     console.log(`[Server] Serving manifest: ${manifestPath}`);
     
     try {
       if (fs.existsSync(manifestPath)) {
-        // 防止缓存，确保每次都能获取最新内容
+        // Prevent caching to ensure latest content is retrieved each time
         res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
         res.header('Pragma', 'no-cache');
         res.header('Expires', '0');
@@ -45,11 +45,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // 添加中间件来处理 /manifest.json 请求
+  // Add middleware to handle /manifest.json requests
   app.use((req: Request, res: Response, next: NextFunction) => {
-    // 只处理 /manifest.json 请求
+    // Only process /manifest.json requests
     if (req.path === "/manifest.json") {
-      // 尝试从 referer 获取信息
+      // Try to get information from referer
       const referer = req.headers.referer || "";
       let pathname = "";
       
@@ -62,30 +62,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // 如果无法从 referer 获取路径，尝试从当前页面路径获取
+      // If unable to get path from referer, try to get from current page path
       if (!pathname && req.originalUrl) {
-        // 从当前请求的路径中获取（可能是通过刷新页面触发的请求）
+        // Get from current request path (possibly triggered by page refresh)
         pathname = req.originalUrl.split("/manifest.json")[0] || "/";
       }
       
       console.log(`[Server] Handling /manifest.json request with pathname: ${pathname}`);
       
-      // 根据路径决定返回哪个 manifest 或者什么都不返回
+      // Decide which manifest to return based on path, or return nothing
       if (pathname.includes("/standalone")) {
-        // 对应 standalone 模式的页面
+        // For standalone mode page
         return res.redirect("/manifests/standalone.json");
       } else if (pathname.includes("/minimal-ui")) {
-        // 对应 minimal-ui 模式的页面
+        // For minimal-ui mode page
         return res.redirect("/manifests/minimal-ui.json");
       } else if (pathname.includes("/fullscreen")) {
-        // 对应 fullscreen 模式的页面
+        // For fullscreen mode page
         return res.redirect("/manifests/fullscreen.json");
       } else if (pathname.includes("/browser")) {
-        // 对应 browser 模式的页面
+        // For browser mode page
         return res.redirect("/manifests/browser.json");
       } else {
-        // 对于入口页或无法识别的路径，返回空内容
-        // 使用 204 No Content 响应，避免浏览器错误提示，但不会加载任何内容
+        // For entry page or unrecognized paths, return empty content
+        // Use 204 No Content response to avoid browser error prompt but not load any content
         console.log(`[Server] Handling /manifest.json request with no valid path context: ${pathname}, returning 204`);
         return res.status(204).end();
       }
