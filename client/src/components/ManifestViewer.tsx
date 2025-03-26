@@ -59,7 +59,7 @@ const ManifestViewer: React.FC = () => {
             </div>
           )}
           
-          {manifest && !isLoading && !error && (
+          {(manifest && !isLoading && !error) ? (
             <div>
               <div className="mb-2 flex flex-wrap gap-2">
                 {manifest.name && (
@@ -98,6 +98,19 @@ const ManifestViewer: React.FC = () => {
                 {formatJson(manifest)}
               </pre>
             </div>
+          ) : (
+            // 当没有manifest内容但没有出错或加载中时，显示提示信息
+            !isLoading && !error && (
+              <div className="bg-yellow-50 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 p-4 rounded">
+                <p className="flex items-center">
+                  <AlertCircle className="h-5 w-5 mr-2 text-yellow-600 dark:text-yellow-400" />
+                  {t('manifest_empty', 'No manifest content available')}
+                </p>
+                <p className="mt-2 text-sm">
+                  {t('manifest_check_network', 'This could be because manifest loading is blocked or no valid web app manifest is present.')}
+                </p>
+              </div>
+            )
           )}
         </CollapsibleContent>
       </Collapsible>

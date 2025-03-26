@@ -66,13 +66,52 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     setError(null);
     
     // ======== 修复manifest加载问题 ========
-    // 在添加新manifest前彻底清除所有旧的manifest链接，无论它们来自哪里
-    // 这样可以避免多个manifest同时存在的问题
+    // 为了完全解决manifest冲突，我们需要禁用默认的manifest.json
+    
+    // 1. 添加禁用默认manifest的meta标签
+    let disableDefaultMeta = document.querySelector('meta[name="disabled-manifest"]');
+    if (!disableDefaultMeta) {
+      disableDefaultMeta = document.createElement('meta');
+      disableDefaultMeta.setAttribute('name', 'disabled-manifest');
+      document.head.appendChild(disableDefaultMeta);
+    }
+    disableDefaultMeta.setAttribute('content', 'true');
+    
+    // 2. 在添加新manifest前彻底清除所有旧的manifest链接，无论它们来自哪里
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
     existingLinks.forEach(link => {
       console.log(`[ManifestHandler] Removing existing manifest link: ${link.getAttribute('href')}`);
       link.parentNode?.removeChild(link);
     });
+    
+    // 3. 创建一个拦截器，阻止浏览器自动加载默认manifest
+    // 这里我们用一个空函数替换原始的document.createElement以防止其他库自动加载manifest
+    const originalCreateElement = document.createElement;
+    const hookedCreateElement = function(tagName: string, ...args: any[]): HTMLElement {
+      const element = originalCreateElement.call(document, tagName, ...args);
+      if (tagName.toLowerCase() === 'link') {
+        // 监听元素属性变化
+        const originalSetAttribute = element.setAttribute;
+        element.setAttribute = function(name: string, value: string) {
+          if (name === 'rel' && value === 'manifest' && 
+              element.getAttribute('href') === '/manifest.json') {
+            console.log('[ManifestHandler] Prevented loading of default manifest.json');
+            // 不设置rel="manifest"属性，使其失效
+            return;
+          }
+          return originalSetAttribute.call(element, name, value);
+        };
+      }
+      return element;
+    };
+    
+    // 短暂替换createElement方法以拦截可能的manifest加载
+    document.createElement = hookedCreateElement as any;
+    // 然后在短时间后恢复
+    setTimeout(() => {
+      document.createElement = originalCreateElement;
+      console.log('[ManifestHandler] Restored original createElement');
+    }, 1000);
     
     // 重置title元素，避免它被PWA缓存
     document.title = location.startsWith('/browser') 
