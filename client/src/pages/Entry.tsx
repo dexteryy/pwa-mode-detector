@@ -99,49 +99,82 @@ const Entry = () => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t('what_is_pwa_display_mode')}</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('pwa_display_mode_description').split('Progressive Web Apps').map((part, i, arr) => 
-                i === 0 ? (
-                  <React.Fragment key={i}>
-                    {part}
-                    <a 
-                      href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline dark:text-blue-400"
-                    >
-                      Progressive Web Apps
-                    </a>
-                  </React.Fragment>
-                ) : part.split('Web App Manifest').map((subPart, j, subArr) => 
-                    j === 0 ? (
-                      <React.Fragment key={`${i}-${j}`}>
-                        {subPart}
-                        <a 
-                          href="https://developer.mozilla.org/en-US/docs/Web/Manifest" 
-                          target="_blank" 
+              {(() => {
+                const text = t('pwa_display_mode_description');
+                
+                // 定义替换模式
+                const createLinks = (inputText: string): (string | React.ReactElement)[] => {
+                  // 创建链接替换正则表达式模式，这些会应用于所有语言
+                  const replacements = [
+                    {
+                      regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b/,
+                      url: "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
+                    },
+                    {
+                      regex: /\bWeb App Manifest\b/,
+                      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
+                    },
+                    {
+                      regex: /[''](display)['']\s+property|\b(display)\s+属性|\b(display)\b/,
+                      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest/display",
+                      matchIndex: 1,
+                    }
+                  ];
+                  
+                  // 开始创建React元素数组
+                  let result: (string | React.ReactElement)[] = [inputText];
+                  
+                  // 依次应用每个替换
+                  replacements.forEach(({ regex, url, matchIndex = 0 }) => {
+                    const newResult: (string | React.ReactElement)[] = [];
+                    
+                    result.forEach(part => {
+                      if (typeof part !== 'string') {
+                        newResult.push(part);
+                        return;
+                      }
+                      
+                      const matches = part.match(regex);
+                      if (!matches) {
+                        newResult.push(part);
+                        return;
+                      }
+                      
+                      const index = part.indexOf(matches[0]);
+                      const linkText = matches[matchIndex] || matches[0];
+                      
+                      // 在匹配前的文本
+                      if (index > 0) {
+                        newResult.push(part.substring(0, index));
+                      }
+                      
+                      // 链接元素
+                      newResult.push(
+                        <a
+                          key={url + index}
+                          href={url}
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:underline dark:text-blue-400"
                         >
-                          Web App Manifest
+                          {linkText}
                         </a>
-                      </React.Fragment>
-                    ) : subPart.split('\'display\' property').map((propPart, k, propArr) => 
-                        k === 0 ? (
-                          <React.Fragment key={`${i}-${j}-${k}`}>
-                            {propPart}
-                            <a 
-                              href="https://developer.mozilla.org/en-US/docs/Web/Manifest/display" 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline dark:text-blue-400"
-                            >
-                              'display' property
-                            </a>
-                          </React.Fragment>
-                        ) : propPart
-                      )
-                  )
-              )}
+                      );
+                      
+                      // 匹配后的文本
+                      if (index + matches[0].length < part.length) {
+                        newResult.push(part.substring(index + matches[0].length));
+                      }
+                    });
+                    
+                    result = newResult;
+                  });
+                  
+                  return result;
+                };
+                
+                return createLinks(text);
+              })()}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('click_card_instruction')}
@@ -176,21 +209,75 @@ const Entry = () => {
               {t('technical_details')}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('technical_description').split('Web App Manifest').map((part, i) => 
-                i === 0 ? (
-                  <React.Fragment key={i}>
-                    {part}
-                    <a 
-                      href="https://developer.mozilla.org/en-US/docs/Web/Manifest" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline dark:text-blue-400"
-                    >
-                      Web App Manifest
-                    </a>
-                  </React.Fragment>
-                ) : part
-              )}
+              {(() => {
+                const text = t('technical_description');
+                // 创建链接替换正则表达式模式，这些会应用于所有语言
+                const replacements = [
+                  {
+                    regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b/,
+                    url: "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
+                  },
+                  {
+                    regex: /\bWeb App Manifest\b/,
+                    url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
+                  },
+                  {
+                    regex: /\bmanifest\b/i,
+                    url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
+                  }
+                ];
+                
+                // 开始创建React元素数组
+                let result = [text];
+                
+                // 依次应用每个替换
+                replacements.forEach(({ regex, url, matchIndex = 0 }) => {
+                  const newResult = [];
+                  
+                  result.forEach(part => {
+                    if (typeof part !== 'string') {
+                      newResult.push(part);
+                      return;
+                    }
+                    
+                    const matches = part.match(regex);
+                    if (!matches) {
+                      newResult.push(part);
+                      return;
+                    }
+                    
+                    const index = part.indexOf(matches[0]);
+                    const linkText = matches[matchIndex] || matches[0];
+                    
+                    // 在匹配前的文本
+                    if (index > 0) {
+                      newResult.push(part.substring(0, index));
+                    }
+                    
+                    // 链接元素
+                    newResult.push(
+                      <a
+                        key={url + index}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline dark:text-blue-400"
+                      >
+                        {linkText}
+                      </a>
+                    );
+                    
+                    // 匹配后的文本
+                    if (index + matches[0].length < part.length) {
+                      newResult.push(part.substring(index + matches[0].length));
+                    }
+                  });
+                  
+                  result = newResult;
+                });
+                
+                return result;
+              })()}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('browser_support_note')}
