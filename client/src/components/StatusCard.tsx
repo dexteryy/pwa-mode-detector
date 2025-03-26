@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { usePwaDetection, InstallStatus } from "../hooks/usePwaDetection";
 import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, PackageOpen, X, MonitorSmartphone, CircleOff } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface StatusCardProps {
   mode: string;
@@ -8,9 +9,31 @@ interface StatusCardProps {
   expectedMode?: string;  // Expected mode, optional parameter
 }
 
-const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
+const StatusCard = ({ mode, isInstallable: propIsInstallable, expectedMode }: StatusCardProps) => {
   const { t } = useTranslation();
   const { isChecking, promptInstall, installStatus } = usePwaDetection();
+  
+  // Local state to track installation status
+  // This ensures the UI stays consistent with the actual installation status
+  const [isInstallable, setIsInstallable] = useState(propIsInstallable);
+  
+  // Update local state whenever installStatus changes
+  useEffect(() => {
+    // The only installable status is 'installable'
+    const calculatedInstallable = installStatus === 'installable';
+    if (isInstallable !== calculatedInstallable) {
+      console.log(`[StatusCard] Updated isInstallable: ${calculatedInstallable} based on status: ${installStatus}`);
+      setIsInstallable(calculatedInstallable);
+    }
+  }, [installStatus, isInstallable]);
+  
+  // Also update local state when parent prop changes
+  useEffect(() => {
+    if (propIsInstallable !== isInstallable) {
+      console.log(`[StatusCard] Props isInstallable changed to: ${propIsInstallable}`);
+      setIsInstallable(propIsInstallable);
+    }
+  }, [propIsInstallable, isInstallable]);
   
   // Mode detection card styling
   let cardBorderColor = "border-amber-500";
