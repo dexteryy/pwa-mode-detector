@@ -6,8 +6,6 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ArrowDownIcon, ArrowRightIcon, FileJson, AlertCircle } from 'lucide-react';
-import TermText from './TermText';
-import { processTerms } from '../lib/termLinks';
 
 interface WebAppManifest {
   name?: string;
@@ -87,7 +85,7 @@ const ManifestViewer: React.FC = () => {
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
       <h2 className="text-lg font-semibold text-dark dark:text-white mb-4 flex items-center">
         <FileJson className="mr-2 h-5 w-5 dark:text-blue-400" />
-        <TermText textKey="manifest_viewer_title" />
+        {t('manifest_viewer_title', 'Web App Manifest')}
       </h2>
       
       <Collapsible open={isOpen} onOpenChange={setIsOpen} className="border dark:border-gray-700 rounded-md p-2">
@@ -137,7 +135,7 @@ const ManifestViewer: React.FC = () => {
                 )}
                 {manifest.display && (
                   <span className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-1 rounded text-xs">
-                    {processTerms("display")}: {processTerms(manifest.display)}
+                    display: {manifest.display}
                   </span>
                 )}
                 {manifest.id && (

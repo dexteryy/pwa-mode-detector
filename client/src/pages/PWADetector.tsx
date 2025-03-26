@@ -3,14 +3,12 @@ import StatusCard from "@/components/StatusCard";
 import DetectionCard from "@/components/DetectionCard";
 import InfoCard from "@/components/InfoCard";
 import ManifestViewer from "@/components/ManifestViewer";
-import TermText from "@/components/TermText";
 import { usePwaDetection } from "@/hooks/usePwaDetection";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import { ArrowLeft, RefreshCw, Smartphone, CheckCircle, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { processTerms } from "@/lib/termLinks";
 
 const PWADetector = () => {
   const { t } = useTranslation();
@@ -126,7 +124,7 @@ const PWADetector = () => {
                 <Info className="h-5 w-5 mr-2" />
               )}
               <h2 className="font-semibold">
-                {t('expected_mode')}: <span className="font-bold">{processTerms(expectedMode)}</span>
+                {t('expected_mode')}: <span className="font-bold">{expectedMode}</span>
               </h2>
             </div>
             {expectedMode !== currentMode && (

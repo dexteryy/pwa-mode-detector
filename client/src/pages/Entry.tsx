@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
-import TermText from "../components/TermText";
 import { useEffect } from "react";
 import { Globe, Layout, Smartphone, Maximize, ArrowRight, Code } from "lucide-react";
 
@@ -100,10 +99,10 @@ const Entry = () => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t('what_is_pwa_display_mode')}</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              <TermText textKey="pwa_display_mode_description" />
+              {t('pwa_display_mode_description')}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
-              <TermText textKey="click_card_instruction" />
+              {t('click_card_instruction')}
             </p>
           </div>
 
@@ -135,10 +134,10 @@ const Entry = () => {
               {t('technical_details')}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              <TermText textKey="technical_description" />
+              {t('technical_description')}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
-              <TermText textKey="browser_support_note" />
+              {t('browser_support_note')}
             </p>
           </div>
           
