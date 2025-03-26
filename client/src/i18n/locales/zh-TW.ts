@@ -28,13 +28,13 @@ export default {
   footer_text: "PWA 展示模式演示 | 選擇一種模式開始體驗",
 
   // 展示模式
-  standalone_name: "獨立窗口模式 (standalone)",
+  standalone_name: "獨立窗口模式",
   standalone_description: "應用在沒有瀏覽器界面的獨立窗口中運行",
-  minimal_ui_name: "最小界面模式 (minimal-ui)",
+  minimal_ui_name: "最小界面模式",
   minimal_ui_description: "應用在帶有最小瀏覽器控件的窗口中運行",
-  fullscreen_name: "全屏模式 (fullscreen)",
+  fullscreen_name: "全屏模式",
   fullscreen_description: "應用佔據整個屏幕，沒有任何瀏覽器界面",
-  browser_name: "瀏覽器模式 (browser)",
+  browser_name: "瀏覽器模式",
   browser_description: "應用在常規瀏覽器標籤頁中運行",
 
   // 狀態卡片
