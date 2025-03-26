@@ -41,9 +41,9 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
   }
 
   // Determine installation status icon and message
-  let InstallIcon = isInstallable ? PackageOpen : Ban;
-  let installTextClass = isInstallable ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
-  let installStatusText = isInstallable ? t('can_be_installed') : t('not_installable');
+  let InstallIcon = PackageOpen;
+  let installTextClass = 'text-green-600 dark:text-green-400';
+  let installStatusText = t('can_be_installed');
   let installDisabledReason = "";
   
   if (!isChecking) {
@@ -58,24 +58,28 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
       case 'not-installable-browser-mode':
         InstallIcon = Globe;
         installTextClass = 'text-orange-500 dark:text-orange-400';
+        installStatusText = t('not_installable');
         installDisabledReason = t('install_disabled_manifest_browser');
         break;
         
       case 'not-installable-already-pwa':
         InstallIcon = CheckCircle;
         installTextClass = 'text-blue-500 dark:text-blue-400';
+        installStatusText = t('not_installable');
         installDisabledReason = t('install_disabled_already_pwa');
         break;
         
       case 'not-installable-already-installed':
         InstallIcon = MonitorSmartphone;
         installTextClass = 'text-purple-500 dark:text-purple-400';
+        installStatusText = t('not_installable');
         installDisabledReason = t('install_disabled_already_installed');
         break;
         
       case 'not-installable-browser-unsupported':
         InstallIcon = CircleOff;
         installTextClass = 'text-gray-500 dark:text-gray-400';
+        installStatusText = t('not_installable');
         installDisabledReason = t('install_disabled_browser_unsupported');
         break;
         

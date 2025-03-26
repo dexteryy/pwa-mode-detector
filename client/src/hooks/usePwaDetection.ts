@@ -296,11 +296,17 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   // Calculate current installation status
   const installStatus = getInstallStatus();
 
+  // Compute proper isInstallable flag based on installStatus
+  const getIsInstallable = (): boolean => {
+    // Only 'installable' status should return true
+    return installStatus === 'installable';
+  };
+
   return {
     displayModes,
     currentMode,
     // When detecting, don't return installation status to avoid UI flickering
-    isInstallable: isChecking ? false : !!deferredPrompt,
+    isInstallable: isChecking ? false : getIsInstallable(),
     isChecking,
     installStatus,
     promptInstall,
