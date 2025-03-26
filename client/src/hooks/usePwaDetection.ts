@@ -410,7 +410,10 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     }
     
     // Case 3: Manifest uses display:browser
-    if (manifestInfo && manifestInfo.display === 'browser') {
+    // Check both our local state and context directly to ensure we don't miss it
+    if ((manifestInfo && manifestInfo.display === 'browser') || 
+        (contextManifestInfo && contextManifestInfo.display === 'browser')) {
+      console.log('[usePwaDetection] Detected display:browser in manifest');
       return 'not-installable-browser-mode';
     }
     
