@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Collapsible,
@@ -6,51 +6,14 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ArrowDownIcon, ArrowRightIcon, FileJson, AlertCircle } from 'lucide-react';
-import { loadManifest, subscribeToManifest, WebAppManifest } from "@/lib/manifestLoader";
+import { ManifestContext } from '../App';
 
 const ManifestViewer: React.FC = () => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [manifest, setManifest] = useState<WebAppManifest | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Use the centralized manifest loader, with auto subscription
-  useEffect(() => {
-    // Don't even subscribe if not opened
-    if (!isOpen) return;
-    
-    // Set loading state
-    setIsLoading(true);
-    
-    // Subscribe to manifest state changes
-    const unsubscribe = subscribeToManifest((state) => {
-      // Update our component state based on the loader state
-      if (state.state === 'loaded' && state.manifest) {
-        setManifest(state.manifest);
-        setError(null);
-        setIsLoading(false);
-        console.log('[ManifestViewer] Received manifest from loader:', state.manifest);
-      } else if (state.state === 'loading') {
-        setIsLoading(true);
-        setError(null);
-      } else if (state.state === 'error') {
-        setError(state.error);
-        setIsLoading(false);
-        console.error('[ManifestViewer] Error from loader:', state.error);
-      }
-    });
-    
-    // Trigger a manifest load (without forcing a reload)
-    loadManifest(false).catch(error => {
-      console.error('[ManifestViewer] Failed to load manifest:', error);
-      setError('Failed to load manifest: ' + (error instanceof Error ? error.message : 'Unknown error'));
-      setIsLoading(false);
-    });
-    
-    // Cleanup subscription when component unmounts or collapsible closes
-    return () => unsubscribe();
-  }, [isOpen]);
+  
+  // Use the shared manifest context instead of fetching it again
+  const { manifestInfo: manifest, isLoading, error } = useContext(ManifestContext);
 
   // Format JSON for display
   const formatJson = (json: object): string => {

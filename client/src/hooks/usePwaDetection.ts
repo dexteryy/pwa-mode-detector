@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { loadManifest, subscribeToManifest, resetAndReloadManifest, WebAppManifest } from "@/lib/manifestLoader";
+import { ManifestContext } from "../App";
 
 interface DisplayMode {
   name: string;
@@ -61,8 +61,35 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   const [userAgent, setUserAgent] = useState<string>("");
   const [isChecking, setIsChecking] = useState<boolean>(true);
   const [manifestInfo, setManifestInfo] = useState<{display?: string} | null>(null);
-  const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(false);
+  
+  // Each path should have its own installation state
+  // forcedPathKey represents the display mode path being used
+  const localStorageKey = `pwa-installed-state-${forcedPathKey || 'default'}`;
+  
+  // Load installation state from localStorage to persist between refreshes
+  const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(() => {
+    try {
+      // Check if we have a stored installation state for this specific path
+      const storedState = localStorage.getItem(localStorageKey);
+      const isInstalled = storedState === 'true';
+      console.log(`[usePwaDetection] Loaded installation state for path "${forcedPathKey}" from localStorage: ${isInstalled}`);
+      return isInstalled;
+    } catch (e) {
+      console.error('[usePwaDetection] Error reading installation state from localStorage:', e);
+      return false;
+    }
+  });
 
+  // Update localStorage whenever hasBeenInstalled changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(localStorageKey, hasBeenInstalled ? 'true' : 'false');
+      console.log(`[usePwaDetection] Updated installation state for path "${forcedPathKey}" in localStorage: ${hasBeenInstalled}`);
+    } catch (e) {
+      console.error('[usePwaDetection] Error saving installation state to localStorage:', e);
+    }
+  }, [hasBeenInstalled, localStorageKey, forcedPathKey]);
+  
   // Force checking state every time the path changes
   useEffect(() => {
     // Reset state
@@ -109,32 +136,50 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     setCurrentMode(detectedMode);
   };
 
-  // Using the new ManifestLoader to manage centralized manifest loading
+  // Use ManifestContext to access manifest data
+  const { manifestInfo: contextManifestInfo } = useContext(ManifestContext);
+  
+  // Update our local state when context changes
   useEffect(() => {
-    // Subscribe to manifest state changes
-    const unsubscribe = subscribeToManifest((state) => {
-      if (state.state === 'loaded' && state.manifest) {
-        console.log('[usePwaDetection] Received manifest update from loader:', state.manifest);
-        setManifestInfo(state.manifest);
-      } else if (state.state === 'error') {
-        console.error('[usePwaDetection] Error loading manifest:', state.error);
-        setManifestInfo(null);
-      }
-    });
-
-    // Trigger the manifest load (force reload if forcedPathKey changes)
-    loadManifest(!!forcedPathKey).catch(error => {
-      console.error('[usePwaDetection] Failed to load manifest:', error);
-    });
-
-    // Cleanup the subscription
-    return () => unsubscribe();
-  }, [forcedPathKey]); // Reload manifest only when path changes
+    console.log(`[usePwaDetection] Context manifest:`, contextManifestInfo);
+    if (contextManifestInfo) {
+      console.log(`[usePwaDetection] Updated manifest info from context:`, contextManifestInfo);
+      // Force a refresh of the manifest info state
+      setManifestInfo(contextManifestInfo);
+    }
+  }, [contextManifestInfo]);
 
   // Set up event listeners for display mode changes
   useEffect(() => {
     // Set user agent
     setUserAgent(navigator.userAgent);
+    
+    // Add a special handler for browser refresh after installation
+    // This is important for catching installations from browser UI buttons
+    const detectIfNewlyInstalled = () => {
+      // If we're not in the browser mode and weren't previously installed,
+      // then we must have just been installed from the browser UI
+      const detectedMode = getCurrentDisplayMode();
+      if (detectedMode !== 'browser' && !hasBeenInstalled) {
+        console.log(`[usePwaDetection] Detected installation from browser UI, current mode: ${detectedMode}`);
+        setHasBeenInstalled(true);
+        
+        // Also update the current mode immediately
+        if (detectedMode !== currentMode) {
+          setCurrentMode(detectedMode);
+        }
+      }
+    };
+    
+    // Run this check immediately
+    detectIfNewlyInstalled();
+    
+    // Also set up a short interval to check specifically for browser UI installations
+    // This is more aggressive than our normal interval but only runs for a short time after load
+    const quickCheckIntervalId = setInterval(detectIfNewlyInstalled, 1000);
+    setTimeout(() => {
+      clearInterval(quickCheckIntervalId);
+    }, 5000); // Only check aggressively for the first 5 seconds
     
     // Initial check
     checkDisplayMode();
@@ -267,12 +312,17 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       
-      // Clear the periodic check interval
+      // Clear all interval timers
       if (intervalId) {
         clearInterval(intervalId);
       }
+      
+      // Also clear the quick check interval if it's still running
+      if (quickCheckIntervalId) {
+        clearInterval(quickCheckIntervalId);
+      }
     };
-  }, [displayModes]); // Only depends on displayModes
+  }, [displayModes, currentMode, hasBeenInstalled, localStorageKey, forcedPathKey, manifestInfo]); // Depends on displayModes, current mode, installed state, manifest and path
 
   // Function to prompt installation
   const promptInstall = () => {
@@ -318,12 +368,25 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     setIsChecking(true);
     // Reset installable state
     setDeferredPrompt(null);
-    console.log(`[usePwaDetection] Manual refresh: starting new detection`);
     
-    // Reset and reload the manifest from network
-    resetAndReloadManifest().catch(error => {
-      console.error('[usePwaDetection] Failed to reload manifest during refresh:', error);
-    });
+    // Detect if we need to clear installation state
+    // This is important to handle browser address bar installations
+    // If we're running in browser mode but still have hasBeenInstalled=true,
+    // allow a manual refresh to clear that state so we can detect fresh again
+    const currentDisplayMode = getCurrentDisplayMode();
+    if (currentDisplayMode === 'browser' && hasBeenInstalled) {
+      try {
+        // Clear stored state to allow re-detection
+        localStorage.removeItem(localStorageKey);
+        setHasBeenInstalled(false);
+        console.log(`[usePwaDetection] Manual refresh: cleared installation state for path "${forcedPathKey}"`);
+        
+      } catch (e) {
+        console.error('[usePwaDetection] Error clearing installation state:', e);
+      }
+    }
+    
+    console.log(`[usePwaDetection] Manual refresh: starting new detection`);
     
     // Complete check after delay
     setTimeout(() => {
@@ -334,31 +397,65 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
 
   // Determine the proper installation status
   const getInstallStatus = (): InstallStatus => {
+    // Log all states for debugging
+    console.log('[usePwaDetection] Status check', {
+      isChecking,
+      deferredPrompt: !!deferredPrompt,
+      currentMode,
+      manifestInfo,
+      contextManifestInfo,
+      hasBeenInstalled,
+      location: window.location.pathname
+    });
+    
     if (isChecking) {
       return 'checking';
     }
     
     // Case 1: Installable - browser supports installation and app can be installed
     if (deferredPrompt) {
+      console.log('[usePwaDetection] Status: installable');
       return 'installable';
     }
     
     // Case 2: Running as PWA - not in browser mode
     if (currentMode !== 'browser') {
+      console.log('[usePwaDetection] Status: not-installable-already-pwa');
       return 'not-installable-already-pwa';
     }
     
-    // Case 3: Manifest uses display:browser
-    if (manifestInfo && manifestInfo.display === 'browser') {
+    // Case 3: Manifest uses display:browser - HIGHEST PRIORITY FOR BROWSER MODE & BROWSER PATHS
+    // We prioritize this check over hasBeenInstalled to ensure proper detection
+    // Also do path-based detection for known browser display paths
+    const isBrowserPath = window.location.pathname === '/browser' || 
+                         window.location.pathname.startsWith('/browser/');
+    
+    const isBrowserDisplayMode = (manifestInfo && manifestInfo.display === 'browser') || 
+                               (contextManifestInfo && contextManifestInfo.display === 'browser') ||
+                               isBrowserPath; // Also check path as fallback
+    
+    // Debug the manifest display mode check
+    console.log('[usePwaDetection] Display mode & path check:', {
+      isBrowserDisplayMode,
+      isBrowserPath,
+      manifestDisplay: manifestInfo?.display,
+      contextManifestDisplay: contextManifestInfo?.display,
+      pathname: window.location.pathname
+    });
+    
+    if (isBrowserDisplayMode) {
+      console.log('[usePwaDetection] Status: not-installable-browser-mode (display:browser in manifest or browser path)');
       return 'not-installable-browser-mode';
     }
     
     // Case 4: Already installed but running in browser
     if (hasBeenInstalled) {
+      console.log('[usePwaDetection] Status: not-installable-already-installed');
       return 'not-installable-already-installed';
     }
     
     // Case 5: Browser doesn't support installation (default fallback)
+    console.log('[usePwaDetection] Status: not-installable-browser-unsupported');
     return 'not-installable-browser-unsupported';
   };
 
