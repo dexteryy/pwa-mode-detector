@@ -12,15 +12,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
   // 英文
   en: [
     { 
-      term: "Progressive Web App", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
       term: "PWA", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "Progressive Web Apps", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
@@ -44,14 +36,6 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: "渐进式网络应用", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "渐进式Web应用", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
       term: "Web App Manifest", 
       url: "https://developer.mozilla.org/zh-CN/docs/Web/Manifest" 
     },
@@ -69,14 +53,6 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
   'zh-TW': [
     { 
       term: "PWA", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "漸進式網路應用", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "漸進式Web應用", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
@@ -100,10 +76,6 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: "プログレッシブ ウェブ アプリ", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
       term: "Web App Manifest", 
       url: "https://developer.mozilla.org/ja/docs/Web/Manifest" 
     },
@@ -120,15 +92,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
   // 德语
   de: [
     { 
-      term: "Progressive Web App", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
       term: "PWA", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "Progressive Web Apps", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
@@ -144,19 +108,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
   // 法语
   fr: [
     { 
-      term: "Progressive Web App", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
       term: "PWA", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "Progressive Web Apps", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "application web progressive", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
@@ -176,15 +128,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
   // 西班牙语
   es: [
     { 
-      term: "Progressive Web App", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
       term: "PWA", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "aplicación web progresiva", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
@@ -204,15 +148,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
   // 葡萄牙语
   pt: [
     { 
-      term: "Progressive Web App", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
       term: "PWA", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "aplicativo web progressivo", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
@@ -233,10 +169,6 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
   ko: [
     { 
       term: "PWA", 
-      url: "https://web.dev/progressive-web-apps/" 
-    },
-    { 
-      term: "프로그레시브 웹 앱", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
