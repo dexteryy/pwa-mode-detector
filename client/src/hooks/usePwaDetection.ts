@@ -49,6 +49,7 @@ export function usePwaDetection(): PwaDetection {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [userAgent, setUserAgent] = useState<string>("");
   const [isChecking, setIsChecking] = useState<boolean>(true);
+  const [hasCompletedInitialCheck, setHasCompletedInitialCheck] = useState<boolean>(false);
 
   // Detect the current display mode
   const checkDisplayMode = () => {
@@ -100,10 +101,12 @@ export function usePwaDetection(): PwaDetection {
       mediaQuery.addEventListener("change", handleChange);
     });
     
-    // Set checking state to false after a short delay to simulate checking
+    // 设置为检查状态，并等待延迟完成初始检查
     const checkingTimer = setTimeout(() => {
+      // 初始检查完成后，设置检查状态为false
+      setHasCompletedInitialCheck(true);
       setIsChecking(false);
-    }, 1000);
+    }, 2000); // 增加时间确保安装状态可以被正确确定
     
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -111,7 +114,12 @@ export function usePwaDetection(): PwaDetection {
       e.preventDefault();
       // Stash the event so it can be triggered later
       setDeferredPrompt(e);
-      setIsChecking(false); // End checking when we know the result
+      
+      // 如果初始检查已完成，则可以立即设置isChecking为false
+      if (hasCompletedInitialCheck) {
+        setIsChecking(false);
+      }
+      // 如果初始检查未完成，让定时器继续执行
     };
     
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -142,7 +150,7 @@ export function usePwaDetection(): PwaDetection {
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [displayModes]); // Add displayModes as a dependency
+  }, [displayModes, hasCompletedInitialCheck]); // Add displayModes and hasCompletedInitialCheck as dependencies
 
   // Function to prompt installation
   const promptInstall = () => {
@@ -165,10 +173,15 @@ export function usePwaDetection(): PwaDetection {
   
   // Function to manually reset the checking state (for use with refresh button)
   const resetChecking = () => {
+    // 重置所有检查状态
     setIsChecking(true);
+    setHasCompletedInitialCheck(false);
+    
+    // 延迟后完成检查
     setTimeout(() => {
+      setHasCompletedInitialCheck(true);
       setIsChecking(false);
-    }, 1000);
+    }, 2000);
   };
 
   return {

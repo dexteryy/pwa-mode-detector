@@ -39,7 +39,7 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
     modeStatusText = `${t('current_mode')}: ${t('browser_name')}`;
   }
 
-  // 确定安装不能的原因
+  // 确定安装不能的原因，仅在非检查状态时
   let installDisabledReason = "";
   if (!isInstallable && !isChecking) {
     // 使用传入的expectedMode或默认为当前mode

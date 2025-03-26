@@ -148,7 +148,7 @@ const PWADetector = () => {
 
       {/* Install button for PWA installation - Hidden during checking */}
       {isInstallable && !isChecking && (
-        <div className="fixed bottom-4 right-4">
+        <div className="fixed bottom-4 right-4 transition-opacity duration-300">
           <button 
             onClick={promptInstall}
             className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 flex items-center"
