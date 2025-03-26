@@ -2,7 +2,7 @@ export default {
   // 通用
   language: "選擇語言",
   language_english: "English (英文)",
-  language_chinese: "简体中文 (簡體中文)",
+  language_chinese: "簡體中文",
   language_chinese_traditional: "繁體中文",
   language_japanese: "日本語 (日文)",
   language_german: "Deutsch (德文)",
@@ -28,13 +28,13 @@ export default {
   footer_text: "PWA 展示模式演示 | 選擇一種模式開始體驗",
 
   // 展示模式
-  standalone_name: "獨立窗口模式",
+  standalone_name: "獨立窗口模式 (standalone)",
   standalone_description: "應用在沒有瀏覽器界面的獨立窗口中運行",
-  minimal_ui_name: "最小界面模式",
+  minimal_ui_name: "最小界面模式 (minimal-ui)",
   minimal_ui_description: "應用在帶有最小瀏覽器控件的窗口中運行",
-  fullscreen_name: "全屏模式",
+  fullscreen_name: "全屏模式 (fullscreen)",
   fullscreen_description: "應用佔據整個屏幕，沒有任何瀏覽器界面",
-  browser_name: "瀏覽器模式",
+  browser_name: "瀏覽器模式 (browser)",
   browser_description: "應用在常規瀏覽器標籤頁中運行",
 
   // 狀態卡片
@@ -83,8 +83,7 @@ export default {
 
   // 刷新提示
   refreshing: "正在刷新...",
-  refresh_process:
-    "正在檢查 display mode、安裝狀態及更新 Web App Manifest 信息",
+  refresh_process: "正在檢查 display mode、安裝狀態及更新 Web App Manifest 信息",
 
   // Manifest 查看器
   manifest_viewer_title: "Web App Manifest",
