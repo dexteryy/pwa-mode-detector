@@ -49,6 +49,8 @@ export function usePwaDetection(): PwaDetection {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [userAgent, setUserAgent] = useState<string>("");
   const [isChecking, setIsChecking] = useState<boolean>(true);
+  // 添加一个明确的安装状态，与deferredPrompt分开
+  const [installabilityDetermined, setInstallabilityDetermined] = useState<boolean>(false);
 
   // Detect the current display mode
   const checkDisplayMode = () => {
@@ -100,10 +102,14 @@ export function usePwaDetection(): PwaDetection {
       mediaQuery.addEventListener("change", handleChange);
     });
     
-    // Set checking state to false after a short delay to simulate checking
-    const checkingTimer = setTimeout(() => {
-      setIsChecking(false);
-    }, 1000);
+    // 添加一个定时器以确保installability状态最终会被确定
+    // 如果在超时期间beforeinstallprompt没有触发，则app不可安装
+    const installabilityTimer = setTimeout(() => {
+      if (!installabilityDetermined) {
+        setInstallabilityDetermined(true);
+        setIsChecking(false);
+      }
+    }, 2000); // 给beforeinstallprompt事件更多时间触发
     
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -111,6 +117,7 @@ export function usePwaDetection(): PwaDetection {
       e.preventDefault();
       // Stash the event so it can be triggered later
       setDeferredPrompt(e);
+      setInstallabilityDetermined(true);
       setIsChecking(false); // End checking when we know the result
     };
     
@@ -134,7 +141,7 @@ export function usePwaDetection(): PwaDetection {
     
     // Cleanup
     return () => {
-      clearTimeout(checkingTimer);
+      clearTimeout(installabilityTimer);
       mediaQueries.forEach((mediaQuery, index) => {
         mediaQuery.removeEventListener("change", handlers[index]);
       });
@@ -142,7 +149,7 @@ export function usePwaDetection(): PwaDetection {
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [displayModes]); // Add displayModes as a dependency
+  }, [displayModes, installabilityDetermined]); // Add displayModes and installabilityDetermined as dependencies
 
   // Function to prompt installation
   const promptInstall = () => {
@@ -166,15 +173,25 @@ export function usePwaDetection(): PwaDetection {
   // Function to manually reset the checking state (for use with refresh button)
   const resetChecking = () => {
     setIsChecking(true);
+    setInstallabilityDetermined(false); // 重置installability状态
+    
+    // 重新给一些时间让beforeinstallprompt事件可能触发
     setTimeout(() => {
-      setIsChecking(false);
-    }, 1000);
+      if (!installabilityDetermined) {
+        setInstallabilityDetermined(true);
+        setIsChecking(false);
+      }
+    }, 2000);
   };
+
+  // 只有在确定了安装状态后，才返回实际的installable值
+  // 如果仍在检查中，默认返回false
+  const isInstallable = installabilityDetermined ? !!deferredPrompt : false;
 
   return {
     displayModes,
     currentMode,
-    isInstallable: !!deferredPrompt,
+    isInstallable,
     isChecking,
     promptInstall,
     resetChecking,
