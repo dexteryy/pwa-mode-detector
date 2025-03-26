@@ -53,8 +53,6 @@ function ManifestHandler({ children }: { children: ReactNode }) {
   
   // 使用useRef跟踪manifest请求状态，避免重复请求
   const manifestRequested = useRef<Record<string, boolean>>({});
-  // 跟踪初始渲染，用于跳过严格模式下的第一次effect执行
-  const initialRender = useRef(true);
   
   // 组件挂载和卸载时的清理
   useEffect(() => {
@@ -75,12 +73,6 @@ function ManifestHandler({ children }: { children: ReactNode }) {
   
   // 处理路径变化时的manifest加载
   useEffect(() => {
-    // 跳过严格模式下的第一次渲染 - 这能减少一半的重复请求
-    if (initialRender.current) {
-      initialRender.current = false;
-      console.log('[ManifestHandler] 跳过初始渲染的manifest处理');
-      return;
-    }
     
     // 构建基础URL
     let baseUrl: string | null = null;
