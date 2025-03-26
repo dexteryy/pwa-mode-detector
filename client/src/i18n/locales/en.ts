@@ -48,5 +48,7 @@ export default {
   "status_browser_installable": "You can install this app to experience the PWA standalone window mode",
   "status_browser_not_installable": "Your browser does not support installing PWA applications",
   "mode_active": "Active",
-  "mode_inactive": "Inactive"
+  "mode_inactive": "Inactive",
+  "about_pwa_modes": "About PWA Modes",
+  "pwa_different_modes": "Progressive Web Apps (PWAs) can run in different display modes:"
 }
