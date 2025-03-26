@@ -135,29 +135,17 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     setCurrentMode(detectedMode);
   };
 
-  // Fetch manifest information
+  // Use context for manifest (context will be added in step 3)
   useEffect(() => {
-    const fetchManifest = async () => {
-      try {
-        // Try to fetch the manifest
-        const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
-        if (manifestLinks.length > 0) {
-          const manifestUrl = manifestLinks[0].getAttribute('href');
-          if (manifestUrl) {
-            const response = await fetch(manifestUrl);
-            const data = await response.json();
-            setManifestInfo(data);
-            console.log(`[usePwaDetection] Manifest loaded:`, data);
-          }
-        }
-      } catch (error) {
-        console.error(`[usePwaDetection] Error loading manifest:`, error);
-        setManifestInfo(null);
-      }
-    };
-
-    fetchManifest();
-  }, [forcedPathKey]); // Reload manifest when path changes
+    // Instead of fetching manifest directly, we will use the context in the next step
+    console.log(`[usePwaDetection] Will use ManifestContext in next update`);
+    
+    // For now, check if links exist to detect manifest presence
+    const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
+    if (manifestLinks.length > 0) {
+      console.log(`[usePwaDetection] Found manifest link, will use context data when implemented`);
+    }
+  }, [forcedPathKey]); // Reload when path changes
 
   // Set up event listeners for display mode changes
   useEffect(() => {
