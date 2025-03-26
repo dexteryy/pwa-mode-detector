@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { HelpCircle } from "lucide-react";
+import TermText from "./TermText";
+import { processTerms } from "../lib/termLinks";
 
 const InfoCard = () => {
   const { t } = useTranslation();
@@ -11,12 +13,24 @@ const InfoCard = () => {
         {t('about_pwa_modes')}
       </h2>
       <div className="prose dark:prose-invert text-gray-700 dark:text-gray-300">
-        <p className="mb-3">{t('pwa_different_modes')}</p>
+        <p className="mb-3"><TermText textKey="pwa_different_modes" /></p>
         <ul className="list-disc pl-5 space-y-2">
-          <li><strong>{t('browser_name')} (browser)：</strong>{t('browser_description')}</li>
-          <li><strong>{t('minimal_ui_name')} (minimal-ui)：</strong>{t('minimal_ui_description')}</li>
-          <li><strong>{t('standalone_name')} (standalone)：</strong>{t('standalone_description')}</li>
-          <li><strong>{t('fullscreen_name')} (fullscreen)：</strong>{t('fullscreen_description')}</li>
+          <li>
+            <strong>{t('browser_name')} ({processTerms("browser")})：</strong>
+            <TermText textKey="browser_description" />
+          </li>
+          <li>
+            <strong>{t('minimal_ui_name')} ({processTerms("minimal-ui")})：</strong>
+            <TermText textKey="minimal_ui_description" />
+          </li>
+          <li>
+            <strong>{t('standalone_name')} ({processTerms("standalone")})：</strong>
+            <TermText textKey="standalone_description" />
+          </li>
+          <li>
+            <strong>{t('fullscreen_name')} ({processTerms("fullscreen")})：</strong>
+            <TermText textKey="fullscreen_description" />
+          </li>
         </ul>
       </div>
     </div>

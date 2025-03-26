@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { usePwaDetection } from "../hooks/usePwaDetection";
+import TermText from "./TermText";
 import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, PackageOpen, X } from "lucide-react";
 
 interface StatusCardProps {
@@ -42,12 +43,10 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
 
   // 确定安装不能的原因，仅在非检查状态时
   let installDisabledReason = "";
+  
   if (!isInstallable && !isChecking) {
-    // 使用传入的expectedMode或默认为当前mode
-    const actualExpectedMode = expectedMode || mode;
-    
     // 如果预期模式为browser，提供特定的消息
-    if (actualExpectedMode === 'browser') {
+    if (expectedMode === 'browser' || mode === 'browser') {
       installDisabledReason = t('install_disabled_manifest_browser');
     } else {
       // 其他模式（standalone、minimal-ui、fullscreen）显示浏览器不支持的消息
@@ -89,7 +88,13 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
                   </p>
                 </div>
                 {!isInstallable && installDisabledReason && (
-                  <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm">{installDisabledReason}</p>
+                  <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm">
+                    {expectedMode === 'browser' || mode === 'browser' ? (
+                      <TermText textKey="install_disabled_manifest_browser" />
+                    ) : (
+                      <TermText textKey="install_disabled_browser_unsupported" />
+                    )}
+                  </p>
                 )}
               </>
             )}
