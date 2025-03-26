@@ -12,36 +12,48 @@ function ManifestHandler() {
   const [location] = useLocation();
   
   useEffect(() => {
+    // 设置meta标签禁止缓存，确保manifest能及时更新
+    let noCacheMeta = document.querySelector('meta[http-equiv="Cache-Control"]');
+    if (!noCacheMeta) {
+      noCacheMeta = document.createElement('meta');
+      noCacheMeta.setAttribute('http-equiv', 'Cache-Control');
+      document.head.appendChild(noCacheMeta);
+    }
+    noCacheMeta.setAttribute('content', 'no-cache, no-store, must-revalidate');
+    
     // 先移除所有现有的 manifest 链接，确保没有多余的 manifest
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
-    existingLinks.forEach(link => link.remove());
+    existingLinks.forEach(link => link.parentNode?.removeChild(link));
+    
+    // 确保不会出现缓存问题，添加随机参数避免缓存
+    const timestamp = new Date().getTime();
     
     // 为 PWA 页面创建新的 manifest 链接
     if (location.startsWith('/standalone')) {
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
-      newLink.href = '/manifests/standalone.json';
+      newLink.href = `/manifests/standalone.json?v=${timestamp}`;
       document.head.appendChild(newLink);
       console.log('设置 manifest 为: /manifests/standalone.json');
     } 
     else if (location.startsWith('/minimal-ui')) {
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
-      newLink.href = '/manifests/minimal-ui.json';
+      newLink.href = `/manifests/minimal-ui.json?v=${timestamp}`;
       document.head.appendChild(newLink);
       console.log('设置 manifest 为: /manifests/minimal-ui.json');
     }
     else if (location.startsWith('/fullscreen')) {
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
-      newLink.href = '/manifests/fullscreen.json';
+      newLink.href = `/manifests/fullscreen.json?v=${timestamp}`;
       document.head.appendChild(newLink);
       console.log('设置 manifest 为: /manifests/fullscreen.json');
     }
     else if (location.startsWith('/browser')) {
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
-      newLink.href = '/manifests/browser.json';
+      newLink.href = `/manifests/browser.json?v=${timestamp}`;
       document.head.appendChild(newLink);
       console.log('设置 manifest 为: /manifests/browser.json');
     }
@@ -49,7 +61,7 @@ function ManifestHandler() {
       // 兼容旧的PWA路径，设置默认 manifest
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
-      newLink.href = '/manifest.json';
+      newLink.href = `/manifest.json?v=${timestamp}`;
       document.head.appendChild(newLink);
       console.log('设置默认 manifest: /manifest.json');
     } else {
@@ -60,7 +72,7 @@ function ManifestHandler() {
     // 组件卸载时也清理所有 manifest 链接
     return () => {
       const links = document.querySelectorAll('link[rel="manifest"]');
-      links.forEach(link => link.remove());
+      links.forEach(link => link.parentNode?.removeChild(link));
     };
   }, [location]);
   
