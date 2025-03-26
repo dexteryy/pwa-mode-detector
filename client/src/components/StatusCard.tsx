@@ -4,12 +4,11 @@ import { usePwaDetection } from "../hooks/usePwaDetection";
 interface StatusCardProps {
   mode: string;
   isInstallable: boolean;
-  isChecking?: boolean;
 }
 
-const StatusCard = ({ mode, isInstallable, isChecking = false }: StatusCardProps) => {
+const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
   const { t } = useTranslation();
-  const { promptInstall } = usePwaDetection(); // 不再从 hook 获取 isChecking，而是接受为属性
+  const { isChecking, promptInstall } = usePwaDetection();
   
   // 模式检测卡片样式
   let cardBorderColor = "border-amber-500";
@@ -39,40 +38,16 @@ const StatusCard = ({ mode, isInstallable, isChecking = false }: StatusCardProps
     modeStatusText = `${t('current_mode')}: ${t('browser_name')}`;
   }
 
-  // 确定安装状态和原因
+  // 确定安装不能的原因
   let installDisabledReason = "";
-  let statusText = "";
-  let statusIcon = "";
-  let statusColor = "";
-  
-  if (isChecking) {
-    // 检测中
-    statusText = t('status_browser_checking');
-    statusIcon = "hourglass_empty";
-    statusColor = "text-blue-500";
-  } else if (isInstallable) {
-    // 可安装
-    statusText = t('can_be_installed');
-    statusIcon = "system_update";
-    statusColor = "text-green-500";
-  } else if (mode === 'browser') {
-    // 不可安装，且在浏览器模式
-    statusText = t('not_installable');
-    statusIcon = "block";
-    statusColor = "text-gray-500";
-    
-    // 确定具体原因
+  if (mode === 'browser' && !isInstallable && !isChecking) {
+    // 如果是因为manifest配置为browser，提供特定的消息
     const manifestDisplayIsBrowser = true; // 由于我们在browser模式下，这个条件成立
     if (manifestDisplayIsBrowser) {
       installDisabledReason = t('install_disabled_manifest_browser');
     } else {
       installDisabledReason = t('install_disabled_browser_unsupported');
     }
-  } else {
-    // 其他模式
-    statusText = t('already_installed');
-    statusIcon = "check_circle";
-    statusColor = "text-green-500";
   }
 
   return (
@@ -88,21 +63,25 @@ const StatusCard = ({ mode, isInstallable, isChecking = false }: StatusCardProps
         {mode === 'browser' && (
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-4 border-t border-gray-200">
             <div className="flex-grow">
-              <div className="flex items-center">
-                <span className={`material-icons mr-2 ${statusColor}`}>
-                  {statusIcon}
-                </span>
-                <p className={statusColor}>
-                  {statusText}
-                </p>
-              </div>
-              {!isInstallable && !isChecking && installDisabledReason && (
-                <p className="text-gray-600 mt-2 text-sm">{installDisabledReason}</p>
-              )}
-              {isChecking && (
-                <p className="text-blue-600 mt-2 text-sm animate-pulse">
-                  {t('status_detecting')}
-                </p>
+              {isChecking ? (
+                <div className="flex items-center">
+                  <span className="material-icons text-blue-500 mr-2">hourglass_empty</span>
+                  <p className="text-blue-500">{t('status_browser_checking')}</p>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center">
+                    <span className={`material-icons mr-2 ${isInstallable ? 'text-green-500' : 'text-gray-500'}`}>
+                      {isInstallable ? 'system_update' : 'block'}
+                    </span>
+                    <p className={isInstallable ? 'text-green-600' : 'text-gray-500'}>
+                      {isInstallable ? t('can_be_installed') : t('not_installable')}
+                    </p>
+                  </div>
+                  {!isInstallable && installDisabledReason && (
+                    <p className="text-gray-600 mt-2 text-sm">{installDisabledReason}</p>
+                  )}
+                </>
               )}
             </div>
             
