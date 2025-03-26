@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { usePwaDetection } from "../hooks/usePwaDetection";
-import { CheckCircle, Minimize, Maximize, Globe, HourglassClock, Download, Ban, SystemUpdate, X } from "lucide-react";
+import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, PackageOpen, X } from "lucide-react";
 
 interface StatusCardProps {
   mode: string;
@@ -60,7 +60,7 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
       <div className="flex flex-col space-y-4">
         {/* 当前模式部分 */}
         <div className="flex items-center">
-          <span className={modeIconClassName + "mb-0"}>{modeIconName}</span>
+          <ModeIcon className={`h-6 w-6 mr-3 ${iconColorClass}`} />
           <h2 className="text-xl font-semibold text-dark">{modeStatusText}</h2>
         </div>
         
@@ -69,15 +69,17 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
           <div className="flex-grow">
             {isChecking ? (
               <div className="flex items-center">
-                <span className="material-icons text-blue-500 mr-2">hourglass_empty</span>
+                <Hourglass className="h-5 w-5 text-blue-500 mr-2" />
                 <p className="text-blue-500">{t('status_browser_checking')}</p>
               </div>
             ) : (
               <>
                 <div className="flex items-center">
-                  <span className={`material-icons mr-2 ${isInstallable ? 'text-green-500' : 'text-gray-500'}`}>
-                    {isInstallable ? 'system_update' : 'block'}
-                  </span>
+                  {isInstallable ? (
+                    <PackageOpen className="h-5 w-5 text-green-500 mr-2" />
+                  ) : (
+                    <Ban className="h-5 w-5 text-gray-500 mr-2" />
+                  )}
                   <p className={isInstallable ? 'text-green-600' : 'text-gray-500'}>
                     {isInstallable ? t('can_be_installed') : t('not_installable')}
                   </p>
@@ -96,7 +98,7 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
                 disabled={true}
                 className="flex items-center justify-center px-4 py-2 rounded-lg bg-gray-300 text-gray-500 cursor-not-allowed transition-colors w-full sm:w-auto"
               >
-                <span className="material-icons text-sm mr-1">hourglass_empty</span>
+                <Hourglass className="h-4 w-4 mr-1" />
                 {t('checking')}
               </button>
             ) : (
@@ -110,7 +112,7 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   } transition-colors w-full sm:w-auto`}
                 >
-                  <span className="material-icons text-sm mr-1">get_app</span>
+                  <Download className="h-4 w-4 mr-1" />
                   {t('install_pwa')}
                 </button>
                 

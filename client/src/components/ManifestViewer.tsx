@@ -5,7 +5,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ArrowDownIcon, ArrowRightIcon, FileJson } from 'lucide-react';
+import { ArrowDownIcon, ArrowRightIcon, FileJson, AlertCircle } from 'lucide-react';
 
 interface WebAppManifest {
   name?: string;

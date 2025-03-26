@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { HelpCircle } from "lucide-react";
 
 const InfoCard = () => {
   const { t } = useTranslation();
@@ -6,7 +7,7 @@ const InfoCard = () => {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-lg font-semibold text-dark mb-4 flex items-center">
-        <span className="material-icons mr-2">help_outline</span>
+        <HelpCircle className="h-5 w-5 mr-2" />
         {t('about_pwa_modes')}
       </h2>
       <div className="prose text-gray-700">
