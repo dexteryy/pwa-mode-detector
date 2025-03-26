@@ -90,34 +90,23 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
           
           {/* 安装按钮 */}
           <div className="mt-4 sm:mt-0 w-full sm:w-auto">
-            {isChecking ? (
-              <button 
-                disabled={true}
-                className="flex items-center justify-center px-4 py-2 rounded-lg bg-gray-300 text-gray-500 cursor-not-allowed transition-colors w-full sm:w-auto"
-              >
-                <span className="material-icons text-sm mr-1">hourglass_empty</span>
-                {t('checking')}
-              </button>
-            ) : (
-              <>
-                <button 
-                  onClick={promptInstall}
-                  disabled={!isInstallable}
-                  className={`flex items-center justify-center px-4 py-2 rounded-lg ${
-                    isInstallable
-                      ? 'bg-blue-500 text-white hover:bg-blue-600'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  } transition-colors w-full sm:w-auto`}
-                >
-                  <span className="material-icons text-sm mr-1">get_app</span>
-                  {t('install_pwa')}
-                </button>
-                
-                {/* 当安装不可用时，显示悬浮提示 */}
-                {!isInstallable && (
-                  <p className="text-xs text-gray-500 mt-1 text-center sm:text-right">{t('install_button_disabled')}</p>
-                )}
-              </>
+            {/* 检查状态时，仍然可以根据已知的安装状态显示可用按钮，但显示检查中的文本 */}
+            <button 
+              onClick={promptInstall}
+              disabled={!isInstallable || isChecking}
+              className={`flex items-center justify-center px-4 py-2 rounded-lg ${
+                isInstallable && !isChecking
+                  ? 'bg-blue-500 text-white hover:bg-blue-600'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              } transition-colors w-full sm:w-auto`}
+            >
+              <span className="material-icons text-sm mr-1">{isChecking ? 'hourglass_empty' : 'get_app'}</span>
+              {isChecking ? t('checking') : t('install_pwa')}
+            </button>
+            
+            {/* 当安装不可用时，显示悬浮提示 */}
+            {!isInstallable && !isChecking && (
+              <p className="text-xs text-gray-500 mt-1 text-center sm:text-right">{t('install_button_disabled')}</p>
             )}
           </div>
         </div>

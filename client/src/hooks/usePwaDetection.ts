@@ -22,6 +22,8 @@ let globalCheckState = {
   deferredPrompt: null as any,
   isChecking: true,
   hasCompletedInitialCheck: false,
+  // 用于存储伪检查状态（仅显示，不影响installable）
+  uiCheckingOnly: false,
   // 状态更新时的回调
   listeners: [] as Function[]
 };
@@ -74,6 +76,7 @@ export function usePwaDetection(): PwaDetection {
   // 将状态连接到全局状态
   const [deferredPrompt, setDeferredPrompt] = useState<any>(globalCheckState.deferredPrompt);
   const [isChecking, setIsChecking] = useState<boolean>(globalCheckState.isChecking);
+  const [uiCheckingOnly, setUiCheckingOnly] = useState<boolean>(globalCheckState.uiCheckingOnly);
   const [hasCompletedInitialCheck, setHasCompletedInitialCheck] = useState<boolean>(
     globalCheckState.hasCompletedInitialCheck
   );
@@ -83,8 +86,18 @@ export function usePwaDetection(): PwaDetection {
     const unregister = registerStateChangeListener(() => {
       setDeferredPrompt(globalCheckState.deferredPrompt);
       setIsChecking(globalCheckState.isChecking);
+      setUiCheckingOnly(globalCheckState.uiCheckingOnly);
       setHasCompletedInitialCheck(globalCheckState.hasCompletedInitialCheck);
     });
+    
+    // 页面挂载时，触发一个短暂的UI检查状态
+    // 这只影响显示，不影响安装功能
+    if (globalCheckState.hasCompletedInitialCheck) {
+      updateGlobalState({ uiCheckingOnly: true });
+      setTimeout(() => {
+        updateGlobalState({ uiCheckingOnly: false });
+      }, 1000);
+    }
     
     return unregister;
   }, []);
@@ -235,9 +248,11 @@ export function usePwaDetection(): PwaDetection {
   return {
     displayModes,
     currentMode,
-    // 当检测中时，不返回安装状态，避免闪烁
+    // 当真正检测中时不返回安装状态，避免闪烁
+    // 当仅UI检测中时返回安装状态，以避免安装按钮闪烁
     isInstallable: isChecking ? false : !!deferredPrompt,
-    isChecking,
+    // 当真正检测中或UI检测中，都显示正在检测
+    isChecking: isChecking || uiCheckingOnly,
     promptInstall,
     resetChecking,
     userAgent
