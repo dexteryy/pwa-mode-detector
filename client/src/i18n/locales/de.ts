@@ -13,7 +13,8 @@ export default {
 
   // Entry Page
   entry_title: "PWA Display-Modus Demo",
-  entry_subtitle: "Wählen Sie einen Display-Modus um zu sehen, wie PWAs unterschiedlich ausgeführt werden",
+  entry_subtitle:
+    "Wählen Sie einen Display-Modus um zu sehen, wie PWAs unterschiedlich ausgeführt werden",
   what_is_pwa_display_mode: "Was ist ein PWA Display-Modus?",
   pwa_display_mode_description:
     "Progressive Web Apps (PWAs) können in verschiedener Weise auf dem Gerät des Benutzers angezeigt werden. Die 'display'-Eigenschaft im Web App Manifest definiert den Anzeigemodus und beeinflusst, welche Browser-UI-Elemente sichtbar sind und wie die App allgemein erscheint.",
@@ -25,16 +26,19 @@ export default {
     "Jede PWA verwendet den gleichen Codebase, hat aber unterschiedliche Web App Manifest-Konfigurationen. Die App erkennt den tatsächlichen Laufmodus und vergleicht ihn mit dem im Manifest deklarierten erwarteten Modus.",
   browser_support_note:
     "Für das volle PWA-Erlebnis verwenden Sie bitte einen PWA-fähigen Browser (wie Chrome, Edge, Safari) und installieren Sie die App.",
-  footer_text: "PWA Display-Modus Demo | Wählen Sie einen Modus, um zu beginnen",
+  footer_text:
+    "PWA Display-Modus Demo | Wählen Sie einen Modus, um zu beginnen",
 
   // Display Modes
-  standalone_name: "Eigenständig (standalone)",
+  standalone_name: "Eigenständig",
   standalone_description: "App läuft in einem eigenen Fenster ohne Browser-UI",
-  minimal_ui_name: "Minimale UI (minimal-ui)",
-  minimal_ui_description: "App läuft in einem Fenster mit minimalen Browser-Steuerelementen",
-  fullscreen_name: "Vollbild (fullscreen)",
-  fullscreen_description: "App nimmt den gesamten Bildschirm ein, ohne Browser-UI",
-  browser_name: "Browser (browser)",
+  minimal_ui_name: "Minimale UI",
+  minimal_ui_description:
+    "App läuft in einem Fenster mit minimalen Browser-Steuerelementen",
+  fullscreen_name: "Vollbild",
+  fullscreen_description:
+    "App nimmt den gesamten Bildschirm ein, ohne Browser-UI",
+  browser_name: "Browser",
   browser_description: "App läuft in einem normalen Browser-Tab",
 
   // Status Card
@@ -49,12 +53,14 @@ export default {
   install_capability_title: "Installationsstatus",
   install_disabled_manifest_browser:
     "Der 'display'-Modus im Web App Manifest ist 'browser', dieser Modus unterstützt keine Installation",
-  install_disabled_browser_unsupported: "Ihr Browser unterstützt keine PWA-Installation",
+  install_disabled_browser_unsupported:
+    "Ihr Browser unterstützt keine PWA-Installation",
   install_button_disabled: "Installation nicht verfügbar",
 
   // PWA Detector
   detector_title: "PWA Display-Modus Detektor",
-  detector_subtitle: "Dieses Tool erkennt, wie Ihre PWA derzeit ausgeführt wird",
+  detector_subtitle:
+    "Dieses Tool erkennt, wie Ihre PWA derzeit ausgeführt wird",
   current_mode: "Aktueller Modus",
   expected_mode: "Erwarteter Modus",
   pwa_window: "PWA Eigenständig",
@@ -67,10 +73,13 @@ export default {
   detector_mode_mismatch:
     "Der erkannte Ausführungsmodus unterscheidet sich vom im manifest konfigurierten. Dies könnte daran liegen, dass Ihr Browser diesen Modus nicht unterstützt oder die App noch nicht installiert ist.",
   status_standalone_running: "Die App läuft bereits im eigenständigen Modus",
-  status_minimal_ui_prompt: "Sie können diese App installieren, um den vollständigen eigenständigen Modus zu erleben",
+  status_minimal_ui_prompt:
+    "Sie können diese App installieren, um den vollständigen eigenständigen Modus zu erleben",
   status_fullscreen_running: "Die App läuft bereits im Vollbildmodus",
-  status_browser_installable: "Sie können diese App installieren, um den PWA eigenständigen Modus zu erleben",
-  status_browser_not_installable: "Ihr Browser unterstützt keine PWA-Installation",
+  status_browser_installable:
+    "Sie können diese App installieren, um den PWA eigenständigen Modus zu erleben",
+  status_browser_not_installable:
+    "Ihr Browser unterstützt keine PWA-Installation",
   status_browser_checking: "Überprüfe, ob diese Seite installierbar ist...",
   checking: "Überprüfe...",
   browser_mode_info:
@@ -78,11 +87,13 @@ export default {
   mode_active: "Aktiv",
   mode_inactive: "Inaktiv",
   about_pwa_modes: "Über PWA-Modi",
-  pwa_different_modes: "Progressive Web Apps (PWAs) können in verschiedenen Anzeigemodi ausgeführt werden:",
+  pwa_different_modes:
+    "Progressive Web Apps (PWAs) können in verschiedenen Anzeigemodi ausgeführt werden:",
 
   // Refresh Toast
   refreshing: "Aktualisiere...",
-  refresh_process: "Überprüfe Display-Modus, Installationsstatus und aktualisiere Manifest-Informationen",
+  refresh_process:
+    "Überprüfe Display-Modus, Installationsstatus und aktualisiere Manifest-Informationen",
 
   // Manifest Viewer
   manifest_viewer_title: "Web App Manifest",

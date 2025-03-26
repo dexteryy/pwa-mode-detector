@@ -13,7 +13,8 @@ export default {
 
   // Page d'accueil
   entry_title: "Démo des modes d'affichage PWA",
-  entry_subtitle: "Choisissez un mode d'affichage pour voir comment les PWA fonctionnent différemment",
+  entry_subtitle:
+    "Choisissez un mode d'affichage pour voir comment les PWA fonctionnent différemment",
   what_is_pwa_display_mode: "Qu'est-ce qu'un mode d'affichage PWA ?",
   pwa_display_mode_description:
     "Les Progressive Web Apps (PWA) peuvent s'afficher de différentes manières sur l'appareil de l'utilisateur. La propriété 'display' dans le Web App Manifest définit le mode d'affichage et influence quels éléments de l'interface utilisateur du navigateur sont visibles et l'apparence générale de l'application.",
@@ -25,17 +26,22 @@ export default {
     "Chaque PWA utilise la même base de code, mais avec différentes configurations de Web App Manifest. L'application détectera le mode d'exécution réel et le comparera au mode attendu déclaré dans le manifest.",
   browser_support_note:
     "Pour une expérience PWA complète, veuillez utiliser un navigateur compatible PWA (comme Chrome, Edge, Safari) et installer l'application.",
-  footer_text: "Démo des modes d'affichage PWA | Choisissez un mode pour commencer",
+  footer_text:
+    "Démo des modes d'affichage PWA | Choisissez un mode pour commencer",
 
   // Modes d'affichage
-  standalone_name: "Autonome (standalone)",
-  standalone_description: "L'application fonctionne dans sa propre fenêtre sans interface utilisateur de navigateur",
-  minimal_ui_name: "Interface minimale (minimal-ui)",
-  minimal_ui_description: "L'application fonctionne dans une fenêtre avec des contrôles de navigateur minimaux",
-  fullscreen_name: "Plein écran (fullscreen)",
-  fullscreen_description: "L'application occupe tout l'écran, sans interface utilisateur de navigateur",
-  browser_name: "Navigateur (browser)",
-  browser_description: "L'application fonctionne dans un onglet de navigateur normal",
+  standalone_name: "Autonome",
+  standalone_description:
+    "L'application fonctionne dans sa propre fenêtre sans interface utilisateur de navigateur",
+  minimal_ui_name: "Interface minimale",
+  minimal_ui_description:
+    "L'application fonctionne dans une fenêtre avec des contrôles de navigateur minimaux",
+  fullscreen_name: "Plein écran",
+  fullscreen_description:
+    "L'application occupe tout l'écran, sans interface utilisateur de navigateur",
+  browser_name: "Navigateur",
+  browser_description:
+    "L'application fonctionne dans un onglet de navigateur normal",
 
   // Carte de statut
   current_status: "Statut actuel",
@@ -45,16 +51,19 @@ export default {
   already_installed: "Déjà installé",
   install_pwa: "Installer la PWA",
   refresh_detection: "Actualiser",
-  status_browser_running: "L'application fonctionne en mode navigateur standard",
+  status_browser_running:
+    "L'application fonctionne en mode navigateur standard",
   install_capability_title: "Statut d'installation",
   install_disabled_manifest_browser:
     "Le mode d'affichage du manifeste est 'browser', ce mode ne prend pas en charge l'installation",
-  install_disabled_browser_unsupported: "Votre navigateur ne prend pas en charge l'installation de PWA",
+  install_disabled_browser_unsupported:
+    "Votre navigateur ne prend pas en charge l'installation de PWA",
   install_button_disabled: "Installation non disponible",
 
   // Détecteur PWA
   detector_title: "Détecteur de mode d'affichage PWA",
-  detector_subtitle: "Cet outil détecte comment votre PWA fonctionne actuellement",
+  detector_subtitle:
+    "Cet outil détecte comment votre PWA fonctionne actuellement",
   current_mode: "Mode actuel",
   expected_mode: "Mode attendu",
   pwa_window: "PWA autonome",
@@ -67,10 +76,14 @@ export default {
   detector_mode_mismatch:
     "Le mode d'exécution détecté diffère de celui configuré dans le manifest. Cela pourrait être dû au fait que votre navigateur ne prend pas en charge ce mode ou que l'application n'est pas encore installée.",
   status_standalone_running: "L'application fonctionne déjà en mode autonome",
-  status_minimal_ui_prompt: "Vous pouvez installer cette application pour expérimenter le mode autonome complet",
-  status_fullscreen_running: "L'application fonctionne déjà en mode plein écran",
-  status_browser_installable: "Vous pouvez installer cette application pour expérimenter le mode autonome PWA",
-  status_browser_not_installable: "Votre navigateur ne prend pas en charge l'installation de PWA",
+  status_minimal_ui_prompt:
+    "Vous pouvez installer cette application pour expérimenter le mode autonome complet",
+  status_fullscreen_running:
+    "L'application fonctionne déjà en mode plein écran",
+  status_browser_installable:
+    "Vous pouvez installer cette application pour expérimenter le mode autonome PWA",
+  status_browser_not_installable:
+    "Votre navigateur ne prend pas en charge l'installation de PWA",
   status_browser_checking: "Vérification si cette page est installable...",
   checking: "Vérification...",
   browser_mode_info:
@@ -78,11 +91,13 @@ export default {
   mode_active: "Actif",
   mode_inactive: "Inactif",
   about_pwa_modes: "À propos des modes PWA",
-  pwa_different_modes: "Les applications web progressives (PWA) peuvent fonctionner dans différents modes d'affichage :",
+  pwa_different_modes:
+    "Les applications web progressives (PWA) peuvent fonctionner dans différents modes d'affichage :",
 
   // Toast d'actualisation
   refreshing: "Actualisation...",
-  refresh_process: "Vérification du mode d'affichage, du statut d'installation et mise à jour des informations du manifest",
+  refresh_process:
+    "Vérification du mode d'affichage, du statut d'installation et mise à jour des informations du manifest",
 
   // Visionneuse de manifest
   manifest_viewer_title: "Web App Manifest",
