@@ -11,63 +11,63 @@ import pt from './locales/pt';
 import ko from './locales/ko';
 import { addLinksToI18nResources } from '../lib/linkTerms';
 
-// 存储在localStorage中的键名
+// Key name for storage in localStorage
 const LANGUAGE_STORAGE_KEY = 'pwa-detector-language';
 
-// 支持的语言列表
+// List of supported languages
 const SUPPORTED_LANGUAGES = ['en', 'zh', 'zh-TW', 'ja', 'de', 'fr', 'es', 'pt', 'ko'];
 
-// 获取用户的首选语言
+// Get user's preferred language
 function getInitialLanguage(): string {
-  // 1. 首先检查localStorage中是否有存储的语言选择
+  // 1. First check if there's a stored language preference in localStorage
   const storedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
   if (storedLanguage && SUPPORTED_LANGUAGES.includes(storedLanguage)) {
     return storedLanguage;
   }
   
-  // 2. 如果没有存储的语言，检查浏览器/系统语言
+  // 2. If no stored language, check browser/system language
   const browserLanguages = navigator.languages || [navigator.language];
   
-  // 检查特定语言代码
+  // Check for specific language codes
   for (const lang of browserLanguages) {
     const lowerLang = lang.toLowerCase();
     
-    // 检查日语
+    // Check Japanese
     if (lowerLang === 'ja' || lowerLang === 'ja-jp') {
       return 'ja';
     }
     
-    // 检查韩语
+    // Check Korean
     if (lowerLang === 'ko' || lowerLang === 'ko-kr') {
       return 'ko';
     }
     
-    // 检查德语
+    // Check German
     if (lowerLang === 'de' || lowerLang.startsWith('de-')) {
       return 'de';
     }
     
-    // 检查法语
+    // Check French
     if (lowerLang === 'fr' || lowerLang.startsWith('fr-')) {
       return 'fr';
     }
     
-    // 检查西班牙语
+    // Check Spanish
     if (lowerLang === 'es' || lowerLang.startsWith('es-')) {
       return 'es';
     }
     
-    // 检查葡萄牙语
+    // Check Portuguese
     if (lowerLang === 'pt' || lowerLang.startsWith('pt-')) {
       return 'pt';
     }
     
-    // 检查繁体中文 (zh-TW, zh-HK 等)
+    // Check Traditional Chinese (zh-TW, zh-HK, etc.)
     if (lowerLang === 'zh-tw' || lowerLang === 'zh-hk') {
       return 'zh-TW';
     }
     
-    // 检查简体中文 (zh-CN, zh-SG 等)
+    // Check Simplified Chinese (zh-CN, zh-SG, etc.)
     if (lowerLang.startsWith('zh')) {
       return 'zh';
     }
