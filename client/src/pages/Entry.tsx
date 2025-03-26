@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import { useEffect } from "react";
 import { Globe, Layout, Smartphone, Maximize, ArrowRight, Code } from "lucide-react";
+import TechTermLink, { TECH_TERM_URLS } from "../components/TechTermLink";
 
 // 定义 PWA 的 display 模式选项
 interface DisplayMode {
@@ -99,7 +100,35 @@ const Entry = () => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t('what_is_pwa_display_mode')}</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('pwa_display_mode_description')}
+              {t('pwa_display_mode_description')
+                .replace(/PWA|Progressive Web App/g, match => 
+                  `<pwa>${match}</pwa>`
+                )
+                .replace(/Web App Manifest/g, match => 
+                  `<manifest>${match}</manifest>`
+                )
+                .replace(/display(?!\w)/g, match => 
+                  `<display>${match}</display>`
+                )
+                .split(/<(pwa|manifest|display)>([^<]+)<\/\1>/g)
+                .map((part, i, array) => {
+                  if (i % 3 === 0) return part;
+                  const type = array[i-1];
+                  const content = array[i];
+                  
+                  if (type === 'pwa') {
+                    const url = content === 'PWA' ? TECH_TERM_URLS.PWA : TECH_TERM_URLS['Progressive Web App'];
+                    return <TechTermLink key={i} term={content} url={url}>{content}</TechTermLink>;
+                  }
+                  if (type === 'manifest') {
+                    return <TechTermLink key={i} term={content} url={TECH_TERM_URLS['Web App Manifest']}>{content}</TechTermLink>;
+                  }
+                  if (type === 'display') {
+                    return <TechTermLink key={i} term={content} url={TECH_TERM_URLS.display}>{content}</TechTermLink>;
+                  }
+                  return part;
+                })
+              }
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('click_card_instruction')}
@@ -134,10 +163,47 @@ const Entry = () => {
               {t('technical_details')}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('technical_description')}
+              {t('technical_description')
+                .replace(/PWA/g, match => 
+                  `<pwa>${match}</pwa>`
+                )
+                .replace(/Web App Manifest/g, match => 
+                  `<manifest>${match}</manifest>`
+                )
+                .replace(/manifest(?!s)/g, match => 
+                  `<manifest-term>${match}</manifest-term>`
+                )
+                .split(/<(pwa|manifest|manifest-term)>([^<]+)<\/\1>/g)
+                .map((part, i, array) => {
+                  if (i % 3 === 0) return part;
+                  const type = array[i-1];
+                  const content = array[i];
+                  
+                  if (type === 'pwa') {
+                    return <TechTermLink key={i} term={content} url={TECH_TERM_URLS.PWA}>{content}</TechTermLink>;
+                  }
+                  if (type === 'manifest') {
+                    return <TechTermLink key={i} term={content} url={TECH_TERM_URLS['Web App Manifest']}>{content}</TechTermLink>;
+                  }
+                  if (type === 'manifest-term') {
+                    return <TechTermLink key={i} term={content} url={TECH_TERM_URLS['Web App Manifest']}>{content}</TechTermLink>;
+                  }
+                  return part;
+                })
+              }
             </p>
             <p className="text-gray-600 dark:text-gray-300">
-              {t('browser_support_note')}
+              {t('browser_support_note')
+                .replace(/PWA/g, match => 
+                  `<pwa>${match}</pwa>`
+                )
+                .split(/<(pwa)>([^<]+)<\/\1>/g)
+                .map((part, i, array) => {
+                  if (i % 3 === 0) return part;
+                  const content = array[i+1];
+                  return <TechTermLink key={i} term={content} url={TECH_TERM_URLS.PWA}>{content}</TechTermLink>;
+                })
+              }
             </p>
           </div>
           
