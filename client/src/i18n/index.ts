@@ -73,18 +73,18 @@ function getInitialLanguage(): string {
     }
   }
   
-  // 默认使用英语
+  // Default to English
   return 'en';
 }
 
-// 需要添加链接的文本键
+// Text keys that need links added
 const KEYS_WITH_LINKS = [
   'pwa_display_mode_description',
   'technical_description'
 ];
 
-// 为所有语言资源添加链接
-console.log("准备为以下键添加链接:", KEYS_WITH_LINKS);
+// Add links to all language resources
+console.log("Preparing to add links to the following keys:", KEYS_WITH_LINKS);
 const resources = addLinksToI18nResources(
   {
     en: {
@@ -117,25 +117,25 @@ const resources = addLinksToI18nResources(
   },
   KEYS_WITH_LINKS
 );
-console.log("链接处理完成");
+console.log("Link processing completed");
 
-// 初始化i18next
+// Initialize i18next
 i18n
-  .use(initReactI18next) // 将i18n传递给react-i18next
+  .use(initReactI18next) // Pass i18n to react-i18next
   .init({
     resources,
-    lng: getInitialLanguage(), // 根据用户偏好设置默认语言
-    fallbackLng: 'en', // 回退语言
+    lng: getInitialLanguage(), // Set default language based on user preference
+    fallbackLng: 'en', // Fallback language
     interpolation: {
-      escapeValue: false // 不转义HTML内容
+      escapeValue: false // Don't escape HTML content
     }
   });
 
 export const changeLanguage = (language: string) => {
-  // 改变语言
+  // Change language
   i18n.changeLanguage(language);
   
-  // 将用户选择保存到localStorage
+  // Save user choice to localStorage
   localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
 };
 
