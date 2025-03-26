@@ -33,6 +33,7 @@ const PWADetector = () => {
   
   console.log("当前路径:", path, "预期模式:", expectedMode);
   
+  // 将当前路径作为强制刷新的key传递给hook
   const { 
     displayModes, 
     currentMode, 
@@ -41,7 +42,7 @@ const PWADetector = () => {
     promptInstall,
     resetChecking,
     userAgent 
-  } = usePwaDetection();
+  } = usePwaDetection(path); // 传递当前路径作为key，确保路径变化时重新检测
   
   const [isRefreshing, setIsRefreshing] = useState(false);
 

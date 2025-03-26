@@ -41,7 +41,7 @@ function updateGlobalState(updates: Partial<typeof globalCheckState>) {
   globalCheckState.listeners.forEach(listener => listener());
 }
 
-export function usePwaDetection(): PwaDetection {
+export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   const { t } = useTranslation();
   
   // Define available display modes with i18n
@@ -73,10 +73,8 @@ export function usePwaDetection(): PwaDetection {
   const [userAgent, setUserAgent] = useState<string>("");
   // 将状态连接到全局状态
   const [deferredPrompt, setDeferredPrompt] = useState<any>(globalCheckState.deferredPrompt);
-  const [isChecking, setIsChecking] = useState<boolean>(globalCheckState.isChecking);
-  const [hasCompletedInitialCheck, setHasCompletedInitialCheck] = useState<boolean>(
-    globalCheckState.hasCompletedInitialCheck
-  );
+  const [isChecking, setIsChecking] = useState<boolean>(true); // 每次组件挂载时都默认设为检查中状态
+  const [hasCompletedInitialCheck, setHasCompletedInitialCheck] = useState<boolean>(false);
 
   // 监听全局状态变化
   useEffect(() => {
@@ -114,11 +112,23 @@ export function usePwaDetection(): PwaDetection {
 
   // Set up event listeners for display mode changes
   useEffect(() => {
+    // 当路径变化或组件重新挂载时，强制设置为检查状态
+    setIsChecking(true);
+    
+    // 始终在路径变化时重新检测，无需检查全局状态
+    updateGlobalState({
+      isChecking: true,
+      hasCompletedInitialCheck: false
+    });
+    
     // Set user agent
     setUserAgent(navigator.userAgent);
     
     // Initial check
     checkDisplayMode();
+    
+    // 记录一下当前路径和检测状态
+    console.log(`[usePwaDetection] 路径变化: ${forcedPathKey}, 开始新检测`);
     
     // Listen for changes in each display mode
     const mediaQueries: MediaQueryList[] = [];
@@ -139,18 +149,17 @@ export function usePwaDetection(): PwaDetection {
       mediaQuery.addEventListener("change", handleChange);
     });
     
-    // 只在全局状态未完成检查时才执行初始检查
+    // 每次路径变化时都重新启动检测定时器
     let checkingTimer: any = null;
-    if (!globalCheckState.hasCompletedInitialCheck) {
-      // 设置为检查状态，并等待延迟完成初始检查
-      checkingTimer = setTimeout(() => {
-        // 初始检查完成后，更新全局状态
-        updateGlobalState({
-          hasCompletedInitialCheck: true,
-          isChecking: false
-        });
-      }, 2000); // 增加时间确保安装状态可以被正确确定
-    }
+    // 设置为检查状态，并等待延迟完成初始检查
+    checkingTimer = setTimeout(() => {
+      // 检查完成后，更新全局状态
+      updateGlobalState({
+        hasCompletedInitialCheck: true,
+        isChecking: false
+      });
+      console.log(`[usePwaDetection] 检测完成: ${forcedPathKey}`);
+    }, 2000); // 增加时间确保安装状态可以被正确确定
     
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -194,7 +203,7 @@ export function usePwaDetection(): PwaDetection {
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [displayModes]); // 只依赖 displayModes，不再依赖 hasCompletedInitialCheck
+  }, [displayModes, forcedPathKey]); // 依赖 displayModes 和路径，确保路径变化时重新检测
 
   // Function to prompt installation
   const promptInstall = () => {
