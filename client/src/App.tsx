@@ -49,25 +49,32 @@ function ManifestHandler({ children }: { children: ReactNode }) {
   const [manifestUrl, setManifestUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentManifestPath, setCurrentManifestPath] = useState<string | null>(null);
   
+  // Set up no-cache meta tag only once at component mount
   useEffect(() => {
     // Set meta tag to disable caching, ensuring manifest updates promptly
     let noCacheMeta = document.querySelector('meta[http-equiv="Cache-Control"]');
     if (!noCacheMeta) {
       noCacheMeta = document.createElement('meta');
       noCacheMeta.setAttribute('http-equiv', 'Cache-Control');
+      noCacheMeta.setAttribute('content', 'no-cache, no-store, must-revalidate');
       document.head.appendChild(noCacheMeta);
+      console.log('[ManifestHandler] Added no-cache meta tag');
     }
-    noCacheMeta.setAttribute('content', 'no-cache, no-store, must-revalidate');
     
-    // Reset state
-    setManifestInfo(null);
-    setManifestUrl(null);
-    setError(null);
-    
-    // First remove all existing manifest links to ensure no duplicate manifests
-    const existingLinks = document.querySelectorAll('link[rel="manifest"]');
-    existingLinks.forEach(link => link.parentNode?.removeChild(link));
+    // Clean up all manifest links when component unmounts completely
+    return () => {
+      const links = document.querySelectorAll('link[rel="manifest"]');
+      links.forEach(link => link.parentNode?.removeChild(link));
+      console.log('[ManifestHandler] Cleanup on unmount: removed all manifest links');
+    };
+  }, []); // Empty dependency array means this runs once on mount
+  
+  // Handle manifest changes when location changes
+  useEffect(() => {
+    // Construct the base URL without timestamp
+    let baseUrl: string | null = null;
     
     // For entry page ('/') or any unspecified pages, don't add any manifest and exit early
     if (location === '/' || 
@@ -77,35 +84,62 @@ function ManifestHandler({ children }: { children: ReactNode }) {
          !location.startsWith('/browser') && 
          !location.startsWith('/pwa/'))) {
       console.log('[ManifestHandler] Root or unknown path detected, no manifest added');
+      
+      // If we previously had a manifest, clean it up
+      if (currentManifestPath) {
+        const existingLinks = document.querySelectorAll('link[rel="manifest"]');
+        existingLinks.forEach(link => link.parentNode?.removeChild(link));
+        setCurrentManifestPath(null);
+        setManifestInfo(null);
+        setManifestUrl(null);
+      }
       return;
     }
     
-    // Add timestamp to prevent caching issues
-    const timestamp = new Date().getTime();
-    let url: string | null = null;
-    
     // Determine correct manifest URL based on path
     if (location.startsWith('/standalone')) {
-      url = `/manifests/standalone.json?v=${timestamp}`;
+      baseUrl = '/manifests/standalone.json';
     } 
     else if (location.startsWith('/minimal-ui')) {
-      url = `/manifests/minimal-ui.json?v=${timestamp}`;
+      baseUrl = '/manifests/minimal-ui.json';
     }
     else if (location.startsWith('/fullscreen')) {
-      url = `/manifests/fullscreen.json?v=${timestamp}`;
+      baseUrl = '/manifests/fullscreen.json';
     }
     else if (location.startsWith('/browser')) {
-      url = `/manifests/browser.json?v=${timestamp}`;
+      baseUrl = '/manifests/browser.json';
       console.log("[ManifestHandler] Browser mode manifest path detected");
     }
     else if (location.startsWith('/pwa/')) {
-      url = `/manifest.json?v=${timestamp}`;
+      baseUrl = '/manifest.json';
     }
     
+    // Skip if this is the same manifest we're already using
+    if (baseUrl === currentManifestPath) {
+      console.log(`[ManifestHandler] Manifest already set to ${baseUrl}, skipping reload`);
+      return;
+    }
+    
+    // Clean up existing manifest if we're changing to a new one
+    const existingLinks = document.querySelectorAll('link[rel="manifest"]');
+    if (existingLinks.length > 0) {
+      console.log(`[ManifestHandler] Removing ${existingLinks.length} existing manifest links`);
+      existingLinks.forEach(link => link.parentNode?.removeChild(link));
+    }
+    
+    // Reset state for new manifest loading
+    setManifestInfo(null);
+    setError(null);
+    
     // If we have a valid URL, create the link tag and fetch manifest data
-    if (url) {
+    if (baseUrl) {
+      // Add timestamp to prevent caching issues
+      const timestamp = new Date().getTime();
+      const url = `${baseUrl}?v=${timestamp}`;
+      
       setIsLoading(true);
       setManifestUrl(url);
+      setCurrentManifestPath(baseUrl);
       
       // Create new manifest link for PWA pages
       const newLink = document.createElement('link');
@@ -133,13 +167,7 @@ function ManifestHandler({ children }: { children: ReactNode }) {
           setIsLoading(false);
         });
     }
-    
-    // Also clean up all manifest links when component unmounts
-    return () => {
-      const links = document.querySelectorAll('link[rel="manifest"]');
-      links.forEach(link => link.parentNode?.removeChild(link));
-    };
-  }, [location]);
+  }, [location, currentManifestPath]);
   
   // Provide context value
   const contextValue: ManifestContextType = {
