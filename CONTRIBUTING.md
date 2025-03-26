@@ -4,7 +4,6 @@ Thank you for considering contributing to the PWA Display Mode Detector project!
 
 ## Table of Contents
 
-- [Code of Conduct](#code-of-conduct)
 - [How to Contribute](#how-to-contribute)
   - [Reporting Issues](#reporting-issues)
   - [Suggesting Enhancements](#suggesting-enhancements)
@@ -19,10 +18,6 @@ Thank you for considering contributing to the PWA Display Mode Detector project!
 - [Pull Request Process](#pull-request-process)
 
 English | [简体中文](./CONTRIBUTING.zh.md)
-
-## Code of Conduct
-
-This project adheres to the Contributor Covenant. We expect all participants to adhere to our [Code of Conduct](CODE_OF_CONDUCT.md). Please read the full text to understand what actions will and will not be tolerated.
 
 ## How to Contribute
 
