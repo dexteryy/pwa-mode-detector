@@ -5,14 +5,14 @@ import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, Packa
 interface StatusCardProps {
   mode: string;
   isInstallable: boolean;
-  expectedMode?: string;  // 预期模式，可选参数
+  expectedMode?: string;  // Expected mode, optional parameter
 }
 
 const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
   const { t } = useTranslation();
   const { isChecking, promptInstall } = usePwaDetection();
   
-  // 模式检测卡片样式
+  // Mode detection card styling
   let cardBorderColor = "border-amber-500";
   let iconColorClass = "text-amber-500";
   let ModeIcon = Globe;
@@ -40,17 +40,17 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
     modeStatusText = `${t('current_mode')}: ${t('browser_name')}`;
   }
 
-  // 确定安装不能的原因，仅在非检查状态时
+  // Determine why installation is disabled, only when not checking
   let installDisabledReason = "";
   if (!isInstallable && !isChecking) {
-    // 使用传入的expectedMode或默认为当前mode
+    // Use the provided expectedMode or default to current mode
     const actualExpectedMode = expectedMode || mode;
     
-    // 如果预期模式为browser，提供特定的消息
+    // If expected mode is browser, provide a specific message
     if (actualExpectedMode === 'browser') {
       installDisabledReason = t('install_disabled_manifest_browser');
     } else {
-      // 其他模式（standalone、minimal-ui、fullscreen）显示浏览器不支持的消息
+      // For other modes (standalone, minimal-ui, fullscreen) show browser not supported message
       installDisabledReason = t('install_disabled_browser_unsupported');
     }
   }
@@ -58,13 +58,13 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-4 border-l-4 ${cardBorderColor}`}>
       <div className="flex flex-col space-y-4">
-        {/* 当前模式部分 */}
+        {/* Current mode section */}
         <div className="flex items-center">
           <ModeIcon className={`h-6 w-6 mr-3 ${iconColorClass}`} />
           <h2 className="text-xl font-semibold text-dark dark:text-white">{modeStatusText}</h2>
         </div>
         
-        {/* 安装按钮部分 - 在所有模式下显示 */}
+        {/* Install button section - shown in all modes */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
           <div className="flex-grow overflow-hidden pr-4">
             {isChecking ? (
@@ -95,7 +95,7 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
             )}
           </div>
           
-          {/* 安装按钮 */}
+          {/* Install button */}
           <div className="mt-4 sm:mt-0 w-full sm:w-auto sm:flex-shrink-0">
             {isChecking ? (
               <button 
@@ -120,7 +120,7 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
                   <span className="truncate">{t('install_pwa')}</span>
                 </button>
                 
-                {/* 当安装不可用时，显示悬浮提示 */}
+                {/* Show tooltip when installation is not available */}
                 {!isInstallable && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center sm:text-right">{t('install_button_disabled')}</p>
                 )}

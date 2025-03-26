@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { HelpCircle } from "lucide-react";
 
-// MDN display 模式链接地址
+// MDN display mode link URLs
 const DISPLAY_MODE_LINKS = {
   browser: "https://developer.mozilla.org/docs/Web/Manifest/display#browser",
   minimalUi: "https://developer.mozilla.org/docs/Web/Manifest/display#minimal-ui",
@@ -9,7 +9,7 @@ const DISPLAY_MODE_LINKS = {
   fullscreen: "https://developer.mozilla.org/docs/Web/Manifest/display#fullscreen"
 };
 
-// 样式类
+// Style class
 const linkClass = "text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline font-medium";
 
 const InfoCard = () => {
