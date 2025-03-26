@@ -55,26 +55,28 @@ const PWADetector = () => {
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-blue-500 text-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between flex-wrap">
-          <div className="flex items-center mb-2 sm:mb-0">
-            <span className="material-icons mr-2">devices</span>
-            <h1 className="text-xl font-semibold">{t('detector_title')}</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <Link href="/">
-              <div className="bg-white text-blue-500 px-2 sm:px-3 py-1 rounded-full hover:bg-blue-50 transition-colors flex items-center cursor-pointer">
-                <span className="material-icons text-sm mr-1">home</span>
-                <span className="hidden sm:inline">{t('back_to_home')}</span>
-              </div>
-            </Link>
-            <button 
-              onClick={handleRefresh}
-              className={`bg-white text-blue-500 w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-50 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
-              aria-label="Refresh detection"
-            >
-              <span className="material-icons">refresh</span>
-            </button>
-            <LanguageSwitcher />
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center mb-3 sm:mb-0">
+              <span className="material-icons mr-2">devices</span>
+              <h1 className="text-xl font-semibold">{t('detector_title')}</h1>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Link href="/">
+                <div className="bg-white text-blue-500 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors flex items-center cursor-pointer">
+                  <span className="material-icons text-sm mr-1">home</span>
+                  {t('back_to_home')}
+                </div>
+              </Link>
+              <button 
+                onClick={handleRefresh}
+                className={`bg-white text-blue-500 w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-50 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
+                aria-label="Refresh detection"
+              >
+                <span className="material-icons">refresh</span>
+              </button>
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </header>

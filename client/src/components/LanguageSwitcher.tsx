@@ -21,9 +21,9 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="bg-white text-blue-500 px-2 sm:px-4 py-2 flex items-center justify-center rounded-full hover:bg-blue-50 transition-colors cursor-pointer w-10 h-10 sm:w-auto sm:h-auto">
-          <Globe className="h-[1.2rem] w-[1.2rem] md:mr-2" />
-          <span className="hidden md:inline">{t('language')}</span>
+        <div className="bg-white text-blue-500 px-3 py-2 flex items-center justify-center rounded-full hover:bg-blue-50 transition-colors cursor-pointer">
+          <Globe className="h-[1.2rem] w-[1.2rem] mr-2" />
+          <span>{t('language')}</span>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

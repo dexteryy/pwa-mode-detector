@@ -45,11 +45,11 @@ const Entry = () => {
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-blue-500 text-white shadow-md">
-        <div className="container mx-auto px-4 py-6 relative">
-          <div className="absolute right-4 top-4 z-10">
-            <LanguageSwitcher />
-          </div>
-          <div className="pt-8 sm:pt-0">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col items-center">
+            <div className="w-full flex justify-end mb-2">
+              <LanguageSwitcher />
+            </div>
             <h1 className="text-2xl font-bold text-center">{t('entry_title')}</h1>
             <p className="text-center mt-2 text-blue-100">{t('entry_subtitle')}</p>
           </div>
