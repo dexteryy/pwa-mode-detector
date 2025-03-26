@@ -45,7 +45,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
       <DropdownMenuTrigger asChild>
         <div className={cn(
           "text-white flex items-center justify-center cursor-pointer whitespace-nowrap rounded-md", 
-          "w-16 h-10 hover:bg-blue-400/20 transition-colors",
+          "w-16 h-10 hover:bg-blue-400/20 dark:hover:bg-blue-500/30 transition-colors",
           className
         )}>
           <Globe className="h-4 w-4 mr-1" />
