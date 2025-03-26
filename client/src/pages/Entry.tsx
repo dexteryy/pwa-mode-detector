@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import { useEffect } from "react";
 
 // 定义 PWA 的 display 模式选项
 interface DisplayMode {
@@ -40,6 +41,32 @@ const getDisplayModes = (t: any): DisplayMode[] => [
 const Entry = () => {
   const { t } = useTranslation();
   const displayModes = getDisplayModes(t);
+
+  // 入口页面加载时主动移除所有的 manifest 链接
+  useEffect(() => {
+    // 移除所有现有的 manifest 链接
+    const existingLinks = document.querySelectorAll('link[rel="manifest"]');
+    existingLinks.forEach(link => {
+      if (link.parentNode) {
+        link.parentNode.removeChild(link);
+      }
+    });
+    console.log('[Entry] 主动移除所有 manifest 链接，防止显示安装按钮');
+
+    // 添加特殊的空 manifest，进一步防止安装按钮显示
+    const emptyManifest = document.createElement('link');
+    emptyManifest.rel = 'manifest';
+    emptyManifest.href = 'data:application/json,{}';
+    document.head.appendChild(emptyManifest);
+
+    // 退出时清理
+    return () => {
+      const emptyLink = document.querySelector('link[href="data:application/json,{}"]');
+      if (emptyLink && emptyLink.parentNode) {
+        emptyLink.parentNode.removeChild(emptyLink);
+      }
+    };
+  }, []);
   
   return (
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
