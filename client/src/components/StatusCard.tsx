@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { usePwaDetection } from "../hooks/usePwaDetection";
+import { CheckCircle, Minimize, Maximize, Globe, HourglassClock, Download, Ban, SystemUpdate, X } from "lucide-react";
 
 interface StatusCardProps {
   mode: string;
@@ -13,29 +14,29 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
   
   // 模式检测卡片样式
   let cardBorderColor = "border-amber-500";
-  let modeIconClassName = "material-icons text-3xl mr-3 ";
-  let modeIconName = "";
+  let iconColorClass = "text-amber-500";
+  let ModeIcon = Globe;
   let modeStatusText = "";
 
   if (mode === "standalone") {
     cardBorderColor = "border-green-500";
-    modeIconClassName += "text-green-500";
-    modeIconName = "check_circle";
+    iconColorClass = "text-green-500";
+    ModeIcon = CheckCircle;
     modeStatusText = `${t('current_mode')}: ${t('standalone_name')}`;
   } else if (mode === "minimal-ui") {
     cardBorderColor = "border-blue-500";
-    modeIconClassName += "text-blue-500";
-    modeIconName = "view_compact";
+    iconColorClass = "text-blue-500";
+    ModeIcon = Minimize;
     modeStatusText = `${t('current_mode')}: ${t('minimal_ui_name')}`;
   } else if (mode === "fullscreen") {
     cardBorderColor = "border-blue-500";
-    modeIconClassName += "text-blue-500";
-    modeIconName = "fullscreen";
+    iconColorClass = "text-blue-500";
+    ModeIcon = Maximize;
     modeStatusText = `${t('current_mode')}: ${t('fullscreen_name')}`;
   } else {
     cardBorderColor = "border-amber-500";
-    modeIconClassName += "text-amber-500";
-    modeIconName = "public";
+    iconColorClass = "text-amber-500";
+    ModeIcon = Globe;
     modeStatusText = `${t('current_mode')}: ${t('browser_name')}`;
   }
 

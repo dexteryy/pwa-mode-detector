@@ -7,6 +7,7 @@ import { usePwaDetection } from "@/hooks/usePwaDetection";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import { ArrowLeft, RefreshCw, Smartphone, CheckCircle, Info } from "lucide-react";
 
 const PWADetector = () => {
   const { t } = useTranslation();
@@ -65,11 +66,11 @@ const PWADetector = () => {
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
       {/* Navigation Bar */}
       <div className="bg-blue-700 text-white">
-        <div className="container mx-auto px-0">
+        <div className="w-full mx-auto">
           <div className="flex items-center justify-between">
             <Link href="/">
               <div className="text-white h-10 pl-2 pr-3 flex items-center cursor-pointer whitespace-nowrap hover:bg-blue-600/40 transition-colors">
-                <span className="material-icons text-sm mr-1">arrow_back</span>
+                <ArrowLeft className="h-4 w-4 mr-1" />
                 {t('back_to_home')}
               </div>
             </Link>
@@ -79,7 +80,7 @@ const PWADetector = () => {
                 className={`text-white h-10 w-10 flex items-center justify-center hover:bg-blue-600/40 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
                 aria-label="Refresh detection"
               >
-                <span className="material-icons text-sm">refresh</span>
+                <RefreshCw className="h-4 w-4" />
               </button>
               <LanguageSwitcher className="h-10" />
             </div>
@@ -91,7 +92,7 @@ const PWADetector = () => {
       <header className="bg-blue-500 text-white shadow-md">
         <div className="container mx-auto px-4 py-5">
           <div className="flex items-center justify-center">
-            <span className="material-icons mr-2">devices</span>
+            <Smartphone className="h-5 w-5 mr-2" />
             <h1 className="text-xl font-semibold">{t('detector_title')}</h1>
           </div>
         </div>
@@ -103,7 +104,11 @@ const PWADetector = () => {
           {/* Manifest mode banner */}
           <div className={`mb-4 p-4 rounded-lg ${expectedMode === currentMode ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
             <div className="flex items-center">
-              <span className="material-icons mr-2">{expectedMode === currentMode ? 'check_circle' : 'info'}</span>
+              {expectedMode === currentMode ? (
+                <CheckCircle className="h-5 w-5 mr-2" />
+              ) : (
+                <Info className="h-5 w-5 mr-2" />
+              )}
               <h2 className="font-semibold">
                 {t('expected_mode')}: <span className="font-bold">{expectedMode}</span>
               </h2>
@@ -121,7 +126,7 @@ const PWADetector = () => {
           {/* Detection details card */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-lg font-semibold text-dark mb-4 flex items-center">
-              <span className="material-icons mr-2">info</span>
+              <Info className="h-5 w-5 mr-2" />
               {t('detector_subtitle')}
             </h2>
             
