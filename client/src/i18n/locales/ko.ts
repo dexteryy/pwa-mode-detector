@@ -16,13 +16,13 @@ export default {
   entry_subtitle: "PWA가 다양하게 작동하는 방식을 보려면 디스플레이 모드를 선택하세요",
   what_is_pwa_display_mode: "PWA 디스플레이 모드란 무엇인가요?",
   pwa_display_mode_description:
-    "프로그레시브 웹 앱(PWA)은 사용자 장치에서 다양한 방식으로 표시될 수 있습니다. 웹 앱 매니페스트의 디스플레이 속성은 표시 모드를 정의하고 어떤 브라우저 UI 요소가 표시되는지와 앱의 전체적인 모양에 영향을 줍니다.",
+    "Progressive Web Apps(PWA)은 사용자 장치에서 다양한 방식으로 표시될 수 있습니다. Web App Manifest의 'display' 속성은 표시 모드를 정의하고 어떤 브라우저 UI 요소가 표시되는지와 앱의 전체적인 모양에 영향을 줍니다.",
   click_card_instruction:
     "아래 카드 중 하나를 클릭하여 해당 특정 디스플레이 모드로 설정된 PWA로 이동합니다. 설치 후에는 모드에 따라 사용자 경험이 어떻게 달라지는지 관찰할 수 있습니다.",
   view_demo: "데모 보기",
   technical_details: "기술 세부사항",
   technical_description:
-    "각 PWA는 동일한 코드베이스를 사용하지만 웹 앱 매니페스트 구성이 다릅니다. 앱은 실제 실행 모드를 감지하고 매니페스트에 선언된 예상 모드와 비교합니다.",
+    "각 PWA는 동일한 코드베이스를 사용하지만 Web App Manifest 구성이 다릅니다. 앱은 실제 실행 모드를 감지하고 manifest에 선언된 예상 모드와 비교합니다.",
   browser_support_note:
     "전체 PWA 경험을 위해 PWA를 지원하는 브라우저(Chrome, Edge, Safari와 같은)를 사용하고 앱을 설치하세요.",
   footer_text: "PWA 디스플레이 모드 데모 | 시작하려면 모드를 선택하세요",
