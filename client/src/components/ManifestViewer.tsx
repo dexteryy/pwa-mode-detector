@@ -49,9 +49,9 @@ const ManifestViewer: React.FC = () => {
     
     setLocalLoading(true);
     
-    // Try loading hardcoded data first instead of relying on network
-    if (manifestType === 'standalone') {
-      setLocalManifest({
+    // 使用硬编码数据
+    const manifestData = {
+      'standalone': {
         "id": "pwa-mode-detector-standalone",
         "name": "PWA Mode Detector - Standalone",
         "short_name": "PWA Standalone",
@@ -81,10 +81,8 @@ const ManifestViewer: React.FC = () => {
             "purpose": "maskable"
           }
         ]
-      });
-      setLocalLoading(false);
-    } else if (manifestType === 'minimal-ui') {
-      setLocalManifest({
+      },
+      'minimal-ui': {
         "id": "pwa-mode-detector-minimal-ui",
         "name": "PWA Mode Detector - Minimal UI",
         "short_name": "PWA Minimal UI",
@@ -114,11 +112,80 @@ const ManifestViewer: React.FC = () => {
             "purpose": "maskable"
           }
         ]
-      });
+      },
+      'fullscreen': {
+        "id": "pwa-mode-detector-fullscreen",
+        "name": "PWA Mode Detector - Fullscreen",
+        "short_name": "PWA Fullscreen",
+        "start_url": "/fullscreen",
+        "scope": "/fullscreen",
+        "display": "fullscreen",
+        "background_color": "#ffffff",
+        "theme_color": "#3B82F6",
+        "description": "PWA 运行在全屏模式",
+        "icons": [
+          {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "/icons/maskable-icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+          }
+        ]
+      },
+      'browser': {
+        "id": "pwa-mode-detector-browser",
+        "name": "PWA Mode Detector - Browser",
+        "short_name": "PWA Browser",
+        "start_url": "/browser",
+        "scope": "/browser",
+        "display": "browser",
+        "background_color": "#ffffff",
+        "theme_color": "#3B82F6",
+        "description": "PWA 运行在浏览器模式",
+        "icons": [
+          {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "/icons/maskable-icon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+          }
+        ]
+      }
+    };
+    
+    // 如果是我们已知的manifest类型，直接使用硬编码数据
+    if (manifestData[manifestType as keyof typeof manifestData]) {
+      setLocalManifest(manifestData[manifestType as keyof typeof manifestData]);
       setLocalLoading(false);
+      console.log(`[ManifestViewer] Using hardcoded manifest data for ${manifestType}`);
     } else {
-      // For other types, we need to try to load from network
-      fetch(`/manifests/${manifestType}.json?v=${new Date().getTime()}`, {
+      // 未知类型，尝试从网络加载
+      console.log(`[ManifestViewer] Unknown manifest type: ${manifestType}, trying to load from network`);
+      fetch(`/client/public/manifests/${manifestType}.json?v=${new Date().getTime()}`, {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache'
