@@ -59,6 +59,7 @@ export default {
   "status_browser_installable": "您可以安装此应用以体验 PWA 独立窗口模式",
   "status_browser_not_installable": "您的浏览器不支持安装 PWA 应用",
   "status_browser_checking": "正在检查此页面是否可安装...",
+  "status_detecting": "正在检测安装能力...",
   "browser_mode_info": "此页面虽然具有 Web App Manifest，但由于 display 属性设置为 'browser'，因此无法安装，不是完整的 PWA",
   "mode_active": "已启用",
   "mode_inactive": "未启用",
