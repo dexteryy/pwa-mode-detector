@@ -44,12 +44,12 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className={cn(
-          "text-white flex items-center justify-center cursor-pointer whitespace-nowrap", 
-          "w-16 hover:bg-blue-600/40 transition-colors",
+          "text-white flex items-center justify-center cursor-pointer whitespace-nowrap rounded-md", 
+          "w-16 h-10 hover:bg-blue-400/20 transition-colors",
           className
         )}>
           <Globe className="h-4 w-4 mr-1" />
-          <span className="text-xs font-medium">{getCurrentLanguageDisplay()}</span>
+          <span className="text-sm font-medium">{getCurrentLanguageDisplay()}</span>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

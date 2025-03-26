@@ -75,20 +75,21 @@ const PWADetector = () => {
 
   return (
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
-      {/* Navigation Bar */}
-      <div className="bg-blue-700 text-white">
-        <div className="w-full mx-auto">
-          <div className="flex items-center justify-between">
+      {/* Integrated App Header - Native UI Style */}
+      <header className="bg-blue-500 text-white">
+        {/* Top navigation bar - subtle style for native UI integration */}
+        <div className="border-b border-blue-400/30">
+          <div className="flex items-center justify-between px-2">
             <Link href="/">
-              <div className="text-white h-10 pl-2 pr-3 flex items-center cursor-pointer whitespace-nowrap hover:bg-blue-600/40 transition-colors">
+              <div className="text-white h-10 px-2 flex items-center cursor-pointer whitespace-nowrap hover:bg-blue-400/20 rounded-md transition-colors">
                 <ArrowLeft className="h-4 w-4 mr-1" />
-                {t('back_to_home')}
+                <span className="text-sm font-medium">{t('back_to_home')}</span>
               </div>
             </Link>
             <div className="flex items-center">
               <button 
                 onClick={handleRefresh}
-                className={`text-white h-10 w-10 flex items-center justify-center hover:bg-blue-600/40 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
+                className={`text-white h-10 w-10 flex items-center justify-center hover:bg-blue-400/20 rounded-md transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
                 aria-label="Refresh detection"
               >
                 <RefreshCw className="h-4 w-4" />
@@ -97,11 +98,9 @@ const PWADetector = () => {
             </div>
           </div>
         </div>
-      </div>
-      
-      {/* Main Header */}
-      <header className="bg-blue-500 text-white shadow-md">
-        <div className="container mx-auto px-4 py-5">
+        
+        {/* Title area */}
+        <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-center">
             <Smartphone className="h-5 w-5 mr-2" />
             <h1 className="text-xl font-semibold">{t('detector_title')}</h1>

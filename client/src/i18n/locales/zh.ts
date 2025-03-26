@@ -41,8 +41,8 @@ export default {
   status_browser_running: "应用正在标准浏览器模式下运行",
   install_capability_title: "安装状态",
   install_disabled_manifest_browser:
-    "无法安装：清单文件中的显示模式设置为'browser'，此模式不支持安装",
-  install_disabled_browser_unsupported: "无法安装：您的浏览器不支持PWA安装",
+    "清单文件中的显示模式设置为'browser'，此模式不支持安装",
+  install_disabled_browser_unsupported: "您的浏览器不支持PWA安装",
   install_button_disabled: "安装功能不可用",
 
   // PWA 检测器

@@ -71,23 +71,20 @@ const Entry = () => {
   
   return (
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
-      {/* Navigation Bar */}
-      <div className="bg-blue-700 text-white">
-        <div className="container mx-auto px-4 py-1">
-          <div className="flex items-center justify-between">
-            <div>
-              {/* 空白的左侧区域，保持布局平衡 */}
-            </div>
-            <div className="flex items-center gap-2">
-              <LanguageSwitcher />
+      {/* Integrated App Header - Native UI Style */}
+      <header className="bg-blue-500 text-white">
+        {/* Top navigation bar - subtle style for native UI integration */}
+        <div className="border-b border-blue-400/30">
+          <div className="flex items-center justify-between px-2">
+            <div></div>
+            <div className="flex items-center">
+              <LanguageSwitcher className="h-10" />
             </div>
           </div>
         </div>
-      </div>
-      
-      {/* Main Header */}
-      <header className="bg-blue-500 text-white shadow-md">
-        <div className="container mx-auto px-4 py-7">
+        
+        {/* Title area */}
+        <div className="container mx-auto px-4 py-5">
           <div className="text-center">
             <h1 className="text-2xl font-bold">{t('entry_title')}</h1>
             <p className="mt-2 text-blue-100">{t('entry_subtitle')}</p>
