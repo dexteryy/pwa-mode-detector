@@ -89,7 +89,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     }
   ],
   
-  // 德语
+  // German
   de: [
     { 
       term: "PWA", 
@@ -105,7 +105,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     }
   ],
   
-  // 法语
+  // French
   fr: [
     { 
       term: "PWA", 
@@ -125,7 +125,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     }
   ],
   
-  // 西班牙语
+  // Spanish
   es: [
     { 
       term: "PWA", 
@@ -145,7 +145,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     }
   ],
   
-  // 葡萄牙语
+  // Portuguese
   pt: [
     { 
       term: "PWA", 
@@ -165,7 +165,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     }
   ],
   
-  // 韩语
+  // Korean
   ko: [
     { 
       term: "PWA", 
@@ -187,62 +187,62 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
 };
 
 /**
- * 为指定语言的文本添加关键技术术语的链接
- * @param text 原始文本
- * @param lang 语言代码
- * @returns 添加链接后的文本
+ * Add links to key technical terms in text for a specific language
+ * @param text Original text
+ * @param lang Language code
+ * @returns Text with added links
  */
 export function addLinksToTerms(text: string, lang: string): string {
   if (!text) return text;
 
-  // 获取对应语言的术语列表，如果不存在，使用英文
+  // Get term list for the specified language, or use English if not available
   const terms = TERMS_BY_LANGUAGE[lang] || TERMS_BY_LANGUAGE['en'];
   
-  // 按术语长度降序排序，确保先匹配最长的术语
+  // Sort terms by length in descending order to ensure longest terms are matched first
   const sortedTerms = [...terms].sort((a, b) => b.term.length - a.term.length);
   
-  // 使用一个简单的算法来避免HTML重叠问题：
-  // 1. 将文本分割成块以标记哪些部分已被处理
+  // Use a simple algorithm to avoid HTML overlap issues:
+  // 1. Split text into blocks to mark which parts have been processed
   const blocks: { text: string; processed: boolean }[] = [{ text, processed: false }];
   
-  // 2. 对每个术语，扫描所有未处理的块
+  // 2. For each term, scan all unprocessed blocks
   for (const { term, url } of sortedTerms) {
     for (let i = 0; i < blocks.length; i++) {
       const block = blocks[i];
       
-      // 跳过已处理的块
+      // Skip already processed blocks
       if (block.processed) continue;
       
-      // 在块中查找术语
+      // Find term in the current block
       const index = block.text.indexOf(term);
       if (index === -1) continue;
       
-      // 找到匹配，将块分割为3部分：前部，链接部分，后部
+      // Found a match, split block into 3 parts: before, linked part, after
       const before = block.text.substring(0, index);
       const linked = `<a href="${url}" target="_blank" rel="noopener" class="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline font-medium">${term}</a>`;
       const after = block.text.substring(index + term.length);
       
-      // 替换原块为3个新块
+      // Replace original block with 3 new blocks
       blocks.splice(i, 1,
         { text: before, processed: false },
         { text: linked, processed: true },
         { text: after, processed: false }
       );
       
-      // 调整索引以考虑新块
+      // Adjust index to account for new blocks
       i += 2;
     }
   }
   
-  // 3. 合并所有块以获取最终文本
+  // 3. Combine all blocks to get the final text
   return blocks.map(b => b.text).join('');
 }
 
 /**
- * 实用函数 - 将i18n对象中的特定条目添加链接
- * @param resources i18n资源对象
- * @param keys 需要添加链接的key数组
- * @returns 更新后的i18n资源对象
+ * Utility function - Add links to specific entries in i18n resources object
+ * @param resources i18n resources object
+ * @param keys Array of keys that need links added
+ * @returns Updated i18n resources object
  */
 export function addLinksToI18nResources(resources: Record<string, any>, keys: string[]): Record<string, any> {
   const result = JSON.parse(JSON.stringify(resources)); // 深拷贝以避免修改原对象
