@@ -40,12 +40,13 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
 
   // 确定安装不能的原因
   let installDisabledReason = "";
-  if (mode === 'browser' && !isInstallable && !isChecking) {
-    // 如果是因为manifest配置为browser，提供特定的消息
-    const manifestDisplayIsBrowser = true; // 由于我们在browser模式下，这个条件成立
-    if (manifestDisplayIsBrowser) {
+  if (!isInstallable && !isChecking) {
+    // 如果是因为预期模式为browser，提供特定的消息
+    const expectedModeBrowser = mode === 'browser';
+    if (expectedModeBrowser) {
       installDisabledReason = t('install_disabled_manifest_browser');
     } else {
+      // 其他模式（standalone、minimal-ui、fullscreen）显示浏览器不支持的消息
       installDisabledReason = t('install_disabled_browser_unsupported');
     }
   }
@@ -59,54 +60,52 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
           <h2 className="text-xl font-semibold text-dark">{modeStatusText}</h2>
         </div>
         
-        {/* 安装按钮部分 - 仅在browser模式下显示 */}
-        {mode === 'browser' && (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-4 border-t border-gray-200">
-            <div className="flex-grow">
-              {isChecking ? (
+        {/* 安装按钮部分 - 在所有模式下显示 */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-4 border-t border-gray-200">
+          <div className="flex-grow">
+            {isChecking ? (
+              <div className="flex items-center">
+                <span className="material-icons text-blue-500 mr-2">hourglass_empty</span>
+                <p className="text-blue-500">{t('status_browser_checking')}</p>
+              </div>
+            ) : (
+              <>
                 <div className="flex items-center">
-                  <span className="material-icons text-blue-500 mr-2">hourglass_empty</span>
-                  <p className="text-blue-500">{t('status_browser_checking')}</p>
+                  <span className={`material-icons mr-2 ${isInstallable ? 'text-green-500' : 'text-gray-500'}`}>
+                    {isInstallable ? 'system_update' : 'block'}
+                  </span>
+                  <p className={isInstallable ? 'text-green-600' : 'text-gray-500'}>
+                    {isInstallable ? t('can_be_installed') : t('not_installable')}
+                  </p>
                 </div>
-              ) : (
-                <>
-                  <div className="flex items-center">
-                    <span className={`material-icons mr-2 ${isInstallable ? 'text-green-500' : 'text-gray-500'}`}>
-                      {isInstallable ? 'system_update' : 'block'}
-                    </span>
-                    <p className={isInstallable ? 'text-green-600' : 'text-gray-500'}>
-                      {isInstallable ? t('can_be_installed') : t('not_installable')}
-                    </p>
-                  </div>
-                  {!isInstallable && installDisabledReason && (
-                    <p className="text-gray-600 mt-2 text-sm">{installDisabledReason}</p>
-                  )}
-                </>
-              )}
-            </div>
-            
-            {/* 安装按钮 */}
-            <div className="mt-4 sm:mt-0 w-full sm:w-auto">
-              <button 
-                onClick={promptInstall}
-                disabled={!isInstallable || isChecking}
-                className={`flex items-center justify-center px-4 py-2 rounded-lg ${
-                  isInstallable && !isChecking
-                    ? 'bg-blue-500 text-white hover:bg-blue-600'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                } transition-colors w-full sm:w-auto`}
-              >
-                <span className="material-icons text-sm mr-1">get_app</span>
-                {t('install_pwa')}
-              </button>
-              
-              {/* 当安装不可用时，显示悬浮提示 */}
-              {!isInstallable && !isChecking && (
-                <p className="text-xs text-gray-500 mt-1 text-center sm:text-right">{t('install_button_disabled')}</p>
-              )}
-            </div>
+                {!isInstallable && installDisabledReason && (
+                  <p className="text-gray-600 mt-2 text-sm">{installDisabledReason}</p>
+                )}
+              </>
+            )}
           </div>
-        )}
+          
+          {/* 安装按钮 */}
+          <div className="mt-4 sm:mt-0 w-full sm:w-auto">
+            <button 
+              onClick={promptInstall}
+              disabled={!isInstallable || isChecking}
+              className={`flex items-center justify-center px-4 py-2 rounded-lg ${
+                isInstallable && !isChecking
+                  ? 'bg-blue-500 text-white hover:bg-blue-600'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              } transition-colors w-full sm:w-auto`}
+            >
+              <span className="material-icons text-sm mr-1">get_app</span>
+              {t('install_pwa')}
+            </button>
+            
+            {/* 当安装不可用时，显示悬浮提示 */}
+            {!isInstallable && !isChecking && (
+              <p className="text-xs text-gray-500 mt-1 text-center sm:text-right">{t('install_button_disabled')}</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
