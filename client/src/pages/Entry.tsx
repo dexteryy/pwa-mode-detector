@@ -4,12 +4,12 @@ import LanguageSwitcher from "../components/LanguageSwitcher";
 import { useEffect } from "react";
 import { Globe, Layout, Smartphone, Maximize, ArrowRight, Code } from "lucide-react";
 
-// 定义 PWA 的 display 模式选项
+// Define PWA display mode options
 interface DisplayMode {
   name: string;
   displayName: string;
   description: string;
-  Icon: React.ElementType; // 使用React组件类型代替图标名称字符串
+  Icon: React.ElementType; // Use React component type instead of icon name string
 }
 
 const getDisplayModes = (t: any): DisplayMode[] => [
@@ -43,24 +43,24 @@ const Entry = () => {
   const { t } = useTranslation();
   const displayModes = getDisplayModes(t);
 
-  // 入口页面加载时主动移除所有的 manifest 链接
+  // Actively remove all manifest links when entry page loads
   useEffect(() => {
-    // 移除所有现有的 manifest 链接
+    // Remove all existing manifest links
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
     existingLinks.forEach(link => {
       if (link.parentNode) {
         link.parentNode.removeChild(link);
       }
     });
-    console.log('[Entry] 主动移除所有 manifest 链接，防止显示安装按钮');
+    console.log('[Entry] Actively removed all manifest links to prevent install button from showing');
 
-    // 添加特殊的空 manifest，进一步防止安装按钮显示
+    // Add special empty manifest to further prevent install button display
     const emptyManifest = document.createElement('link');
     emptyManifest.rel = 'manifest';
     emptyManifest.href = 'data:application/json,{}';
     document.head.appendChild(emptyManifest);
 
-    // 退出时清理
+    // Cleanup on exit
     return () => {
       const emptyLink = document.querySelector('link[href="data:application/json,{}"]');
       if (emptyLink && emptyLink.parentNode) {

@@ -14,10 +14,10 @@ const PWADetector = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   
-  // 从URL路径中获取预期的display模式
+  // Get expected display mode from URL path
   const [path] = useLocation();
   
-  // 判断当前路径对应的显示模式
+  // Determine display mode based on current path
   let expectedMode = "standalone";
   if (path === "/standalone") {
     expectedMode = "standalone";
@@ -28,16 +28,16 @@ const PWADetector = () => {
   } else if (path === "/browser") {
     expectedMode = "browser";
   } else if (path.startsWith("/pwa/")) {
-    // 向下兼容旧路径
+    // Backward compatibility with old paths
     const match = path.match(/\/pwa\/([a-z-]+)/);
     if (match) {
       expectedMode = match[1];
     }
   }
   
-  console.log("当前路径:", path, "预期模式:", expectedMode);
+  console.log("Current path:", path, "Expected mode:", expectedMode);
   
-  // 将当前路径作为强制刷新的key传递给hook
+  // Pass current path as a forced refresh key to the hook
   const { 
     displayModes, 
     currentMode, 
@@ -46,28 +46,28 @@ const PWADetector = () => {
     promptInstall,
     resetChecking,
     userAgent 
-  } = usePwaDetection(path); // 传递当前路径作为key，确保路径变化时重新检测
+  } = usePwaDetection(path); // Pass current path as key to ensure detection is reset when path changes
   
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // PWADetector 中不再需要动态管理 manifest，这部分功能已由 App.tsx 中的 ManifestHandler 处理
-  // 保留注释作为提醒，这里曾经有动态添加 manifest 的逻辑，现在已经集中到 ManifestHandler 组件中
+  // PWADetector no longer needs to dynamically manage manifests, this functionality is now handled by ManifestHandler in App.tsx
+  // This comment is kept as a reminder that manifest dynamic addition logic was once here, but is now centralized in the ManifestHandler component
 
   // Handle manual refresh
   const handleRefresh = () => {
     setIsRefreshing(true);
     
-    // 显示正在刷新的提示消息
+    // Display refreshing toast message
     toast({
       title: t('refreshing'),
       description: t('refresh_process'),
       duration: 5000,
     });
     
-    // 重置检查状态
+    // Reset detection state
     resetChecking();
     
-    // 动画效果
+    // Animation effect
     setTimeout(() => {
       setIsRefreshing(false);
     }, 500);

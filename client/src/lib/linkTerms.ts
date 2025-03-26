@@ -245,13 +245,13 @@ export function addLinksToTerms(text: string, lang: string): string {
  * @returns Updated i18n resources object
  */
 export function addLinksToI18nResources(resources: Record<string, any>, keys: string[]): Record<string, any> {
-  const result = JSON.parse(JSON.stringify(resources)); // 深拷贝以避免修改原对象
+  const result = JSON.parse(JSON.stringify(resources)); // Deep copy to avoid modifying the original object
   
-  // 遍历所有语言
+  // Iterate through all languages
   for (const lang in result) {
     if (!result[lang] || !result[lang].translation) continue;
     
-    // 为每个指定的key添加链接
+    // Add links for each specified key
     for (const key of keys) {
       if (result[lang].translation[key]) {
         const originalText = result[lang].translation[key];
