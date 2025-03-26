@@ -8,7 +8,7 @@ const InfoCard = () => {
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
       <h2 className="text-lg font-semibold text-dark dark:text-white mb-4 flex items-center">
         <HelpCircle className="h-5 w-5 mr-2 dark:text-blue-400" />
-        {t('about_pwa_modes')}
+        <span dangerouslySetInnerHTML={{ __html: t('about_pwa_modes') }}></span>
       </h2>
       <div className="prose dark:prose-invert text-gray-700 dark:text-gray-300">
         <p className="mb-3">{t('pwa_different_modes')}</p>

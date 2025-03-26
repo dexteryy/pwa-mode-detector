@@ -134,9 +134,10 @@ const Entry = () => {
               <Code className="h-5 w-5 mr-2" />
               {t('technical_details')}
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('technical_description')}
-            </p>
+            <p 
+              className="text-gray-600 dark:text-gray-300 mb-4"
+              dangerouslySetInnerHTML={{ __html: t('technical_description') }}
+            ></p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('browser_support_note')}
             </p>
