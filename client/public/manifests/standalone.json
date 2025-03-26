@@ -5,7 +5,7 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",
-  "description": "PWA 运行在独立窗口模式",
+  "description": "独立窗口模式下的PWA演示",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
