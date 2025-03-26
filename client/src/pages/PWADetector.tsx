@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import StatusCard from "@/components/StatusCard";
 import DetectionCard from "@/components/DetectionCard";
 import InfoCard from "@/components/InfoCard";
 import { usePwaDetection } from "@/hooks/usePwaDetection";
 import { Link, useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 const PWADetector = () => {
+  const { t } = useTranslation();
+  
   // 从URL路径中获取预期的display模式
   const [path] = useLocation();
   
@@ -54,13 +58,14 @@ const PWADetector = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center">
             <span className="material-icons mr-2">devices</span>
-            <h1 className="text-xl font-semibold">PWA Mode Detector</h1>
+            <h1 className="text-xl font-semibold">{t('detector_title')}</h1>
           </div>
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <Link href="/">
               <div className="bg-white text-blue-500 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors flex items-center cursor-pointer">
                 <span className="material-icons text-sm mr-1">home</span>
-                返回首页
+                {t('back_to_home')}
               </div>
             </Link>
             <button 

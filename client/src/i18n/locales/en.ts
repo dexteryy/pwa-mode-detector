@@ -1,43 +1,44 @@
 export default {
-  // 通用
-  app_name: "PWA Mode Detector",
-  refresh: "Refresh",
-  loading: "Loading...",
-  
-  // 入口页面
-  entry_title: "PWA Display Mode Detector",
-  entry_subtitle: "Select a display mode to test",
-  entry_description: "Test different PWA display modes and see how they behave on your device",
-  
-  // 显示模式
-  mode_standalone: "Standalone",
-  mode_standalone_description: "App runs in its own window without browser UI, like a native app",
-  mode_minimal_ui: "Minimal UI",
-  mode_minimal_ui_description: "App runs with minimal browser controls",
-  mode_fullscreen: "Fullscreen",
-  mode_fullscreen_description: "App takes over the entire screen, no browser UI at all",
-  mode_browser: "Browser",
-  mode_browser_description: "App runs in a regular browser tab",
-  
-  // 状态卡片
-  status_title: "Current Status",
-  status_current_mode: "Current Mode",
-  status_installable: "Installable",
-  status_not_installable: "Not Installable",
-  status_yes: "Yes",
-  status_no: "No",
-  status_pwa_mode: "PWA Standalone Window",
-  status_browser_mode: "Browser Tab",
-  
-  // 安装提示
-  install_prompt: "Install this PWA",
-  install_description: "Add this app to your home screen for quick access",
-  
-  // 用户代理信息
-  ua_title: "User Agent Info",
-  
-  // 语言切换
-  language: "Language",
-  language_english: "English",
-  language_chinese: "中文"
-};
+  // Common
+  "language": "Language",
+  "language_english": "English",
+  "language_chinese": "Chinese",
+
+  // Entry page
+  "entry_title": "PWA Display Mode Demo",
+  "entry_subtitle": "Select a display mode to see different PWA behaviors",
+  "what_is_pwa_display_mode": "What are PWA Display Modes?",
+  "pwa_display_mode_description": "Progressive Web Apps (PWAs) can run and display in different ways on user devices. The 'display' property in the Web App Manifest defines the presentation mode, affecting browser UI elements visibility and the overall appearance of the application.",
+  "click_card_instruction": "Click on any card below to navigate to the corresponding PWA app, each configured with a different display mode. After installing the app, you'll be able to observe the user experience differences across display modes.",
+  "view_demo": "View Demo",
+  "technical_details": "Technical Details",
+  "technical_description": "Each PWA app uses the same codebase but has different Web App Manifest configurations. The application will detect the current actual runtime mode and compare it with the expected mode declared in the manifest.",
+  "browser_support_note": "For the full PWA experience, use a PWA-supporting browser (like Chrome, Edge, Safari) and install the application.",
+  "footer_text": "PWA Display Mode Demo | Select a mode to start the experience",
+
+  // Display modes
+  "standalone_name": "Standalone Mode",
+  "standalone_description": "App runs in its own window, without any browser UI",
+  "minimal_ui_name": "Minimal UI Mode",
+  "minimal_ui_description": "App runs in a window with minimal browser controls",
+  "fullscreen_name": "Fullscreen Mode",
+  "fullscreen_description": "App takes up the entire screen without any browser UI",
+  "browser_name": "Browser Mode",
+  "browser_description": "App runs in a regular browser tab",
+
+  // PWA Detector
+  "detector_title": "PWA Display Mode Detector",
+  "detector_subtitle": "This tool detects how your PWA is currently running",
+  "current_mode": "Current Mode",
+  "expected_mode": "Expected Mode",
+  "running_as": "Running as",
+  "browser_tab": "Browser Tab",
+  "pwa_window": "PWA Window",
+  "status_title": "Status",
+  "installable": "Installable",
+  "not_installable": "Not Installable",
+  "install_pwa": "Install PWA",
+  "back_to_home": "Back to Home",
+  "device_info": "Device Information",
+  "user_agent": "User Agent"
+}

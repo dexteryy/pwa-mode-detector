@@ -1,41 +1,56 @@
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 // 定义 PWA 的 display 模式选项
-const displayModes = [
+interface DisplayMode {
+  name: string;
+  displayName: string;
+  description: string;
+  icon: string;
+}
+
+const getDisplayModes = (t: any): DisplayMode[] => [
   {
     name: "standalone",
-    displayName: "独立窗口模式 (standalone)",
-    description: "应用在没有浏览器界面的独立窗口中运行",
+    displayName: t("standalone_name"),
+    description: t("standalone_description"),
     icon: "tablet_mac"
   },
   {
     name: "minimal-ui",
-    displayName: "最小界面模式 (minimal-ui)", 
-    description: "应用在带有最小浏览器控件的窗口中运行",
+    displayName: t("minimal_ui_name"), 
+    description: t("minimal_ui_description"),
     icon: "tab"
   },
   {
     name: "fullscreen",
-    displayName: "全屏模式 (fullscreen)",
-    description: "应用占据整个屏幕，没有任何浏览器界面",
+    displayName: t("fullscreen_name"),
+    description: t("fullscreen_description"),
     icon: "fullscreen"
   },
   {
     name: "browser",
-    displayName: "浏览器模式 (browser)",
-    description: "应用在常规浏览器标签页中运行",
+    displayName: t("browser_name"),
+    description: t("browser_description"),
     icon: "public"
   }
 ];
 
 const Entry = () => {
+  const { t } = useTranslation();
+  const displayModes = getDisplayModes(t);
+  
   return (
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-blue-500 text-white shadow-md">
-        <div className="container mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold text-center">PWA 展示模式演示</h1>
-          <p className="text-center mt-2 text-blue-100">选择一种展示模式来查看 PWA 的不同运行方式</p>
+        <div className="container mx-auto px-4 py-6 relative">
+          <div className="absolute right-4 top-4">
+            <LanguageSwitcher />
+          </div>
+          <h1 className="text-2xl font-bold text-center">{t('entry_title')}</h1>
+          <p className="text-center mt-2 text-blue-100">{t('entry_subtitle')}</p>
         </div>
       </header>
 
@@ -44,15 +59,12 @@ const Entry = () => {
         <div className="max-w-3xl mx-auto w-full">
           {/* Introduction */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">什么是 PWA 展示模式？</h2>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">{t('what_is_pwa_display_mode')}</h2>
             <p className="text-gray-600 mb-4">
-              PWA（渐进式网络应用）可以以不同的方式在用户设备上运行和显示。Web App Manifest 的 
-              <code className="bg-gray-100 px-1 rounded">display</code> 属性定义了应用的显示模式，
-              影响浏览器 UI 元素的可见性和应用的整体外观。
+              {t('pwa_display_mode_description')}
             </p>
             <p className="text-gray-600">
-              点击下方的任意卡片，将跳转到相应的 PWA 应用，每个应用都有不同的展示模式配置。
-              安装应用后，你将能够观察到不同展示模式下的用户体验差异。
+              {t('click_card_instruction')}
             </p>
           </div>
 
@@ -68,7 +80,7 @@ const Entry = () => {
                   <p className="text-gray-600">{mode.description}</p>
                   <div className="mt-4 flex justify-end">
                     <span className="text-blue-500 font-medium flex items-center">
-                      查看演示
+                      {t('view_demo')}
                       <span className="material-icons ml-1">arrow_forward</span>
                     </span>
                   </div>
@@ -81,14 +93,13 @@ const Entry = () => {
           <div className="bg-white rounded-lg shadow-md p-6 mt-8">
             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
               <span className="material-icons mr-2">code</span>
-              技术说明
+              {t('technical_details')}
             </h2>
             <p className="text-gray-600 mb-4">
-              每个 PWA 应用使用相同的代码库，但有不同的 Web App Manifest 配置。
-              应用将检测当前的实际运行模式，并与 manifest 中声明的预期模式进行比较。
+              {t('technical_description')}
             </p>
             <p className="text-gray-600">
-              要获得完整的 PWA 体验，请使用支持 PWA 的浏览器（如 Chrome、Edge、Safari）并安装应用。
+              {t('browser_support_note')}
             </p>
           </div>
           
@@ -100,7 +111,7 @@ const Entry = () => {
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-4 mt-auto">
         <div className="container mx-auto px-4 text-center text-sm">
-          <p>PWA 展示模式演示 | 选择一种模式开始体验</p>
+          <p>{t('footer_text')}</p>
         </div>
       </footer>
     </div>

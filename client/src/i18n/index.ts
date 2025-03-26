@@ -1,50 +1,29 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import enTranslation from './locales/en';
-import zhTranslation from './locales/zh';
-
-// 获取浏览器语言
-const getBrowserLanguage = (): string => {
-  const language = navigator.language || (navigator as any).userLanguage;
-  return language.split('-')[0]; // 获取主语言部分，例如 'zh-CN' -> 'zh'
-};
-
-// 获取存储的语言设置或使用浏览器语言
-const getInitialLanguage = (): string => {
-  if (typeof window === 'undefined') return 'en'; // SSR检查
-  
-  const storedLanguage = localStorage.getItem('language');
-  if (storedLanguage) return storedLanguage;
-
-  const browserLanguage = getBrowserLanguage();
-  return browserLanguage === 'zh' ? 'zh' : 'en'; // 如果是中文则返回中文，否则默认英文
-};
+import en from './locales/en';
+import zh from './locales/zh';
 
 // 初始化i18next
 i18n
-  .use(initReactI18next)
+  .use(initReactI18next) // 将i18n传递给react-i18next
   .init({
     resources: {
       en: {
-        translation: enTranslation
+        translation: en
       },
       zh: {
-        translation: zhTranslation
+        translation: zh
       }
     },
-    lng: typeof window !== 'undefined' ? getInitialLanguage() : 'en',
-    fallbackLng: 'en',
+    lng: 'en', // 默认语言
+    fallbackLng: 'en', // 回退语言
     interpolation: {
-      escapeValue: false
+      escapeValue: false // 不转义HTML内容
     }
   });
 
-// 公开语言切换函数
 export const changeLanguage = (language: string) => {
   i18n.changeLanguage(language);
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('language', language);
-  }
 };
 
 export default i18n;
