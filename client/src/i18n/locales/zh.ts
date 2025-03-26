@@ -23,13 +23,13 @@ export default {
   footer_text: "PWA 展示模式演示 | 选择一种模式开始体验",
 
   // 展示模式
-  standalone_name: "独立窗口模式 (standalone)",
+  standalone_name: "独立窗口模式",
   standalone_description: "应用在没有浏览器界面的独立窗口中运行",
-  minimal_ui_name: "最小界面模式 (minimal-ui)",
+  minimal_ui_name: "最小界面模式",
   minimal_ui_description: "应用在带有最小浏览器控件的窗口中运行",
-  fullscreen_name: "全屏模式 (fullscreen)",
+  fullscreen_name: "全屏模式",
   fullscreen_description: "应用占据整个屏幕，没有任何浏览器界面",
-  browser_name: "浏览器模式 (browser)",
+  browser_name: "浏览器模式",
   browser_description: "应用在常规浏览器标签页中运行",
 
   // 状态卡片
@@ -77,7 +77,8 @@ export default {
 
   // 刷新提示
   refreshing: "正在刷新...",
-  refresh_process: "正在检查 display mode、安装状态及更新 Web App Manifest 信息",
+  refresh_process:
+    "正在检查 display mode、安装状态及更新 Web App Manifest 信息",
 
   // Manifest 查看器
   manifest_viewer_title: "Web App Manifest",
