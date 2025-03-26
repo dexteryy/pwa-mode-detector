@@ -64,5 +64,15 @@ export default {
   "mode_active": "已启用",
   "mode_inactive": "未启用",
   "about_pwa_modes": "关于 PWA 模式",
-  "pwa_different_modes": "PWA（渐进式 Web 应用）可以在不同的显示模式下运行："
+  "pwa_different_modes": "PWA（渐进式 Web 应用）可以在不同的显示模式下运行：",
+  
+  // Manifest 查看器
+  "manifest_viewer_title": "Web 应用清单",
+  "view_manifest": "查看清单内容",
+  "loading": "加载中...",
+  "manifest_error": "加载清单出错",
+  "manifest_name": "名称",
+  "manifest_short_name": "短名称",
+  "manifest_start_url": "起始URL",
+  "manifest_scope": "作用域"
 }

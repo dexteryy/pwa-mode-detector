@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import StatusCard from "@/components/StatusCard";
 import DetectionCard from "@/components/DetectionCard";
 import InfoCard from "@/components/InfoCard";
+import ManifestViewer from "@/components/ManifestViewer";
 import { usePwaDetection } from "@/hooks/usePwaDetection";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
@@ -137,6 +138,9 @@ const PWADetector = () => {
             </div>
           </div>
   
+          {/* Manifest viewer card */}
+          <ManifestViewer />
+          
           {/* Information card */}
           <InfoCard />
           

@@ -65,5 +65,15 @@ export default {
   "mode_active": "Active",
   "mode_inactive": "Inactive",
   "about_pwa_modes": "About PWA Modes",
-  "pwa_different_modes": "Progressive Web Apps (PWAs) can run in different display modes:"
+  "pwa_different_modes": "Progressive Web Apps (PWAs) can run in different display modes:",
+  
+  // Manifest viewer
+  "manifest_viewer_title": "Web App Manifest",
+  "view_manifest": "View Manifest Content",
+  "loading": "Loading...",
+  "manifest_error": "Error loading manifest",
+  "manifest_name": "Name",
+  "manifest_short_name": "Short Name",
+  "manifest_start_url": "Start URL",
+  "manifest_scope": "Scope"
 }
