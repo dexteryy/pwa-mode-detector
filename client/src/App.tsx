@@ -88,8 +88,7 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     if (location === '/' || 
         (pathWithoutParams !== '/standalone' && 
          pathWithoutParams !== '/minimal-ui' && 
-         pathWithoutParams !== '/fullscreen' && 
-         !pathWithoutParams.startsWith('/pwa/'))) {
+         pathWithoutParams !== '/fullscreen')) {
       console.log('[ManifestHandler] Entry page or non-PWA path detected, no manifest needed');
       
       // If we previously had a manifest, clean it up
@@ -121,10 +120,6 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       baseUrl = '/manifests/browser.json';
       exactPathMatch = true;
       console.log("[ManifestHandler] Browser mode manifest path detected (display:browser)");
-    }
-    else if (pathWithoutParams.startsWith('/pwa/')) {
-      baseUrl = '/manifest.json';
-      exactPathMatch = true;
     }
     
     // Skip loading if path is ambiguous and doesn't exactly match a manifest
@@ -211,7 +206,6 @@ function Router() {
       <Route path="/minimal-ui" component={PWADetector} />
       <Route path="/fullscreen" component={PWADetector} />
       <Route path="/browser" component={PWADetector} />
-      <Route path="/pwa/:display" component={PWADetector} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

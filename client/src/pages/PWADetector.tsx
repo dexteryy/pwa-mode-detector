@@ -27,12 +27,6 @@ const PWADetector = () => {
     expectedMode = "fullscreen";
   } else if (path === "/browser") {
     expectedMode = "browser";
-  } else if (path.startsWith("/pwa/")) {
-    // Backward compatibility with old paths
-    const match = path.match(/\/pwa\/([a-z-]+)/);
-    if (match) {
-      expectedMode = match[1];
-    }
   }
   
   console.log("Current path:", path, "Expected mode:", expectedMode);
