@@ -59,7 +59,7 @@ const Entry = () => {
           {/* Display Mode Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {displayModes.map(mode => (
-              <Link key={mode.name} href={`/pwa/${mode.name}`}>
+              <Link key={mode.name} href={`/${mode.name}`}>
                 <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-500 cursor-pointer">
                   <div className="flex items-center mb-4">
                     <span className="material-icons text-4xl text-blue-500 mr-3">{mode.icon}</span>

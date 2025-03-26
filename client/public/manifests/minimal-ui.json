@@ -3,6 +3,7 @@
   "name": "PWA Mode Detector - Minimal UI",
   "short_name": "PWA Minimal UI",
   "start_url": "/pwa/minimal-ui",
+  "scope": "/pwa/minimal-ui",
   "display": "minimal-ui",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",

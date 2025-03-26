@@ -3,6 +3,7 @@
   "name": "PWA Mode Detector - Standalone",
   "short_name": "PWA Standalone",
   "start_url": "/pwa/standalone",
+  "scope": "/pwa/standalone",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",
