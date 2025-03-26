@@ -1,5 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { loadManifest, subscribeToManifest, WebAppManifest } from "@/lib/manifestLoader";
 
 interface DisplayMode {
   name: string;
@@ -108,64 +109,26 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     setCurrentMode(detectedMode);
   };
 
-  // Global cache for manifests (using module scope to maintain across hook calls)
-  const manifestCache: Map<string, any> = (() => {
-    // Module-scoped variable maintains state between renders
-    if (!(window as any).__manifestCache) {
-      (window as any).__manifestCache = new Map<string, any>();
-      console.log('[usePwaDetection] Creating global manifest cache');
-    }
-    return (window as any).__manifestCache;
-  })();
-  
-  // Fetch manifest information - with global caching to avoid any requests when possible
+  // Using the new ManifestLoader to manage centralized manifest loading
   useEffect(() => {
-    const fetchManifest = async () => {
-      try {
-        // First check if there's already anything in the cache (from other components)
-        if (manifestCache.size > 0) {
-          // Use the first manifest in the cache
-          const cachedManifestUrl = manifestCache.keys().next().value;
-          const cachedManifest = manifestCache.get(cachedManifestUrl);
-          console.log(`[usePwaDetection] Using existing manifest from global cache`);
-          setManifestInfo(cachedManifest);
-          return;
-        }
-        
-        // If we reach here, nothing is in cache, so fetch fresh
-        const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
-        if (manifestLinks.length > 0) {
-          const manifestUrl = manifestLinks[0].getAttribute('href');
-          if (manifestUrl) {
-            // Double-check cache to avoid race conditions
-            if (manifestCache.has(manifestUrl)) {
-              console.log(`[usePwaDetection] Using cached manifest data for ${manifestUrl}`);
-              setManifestInfo(manifestCache.get(manifestUrl));
-              return;
-            }
-            
-            // Load manifest and cache it
-            console.log(`[usePwaDetection] Fetching manifest from ${manifestUrl}`);
-            const response = await fetch(manifestUrl);
-            const data = await response.json();
-            
-            // Cache the result
-            manifestCache.set(manifestUrl, data);
-            
-            // Update state
-            setManifestInfo(data);
-            console.log(`[usePwaDetection] Manifest loaded from ${manifestUrl}:`, data);
-          }
-        }
-      } catch (error) {
-        console.error(`[usePwaDetection] Error loading manifest:`, error);
+    // Subscribe to manifest state changes
+    const unsubscribe = subscribeToManifest((state) => {
+      if (state.state === 'loaded' && state.manifest) {
+        console.log('[usePwaDetection] Received manifest update from loader:', state.manifest);
+        setManifestInfo(state.manifest);
+      } else if (state.state === 'error') {
+        console.error('[usePwaDetection] Error loading manifest:', state.error);
         setManifestInfo(null);
       }
-    };
+    });
 
-    fetchManifest();
-    
-    // No cleanup needed for the cache as it's kept via window global
+    // Trigger the manifest load (force reload if forcedPathKey changes)
+    loadManifest(!!forcedPathKey).catch(error => {
+      console.error('[usePwaDetection] Failed to load manifest:', error);
+    });
+
+    // Cleanup the subscription
+    return () => unsubscribe();
   }, [forcedPathKey]); // Reload manifest only when path changes
 
   // Set up event listeners for display mode changes

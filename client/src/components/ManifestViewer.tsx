@@ -6,32 +6,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ArrowDownIcon, ArrowRightIcon, FileJson, AlertCircle } from 'lucide-react';
-
-interface WebAppManifest {
-  name?: string;
-  short_name?: string;
-  start_url?: string;
-  display?: string;
-  background_color?: string;
-  theme_color?: string;
-  description?: string;
-  icons?: Array<{
-    src: string;
-    sizes: string;
-    type?: string;
-    purpose?: string;
-  }>;
-  id?: string;
-  scope?: string;
-  [key: string]: any;  // Allow other possible properties
-}
-
-// Use the same global manifest cache as usePwaDetection
-if (!(window as any).__manifestCache) {
-  (window as any).__manifestCache = new Map<string, WebAppManifest>();
-  console.log('[ManifestViewer] Initializing global manifest cache');
-}
-const manifestCache = (window as any).__manifestCache;
+import { loadManifest, subscribeToManifest, WebAppManifest } from "@/lib/manifestLoader";
 
 const ManifestViewer: React.FC = () => {
   const { t } = useTranslation();
@@ -40,81 +15,41 @@ const ManifestViewer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Only fetch or use the cached manifest when collapsible is opened
+  // Use the centralized manifest loader, with auto subscription
   useEffect(() => {
-    // Skip everything if not open to save resources
+    // Don't even subscribe if not opened
     if (!isOpen) return;
     
-    // On open, check if we already have a manifest cached from usePwaDetection
-    let cachedManifestFound = false;
+    // Set loading state
+    setIsLoading(true);
     
-    // First, check the cache for any existing manifest - don't even need to know the URL
-    if (manifestCache.size > 0) {
-      // We've already loaded a manifest somewhere, use the first one available
-      const cachedManifest = manifestCache.values().next().value;
-      console.log('[ManifestViewer] Found existing manifest in cache, using it directly');
-      setManifest(cachedManifest);
+    // Subscribe to manifest state changes
+    const unsubscribe = subscribeToManifest((state) => {
+      // Update our component state based on the loader state
+      if (state.state === 'loaded' && state.manifest) {
+        setManifest(state.manifest);
+        setError(null);
+        setIsLoading(false);
+        console.log('[ManifestViewer] Received manifest from loader:', state.manifest);
+      } else if (state.state === 'loading') {
+        setIsLoading(true);
+        setError(null);
+      } else if (state.state === 'error') {
+        setError(state.error);
+        setIsLoading(false);
+        console.error('[ManifestViewer] Error from loader:', state.error);
+      }
+    });
+    
+    // Trigger a manifest load (without forcing a reload)
+    loadManifest(false).catch(error => {
+      console.error('[ManifestViewer] Failed to load manifest:', error);
+      setError('Failed to load manifest: ' + (error instanceof Error ? error.message : 'Unknown error'));
       setIsLoading(false);
-      cachedManifestFound = true;
-    }
+    });
     
-    // Only proceed with fetching if nothing was found in cache
-    if (!cachedManifestFound) {
-      const fetchManifest = async () => {
-        try {
-          setIsLoading(true);
-          setError(null);
-          
-          // Find all manifest links on the page
-          const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
-          
-          if (manifestLinks.length === 0) {
-            setError('No manifest link found in document');
-            setIsLoading(false);
-            return;
-          }
-          
-          // Use the first manifest link
-          const manifestUrl = manifestLinks[0].getAttribute('href');
-          
-          if (!manifestUrl) {
-            setError('Manifest link has no href attribute');
-            setIsLoading(false);
-            return;
-          }
-          
-          // One last check if manifest is already in cache (should be redundant)
-          if (manifestCache.has(manifestUrl)) {
-            console.log('[ManifestViewer] Using cached manifest data for URL: ' + manifestUrl);
-            setManifest(manifestCache.get(manifestUrl) || null);
-            setIsLoading(false);
-            return;
-          }
-          
-          // Request manifest content
-          console.log('[ManifestViewer] Fetching manifest from URL: ' + manifestUrl);
-          const response = await fetch(manifestUrl);
-          
-          if (!response.ok) {
-            throw new Error(`Failed to fetch manifest: ${response.status} ${response.statusText}`);
-          }
-          
-          const data = await response.json();
-          
-          // Cache the manifest data
-          manifestCache.set(manifestUrl, data);
-          
-          // Update state
-          setManifest(data);
-        } catch (err) {
-          setError(err instanceof Error ? err.message : 'Unknown error fetching manifest');
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      
-      fetchManifest();
-    }
+    // Cleanup subscription when component unmounts or collapsible closes
+    return () => unsubscribe();
   }, [isOpen]);
 
   // Format JSON for display
