@@ -1,113 +1,115 @@
-# 贡献指南
+# Contributing Guidelines
 
-感谢您考虑为 PWA 展示模式检测器项目做出贡献！本文档将引导您了解贡献过程并提供开发环境设置的说明。
+Thank you for considering contributing to the PWA Display Mode Detector project! This document will guide you through the contribution process and provide instructions for setting up your development environment.
 
-## 目录
+## Table of Contents
 
-- [行为准则](#行为准则)
-- [如何贡献](#如何贡献)
-  - [报告问题](#报告问题)
-  - [提交改进建议](#提交改进建议)
-  - [提交代码](#提交代码)
-- [开发设置](#开发设置)
-  - [环境要求](#环境要求)
-  - [设置本地开发环境](#设置本地开发环境)
-  - [项目结构](#项目结构)
-- [代码规范](#代码规范)
-  - [提交信息规范](#提交信息规范)
-  - [代码风格](#代码风格)
-- [拉取请求流程](#拉取请求流程)
-- [发布流程](#发布流程)
+- [Code of Conduct](#code-of-conduct)
+- [How to Contribute](#how-to-contribute)
+  - [Reporting Issues](#reporting-issues)
+  - [Suggesting Enhancements](#suggesting-enhancements)
+  - [Code Contributions](#code-contributions)
+- [Development Setup](#development-setup)
+  - [Requirements](#requirements)
+  - [Setting Up Local Development](#setting-up-local-development)
+  - [Project Structure](#project-structure)
+- [Coding Guidelines](#coding-guidelines)
+  - [Commit Message Convention](#commit-message-convention)
+  - [Code Style](#code-style)
+- [Pull Request Process](#pull-request-process)
+- [Release Process](#release-process)
 
-## 行为准则
+English | [简体中文](./CONTRIBUTING.zh.md)
 
-本项目采用贡献者公约。我们希望所有参与者遵守[行为准则](CODE_OF_CONDUCT.md)。请阅读全文以了解什么行为将被允许，什么行为不会被容忍。
+## Code of Conduct
 
-## 如何贡献
+This project adheres to the Contributor Covenant. We expect all participants to adhere to our [Code of Conduct](CODE_OF_CONDUCT.md). Please read the full text to understand what actions will and will not be tolerated.
 
-### 报告问题
+## How to Contribute
 
-如果您发现了问题或有建议，请在提交新问题前先搜索现有问题，以确保它尚未被报告。
+### Reporting Issues
 
-提交问题时，请尽可能提供详细信息：
+If you find a bug or have a suggestion, please search the issue tracker first to ensure it hasn't already been reported.
 
-- 清晰且描述性的标题
-- 重现问题的详细步骤
-- 预期行为与实际行为
-- 相关的截图或动画GIF
-- 操作系统和浏览器版本
-- 任何可能有助于排查问题的其他信息
+When submitting an issue, please provide as much detail as possible:
 
-### 提交改进建议
+- A clear and descriptive title
+- Detailed steps to reproduce the bug
+- Expected behavior vs. actual behavior
+- Relevant screenshots or animated GIFs
+- Your operating system and browser version
+- Any other information that might help diagnose the issue
 
-如果您有改进建议，请：
+### Suggesting Enhancements
 
-1. 创建一个详细描述建议的新问题
-2. 标记为"enhancement"
-3. 尽量包含可能的实现方法或使用场景
+If you have an enhancement suggestion:
 
-### 提交代码
+1. Create a new issue with a detailed description
+2. Label it as an "enhancement"
+3. Include potential implementation approaches or use cases if possible
 
-如果您想直接提交代码，请遵循这些步骤：
+### Code Contributions
 
-1. 将仓库 Fork 到您的 GitHub 账户
-2. 将您的 Fork 克隆到本地
-3. 创建一个新分支（不要直接在 `main` 上工作）
-4. 进行您的更改
-5. 提交您的更改并推送到您的 Fork
-6. 提交一个 Pull Request
+If you'd like to contribute code directly, follow these steps:
 
-## 开发设置
+1. Fork the repository to your GitHub account
+2. Clone your fork locally
+3. Create a new branch (don't work directly on `main`)
+4. Make your changes
+5. Commit your changes and push to your fork
+6. Submit a Pull Request
 
-### 环境要求
+## Development Setup
 
-- Node.js 18.x 或更高版本
-- npm 9.x 或更高版本
-- 现代浏览器（Chrome, Firefox, Edge 等）
+### Requirements
 
-### 设置本地开发环境
+- Node.js 18.x or higher
+- npm 9.x or higher
+- Modern browser (Chrome, Firefox, Edge, etc.)
 
-1. 安装依赖：
+### Setting Up Local Development
+
+1. Install dependencies:
    ```bash
    npm install
    ```
 
-2. 启动开发服务器：
+2. Start the development server:
    ```bash
    npm run dev
    ```
 
-3. 在浏览器中打开 `http://localhost:5000`
+3. Open `http://localhost:5000` in your browser
 
-### 项目结构
+### Project Structure
 
 ```
 pwa-mode-detector/
-├── client/              # 前端代码
-│   ├── public/          # 静态资源
-│   │   ├── icons/       # PWA 图标
-│   │   ├── manifests/   # 不同显示模式的 manifest 文件
-│   ├── src/             # 源代码
-│   │   ├── components/  # React 组件
-│   │   ├── hooks/       # 自定义 React Hooks
-│   │   ├── lib/         # 工具函数和通用逻辑
-│   │   ├── pages/       # 页面组件
-├── server/              # 后端代码
-│   ├── routes.ts        # API 路由
-│   ├── storage.ts       # 数据存储层
-├── shared/              # 前后端共享的代码
-│   ├── schema.ts        # 数据模型和验证
-├── docs/                # 文档
-├── CONTRIBUTING.md      # 贡献指南
-├── LICENSE              # 许可证
-├── README.md            # 项目概述
+├── client/              # Frontend code
+│   ├── public/          # Static assets
+│   │   ├── icons/       # PWA icons
+│   │   ├── manifests/   # Manifest files for different display modes
+│   ├── src/             # Source code
+│   │   ├── components/  # React components
+│   │   ├── hooks/       # Custom React hooks
+│   │   ├── lib/         # Utility functions and common logic
+│   │   ├── pages/       # Page components
+├── server/              # Backend code
+│   ├── routes.ts        # API routes
+│   ├── storage.ts       # Data storage layer
+├── shared/              # Code shared between frontend and backend
+│   ├── schema.ts        # Data models and validation
+├── docs/                # Documentation
+├── CONTRIBUTING.md      # Contributing guidelines
+├── LICENSE              # License
+├── README.md            # Project overview
 ```
 
-## 代码规范
+## Coding Guidelines
 
-### 提交信息规范
+### Commit Message Convention
 
-请遵循约定式提交规范：
+Please follow the Conventional Commits specification:
 
 ```
 <type>(<scope>): <description>
@@ -117,55 +119,55 @@ pwa-mode-detector/
 [optional footer(s)]
 ```
 
-类型包括：
-- `feat`：新功能
-- `fix`：错误修复
-- `docs`：文档更改
-- `style`：格式更改（不影响代码功能）
-- `refactor`：代码重构
-- `perf`：性能优化
-- `test`：添加或修改测试
-- `chore`：构建过程或辅助工具的变动
+Types include:
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Formatting changes (not affecting code functionality)
+- `refactor`: Code refactoring
+- `perf`: Performance optimization
+- `test`: Adding or modifying tests
+- `chore`: Build process or auxiliary tool changes
 
-例如：
+Example:
 ```
-feat(detection): 添加对 Android 设备的特殊检测逻辑
+feat(detection): add special detection logic for Android devices
 ```
 
-### 代码风格
+### Code Style
 
-为了保持代码质量和一致性，请遵循以下规范：
+To maintain code quality and consistency, please follow these standards:
 
-- 确保所有 TypeScript 代码都有适当的类型定义
-- 遵循 React 函数组件和 Hooks 的最佳实践
-- 确保组件名称使用 PascalCase（例如 `StatusCard.tsx`）
-- 确保普通工具函数文件名使用 kebab-case（例如 `query-client.ts`）
-- 保持代码简洁，并添加必要的注释来解释复杂逻辑
-- 使用 Tailwind CSS 类名保持一致的样式风格
-- 避免直接操作 DOM，优先使用 React 的声明式方法
+- Ensure all TypeScript code has proper type definitions
+- Follow React functional component and hooks best practices
+- Use PascalCase for component names (e.g., `StatusCard.tsx`)
+- Use kebab-case for utility function files (e.g., `query-client.ts`)
+- Keep code concise and add necessary comments to explain complex logic
+- Maintain consistent styling with Tailwind CSS class names
+- Avoid direct DOM manipulation, prefer React's declarative approach
 
-在提交代码之前，请确保你的代码：
-- 没有编译错误
-- 在不同浏览器中都能正常工作
-- 符合项目的整体设计风格
+Before submitting your code, ensure that it:
+- Has no compilation errors
+- Works correctly across different browsers
+- Adheres to the project's overall design style
 
-## 拉取请求流程
+## Pull Request Process
 
-1. 确保您的 PR 描述清楚地说明了所做的更改和解决的问题
-2. 将相关问题链接到您的 PR
-3. 确保项目能够正常构建和运行，没有明显的功能缺陷
-4. 请求至少一名维护者进行代码审查
-5. 解决代码审查中提出的任何问题
-6. 一旦获得批准，您的 PR 将被合并
+1. Ensure your PR description clearly explains the changes made and issues addressed
+2. Link any relevant issues to your PR
+3. Make sure the project builds and runs correctly with no obvious functional defects
+4. Request a review from at least one maintainer
+5. Address any issues raised during code review
+6. Once approved, your PR will be merged
 
-## 发布流程
+## Release Process
 
-项目维护者会处理版本发布过程。我们遵循语义版本控制：
+Project maintainers will handle the release process. We follow semantic versioning:
 
-- 主版本（x.0.0）：不兼容的 API 更改
-- 次版本（0.x.0）：向后兼容的功能添加
-- 补丁版本（0.0.x）：向后兼容的错误修复
+- Major version (x.0.0): Incompatible API changes
+- Minor version (0.x.0): Backwards-compatible functionality additions
+- Patch version (0.0.x): Backwards-compatible bug fixes
 
 ---
 
-再次感谢您为 PWA 展示模式检测器做出贡献！如果您有任何问题，请随时在问题跟踪器中提问或与维护者联系。
+Thank you again for contributing to the PWA Display Mode Detector! If you have any questions, feel free to ask in the issue tracker or contact the maintainers.

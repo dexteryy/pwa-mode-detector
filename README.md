@@ -1,112 +1,112 @@
-# PWA 展示模式检测器
+# PWA Display Mode Detector
 
 <div align="center">
   <img src="client/public/icons/icon-512x512.png" alt="PWA Mode Detector logo" width="120">
-  <h3>一个用于展示和测试PWA不同显示模式的工具</h3>
+  <h3>A tool for demonstrating and testing different PWA display modes</h3>
 </div>
 
-![许可证](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-v18-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-v5-blue)
 ![PWA](https://img.shields.io/badge/PWA-ready-brightgreen)
 
-[English](./README.en.md) | 简体中文
+English | [简体中文](./README.zh.md)
 
-## 简介
+## Introduction
 
-PWA 展示模式检测器是一个专为开发者设计的工具，用于展示和测试渐进式Web应用（PWA）在不同显示模式下的行为和外观。该工具允许你体验和比较 PWA 的四种主要展示模式：`standalone`、`minimal-ui`、`fullscreen` 和 `browser`。
+PWA Display Mode Detector is a tool designed for developers to demonstrate and test Progressive Web App (PWA) behavior and appearance across different display modes. This tool allows you to experience and compare the four main PWA display modes: `standalone`, `minimal-ui`, `fullscreen`, and `browser`.
 
 <div align="center">
-  <img src="screenshots/preview.png" alt="应用预览" width="80%">
+  <img src="screenshots/preview.png" alt="Application Preview" width="80%">
 </div>
 
-## 特性
+## Features
 
-- ✅ **实时模式检测**：自动识别当前 PWA 的运行模式
-- ✅ **多模式支持**：测试四种不同的 PWA 显示模式
-- ✅ **独立安装**：每种模式可以作为独立 PWA 安装
-- ✅ **响应式设计**：在各种设备上都能良好工作
-- ✅ **用户代理信息**：显示当前环境的详细浏览器信息
-- ✅ **安装按钮**：在支持的环境中提供直观的安装体验
+- ✅ **Real-time Mode Detection**: Automatically identifies the current PWA running mode
+- ✅ **Multi-mode Support**: Test four different PWA display modes
+- ✅ **Independent Installation**: Each mode can be installed as a separate PWA
+- ✅ **Responsive Design**: Works well on various devices
+- ✅ **User Agent Information**: Shows detailed browser information for the current environment
+- ✅ **Install Button**: Provides intuitive installation experience in supported environments
 
-## 四种显示模式
+## Four Display Modes
 
-1. **独立窗口模式 (standalone)**：PWA 在没有浏览器界面的独立窗口中运行，类似于原生应用
-2. **最小界面模式 (minimal-ui)**：PWA 在带有最小浏览器控件的窗口中运行
-3. **全屏模式 (fullscreen)**：PWA 占据整个屏幕，没有任何浏览器界面
-4. **浏览器模式 (browser)**：PWA 在常规浏览器标签页中运行
+1. **Standalone Mode**: PWA runs in a standalone window without browser UI, similar to native applications
+2. **Minimal UI Mode**: PWA runs in a window with minimal browser controls
+3. **Fullscreen Mode**: PWA occupies the entire screen with no browser UI
+4. **Browser Mode**: PWA runs in a regular browser tab
 
-## 开始使用
+## Getting Started
 
-### 在线演示
+### Online Demo
 
-访问 [https://pwa-mode-detector.example.com](https://pwa-mode-detector.example.com) 查看在线演示。
+Visit [https://pwa-mode-detector.example.com](https://pwa-mode-detector.example.com) to see the online demo.
 
-### 本地运行
+### Local Setup
 
-1. 克隆仓库
+1. Clone the repository
    ```bash
    git clone https://github.com/yourusername/pwa-mode-detector.git
    cd pwa-mode-detector
    ```
 
-2. 安装依赖
+2. Install dependencies
    ```bash
    npm install
    ```
 
-3. 启动开发服务器
+3. Start the development server
    ```bash
    npm run dev
    ```
 
-4. 在浏览器中打开 `http://localhost:5000`
+4. Open `http://localhost:5000` in your browser
 
-### 构建生产版本
+### Build for Production
 
 ```bash
 npm run build
 ```
 
-生成的文件将位于 `dist` 目录中。
+The generated files will be in the `dist` directory.
 
-## 技术栈
+## Tech Stack
 
-- **前端框架**：React + TypeScript
-- **构建工具**：Vite
-- **CSS框架**：Tailwind CSS + shadcn/ui
-- **路由**：wouter
-- **数据获取**：TanStack Query
-- **后端**：Express.js
+- **Frontend Framework**: React + TypeScript
+- **Build Tool**: Vite
+- **CSS Framework**: Tailwind CSS + shadcn/ui
+- **Routing**: wouter
+- **Data Fetching**: TanStack Query
+- **Backend**: Express.js
 
-## 工作原理
+## How It Works
 
-该应用通过以下方式工作：
+The application works by:
 
-1. 用户可以从主页选择要测试的 PWA 显示模式
-2. 每个模式都有自己的 `manifest.json` 文件，定义了 `display` 属性和其他相关配置
-3. 应用通过 `window.matchMedia()` 检测当前实际的显示模式
-4. 比较实际模式和预期模式，提供视觉反馈
-5. 每种模式都配置了独立的 `scope`，允许它们作为独立 PWA 同时安装
+1. User selects a PWA display mode to test from the home page
+2. Each mode has its own `manifest.json` file that defines the `display` property and other relevant configurations
+3. The app detects the current actual display mode using `window.matchMedia()`
+4. Compares the actual mode against the expected mode, providing visual feedback
+5. Each mode is configured with an independent `scope`, allowing them to be installed as separate PWAs simultaneously
 
-## 贡献
+## Contributing
 
-欢迎贡献！请阅读 [贡献指南](CONTRIBUTING.md) 了解如何开始。
+Contributions are welcome! Please read the [contributing guidelines](CONTRIBUTING.md) to get started.
 
-## 许可证
+## License
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 联系方式
+## Contact
 
-如有问题或建议，请通过以下方式联系我们：
+For questions or suggestions, please contact us through:
 
-- 提交 [GitHub issue](https://github.com/yourusername/pwa-mode-detector/issues)
-- 发送邮件至 [your-email@example.com](mailto:your-email@example.com)
+- Submit a [GitHub issue](https://github.com/yourusername/pwa-mode-detector/issues)
+- Send an email to [your-email@example.com](mailto:your-email@example.com)
 
 ---
 
 <div align="center">
-  <p>如果这个项目对你有帮助，请考虑给它一个⭐️</p>
+  <p>If this project helped you, please consider giving it a ⭐️</p>
   <p>Made with ❤️ for the PWA community</p>
 </div>
