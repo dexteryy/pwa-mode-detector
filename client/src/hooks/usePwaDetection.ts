@@ -60,8 +60,31 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   const [userAgent, setUserAgent] = useState<string>("");
   const [isChecking, setIsChecking] = useState<boolean>(true);
   const [manifestInfo, setManifestInfo] = useState<{display?: string} | null>(null);
-  const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(false);
+  
+  // Load installation state from localStorage to persist between refreshes
+  const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(() => {
+    try {
+      // Check if we have a stored installation state
+      const storedState = localStorage.getItem('pwa-installed-state');
+      const isInstalled = storedState === 'true';
+      console.log(`[usePwaDetection] Loaded installation state from localStorage: ${isInstalled}`);
+      return isInstalled;
+    } catch (e) {
+      console.error('[usePwaDetection] Error reading installation state from localStorage:', e);
+      return false;
+    }
+  });
 
+  // Update localStorage whenever hasBeenInstalled changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('pwa-installed-state', hasBeenInstalled ? 'true' : 'false');
+      console.log(`[usePwaDetection] Updated installation state in localStorage: ${hasBeenInstalled}`);
+    } catch (e) {
+      console.error('[usePwaDetection] Error saving installation state to localStorage:', e);
+    }
+  }, [hasBeenInstalled]);
+  
   // Force checking state every time the path changes
   useEffect(() => {
     // Reset state
@@ -351,6 +374,23 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     setIsChecking(true);
     // Reset installable state
     setDeferredPrompt(null);
+    
+    // Detect if we need to clear installation state
+    // This is important to handle browser address bar installations
+    // If we're running in browser mode but still have hasBeenInstalled=true,
+    // allow a manual refresh to clear that state so we can detect fresh again
+    const currentDisplayMode = getCurrentDisplayMode();
+    if (currentDisplayMode === 'browser' && hasBeenInstalled) {
+      try {
+        // Clear stored state to allow re-detection
+        localStorage.removeItem('pwa-installed-state');
+        setHasBeenInstalled(false);
+        console.log(`[usePwaDetection] Manual refresh: cleared installation state`);
+      } catch (e) {
+        console.error('[usePwaDetection] Error clearing installation state:', e);
+      }
+    }
+    
     console.log(`[usePwaDetection] Manual refresh: starting new detection`);
     
     // Complete check after delay
