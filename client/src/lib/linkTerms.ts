@@ -287,7 +287,7 @@ export function addLinksToTerms(text: string, lang: string): string {
       
       // 找到匹配，将块分割为3部分：前部，链接部分，后部
       const before = block.text.substring(0, index);
-      const linked = `<a href="${url}" target="_blank" rel="noopener">${term}</a>`;
+      const linked = `<a href="${url}" target="_blank" rel="noopener" class="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline font-medium">${term}</a>`;
       const after = block.text.substring(index + term.length);
       
       // 替换原块为3个新块
