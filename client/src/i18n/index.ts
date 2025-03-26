@@ -9,6 +9,7 @@ import fr from './locales/fr';
 import es from './locales/es';
 import pt from './locales/pt';
 import ko from './locales/ko';
+import { addLinksToI18nResources } from '../lib/linkTerms';
 
 // 存储在localStorage中的键名
 const LANGUAGE_STORAGE_KEY = 'pwa-detector-language';
@@ -76,39 +77,53 @@ function getInitialLanguage(): string {
   return 'en';
 }
 
+// 需要添加链接的文本键
+const KEYS_WITH_LINKS = [
+  'pwa_display_mode_description',
+  'technical_description',
+  'pwa_different_modes',
+  'browser_mode_info'
+];
+
+// 为所有语言资源添加链接
+const resources = addLinksToI18nResources(
+  {
+    en: {
+      translation: en
+    },
+    zh: {
+      translation: zh
+    },
+    'zh-TW': {
+      translation: zhTW
+    },
+    ja: {
+      translation: ja
+    },
+    de: {
+      translation: de
+    },
+    fr: {
+      translation: fr
+    },
+    es: {
+      translation: es
+    },
+    pt: {
+      translation: pt
+    },
+    ko: {
+      translation: ko
+    }
+  },
+  KEYS_WITH_LINKS
+);
+
 // 初始化i18next
 i18n
   .use(initReactI18next) // 将i18n传递给react-i18next
   .init({
-    resources: {
-      en: {
-        translation: en
-      },
-      zh: {
-        translation: zh
-      },
-      'zh-TW': {
-        translation: zhTW
-      },
-      ja: {
-        translation: ja
-      },
-      de: {
-        translation: de
-      },
-      fr: {
-        translation: fr
-      },
-      es: {
-        translation: es
-      },
-      pt: {
-        translation: pt
-      },
-      ko: {
-        translation: ko
-      }
-    },
+    resources,
     lng: getInitialLanguage(), // 根据用户偏好设置默认语言
     fallbackLng: 'en', // 回退语言
     interpolation: {

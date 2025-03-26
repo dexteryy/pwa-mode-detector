@@ -11,7 +11,7 @@ export default {
   entry_subtitle: "选择一种展示模式来查看 PWA 的不同运行方式",
   what_is_pwa_display_mode: "什么是 PWA 展示模式？",
   pwa_display_mode_description:
-    "<a href='https://web.dev/progressive-web-apps/' target='_blank' rel='noopener'>PWA（渐进式网络应用）</a>可以以不同的方式在用户设备上运行和显示。<a href='https://developer.mozilla.org/zh-CN/docs/Web/Manifest' target='_blank' rel='noopener'>Web App Manifest</a> 的 <a href='https://developer.mozilla.org/zh-CN/docs/Web/Manifest/display' target='_blank' rel='noopener'>display</a> 属性定义了应用的显示模式，影响浏览器 UI 元素的可见性和应用的整体外观。",
+    "PWA（渐进式网络应用）可以以不同的方式在用户设备上运行和显示。Web App Manifest 的 display 属性定义了应用的显示模式，影响浏览器 UI 元素的可见性和应用的整体外观。",
   click_card_instruction:
     "点击下方的任意卡片，将跳转到相应的 PWA 应用，每个应用都有不同的展示模式配置。安装应用后，你将能够观察到不同展示模式下的用户体验差异。",
   view_demo: "查看演示",
