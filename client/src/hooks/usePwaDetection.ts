@@ -52,14 +52,17 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
 
   // 每次路径变化时，强制设置为检查中状态
   useEffect(() => {
+    // 重置状态
     setIsChecking(true);
+    // 重置installable状态
+    setDeferredPrompt(null);
     console.log(`[usePwaDetection] 路径变化: ${forcedPathKey}, 开始新检测`);
 
-    // 延迟后完成检查
+    // 延迟完成检查的时间，确保有足够时间接收beforeinstallprompt事件
     const timer = setTimeout(() => {
       setIsChecking(false);
       console.log(`[usePwaDetection] 检测完成: ${forcedPathKey}`);
-    }, 2000);
+    }, 3000); // 增加到3秒，给浏览器更多时间触发安装事件
 
     return () => clearTimeout(timer);
   }, [forcedPathKey]); // 依赖 forcedPathKey，确保路径变化时重新检测
@@ -118,9 +121,19 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent Chrome 67+ from automatically showing the prompt
       e.preventDefault();
-      // Stash the event so it can be triggered later
-      setDeferredPrompt(e);
-      console.log(`[usePwaDetection] 收到安装提示事件`);
+      
+      // 只在检测完成后更新安装状态，避免显示闪烁
+      if (!isChecking) {
+        setDeferredPrompt(e);
+        console.log(`[usePwaDetection] 收到安装提示事件并立即更新状态`);
+      } else {
+        // 在检测过程中接收到事件，保存但不立即更新界面
+        console.log(`[usePwaDetection] 收到安装提示事件，但检测尚未完成，暂存事件`);
+        setTimeout(() => {
+          setDeferredPrompt(e);
+          console.log(`[usePwaDetection] 检测完成后更新安装状态`);
+        }, 100); // 延迟一点更新，确保状态变化在检测完成后
+      }
     };
     
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -176,13 +189,15 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   const resetChecking = () => {
     // 设置为检查中状态
     setIsChecking(true);
+    // 重置installable状态
+    setDeferredPrompt(null);
     console.log(`[usePwaDetection] 手动刷新: 开始新检测`);
     
     // 延迟后完成检查
     setTimeout(() => {
       setIsChecking(false);
       console.log(`[usePwaDetection] 手动刷新: 检测完成`);
-    }, 2000);
+    }, 3000); // 保持与路径变化时的检测时间一致
   };
 
   return {
