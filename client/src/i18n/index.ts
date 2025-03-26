@@ -80,7 +80,6 @@ function getInitialLanguage(): string {
 // 需要添加链接的文本键
 const KEYS_WITH_LINKS = [
   'pwa_display_mode_description',
-  'about_pwa_modes',
   'technical_description'
 ];
 
