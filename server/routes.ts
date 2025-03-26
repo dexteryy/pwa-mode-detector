@@ -4,10 +4,19 @@ import path from "path";
 import fs from "fs";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // 添加中间件来处理 /manifest.json 请求
+  // 添加中间件来处理 manifest 请求
   app.use((req: Request, res: Response, next: NextFunction) => {
-    // 只处理 /manifest.json 请求
-    if (req.path === "/manifest.json") {
+    // 处理 /manifest.json 请求和对特定 manifest 文件的请求
+    const isManifestRequest = req.path === "/manifest.json";
+    const isManifestFileRequest = req.path.startsWith("/manifests/") && req.path.endsWith(".json");
+    
+    // 如果是对特定manifest文件的请求，正常处理（不拦截）
+    if (isManifestFileRequest) {
+      return next();
+    }
+    
+    // 处理 /manifest.json 请求
+    if (isManifestRequest) {
       // 尝试从 referer 获取信息
       const referer = req.headers.referer || "";
       let pathname = "";
@@ -47,6 +56,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(204).end();
       }
     }
+    
     next();
   });
 

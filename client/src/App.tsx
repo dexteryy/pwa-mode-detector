@@ -158,8 +158,12 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       document.head.appendChild(newLink);
       console.log(`[ManifestHandler] Setting manifest to: ${url}`);
       
-      // Fetch the manifest content
-      fetch(url)
+      // 直接获取实际的manifest文件路径，而不是使用带时间戳的URL
+      // 这样可以避免重定向导致的fetch问题
+      const actualManifestPath = baseUrl; // 例如 /manifests/standalone.json
+      console.log(`[ManifestHandler] Fetching manifest directly from: ${actualManifestPath}`);
+      
+      fetch(actualManifestPath)
         .then(response => {
           if (!response.ok) {
             throw new Error(`Failed to fetch manifest: ${response.status}`);
