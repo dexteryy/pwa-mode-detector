@@ -174,7 +174,8 @@ export function usePwaDetection(): PwaDetection {
   return {
     displayModes,
     currentMode,
-    isInstallable: !!deferredPrompt,
+    // 当检测中时，不返回安装状态，避免闪烁
+    isInstallable: isChecking ? false : !!deferredPrompt,
     isChecking,
     promptInstall,
     resetChecking,
