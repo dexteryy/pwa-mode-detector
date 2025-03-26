@@ -96,6 +96,7 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     }
     else if (location.startsWith('/browser')) {
       url = `/manifests/browser.json?v=${timestamp}`;
+      console.log("[ManifestHandler] Browser mode manifest path detected");
     }
     else if (location.startsWith('/pwa/')) {
       url = `/manifest.json?v=${timestamp}`;

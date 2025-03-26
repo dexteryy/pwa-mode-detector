@@ -141,8 +141,10 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   
   // Update our local state when context changes
   useEffect(() => {
+    console.log(`[usePwaDetection] Context manifest:`, contextManifestInfo);
     if (contextManifestInfo) {
       console.log(`[usePwaDetection] Updated manifest info from context:`, contextManifestInfo);
+      // Force a refresh of the manifest info state
       setManifestInfo(contextManifestInfo);
     }
   }, [contextManifestInfo]);
@@ -395,34 +397,65 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
 
   // Determine the proper installation status
   const getInstallStatus = (): InstallStatus => {
+    // Log all states for debugging
+    console.log('[usePwaDetection] Status check', {
+      isChecking,
+      deferredPrompt: !!deferredPrompt,
+      currentMode,
+      manifestInfo,
+      contextManifestInfo,
+      hasBeenInstalled,
+      location: window.location.pathname
+    });
+    
     if (isChecking) {
       return 'checking';
     }
     
     // Case 1: Installable - browser supports installation and app can be installed
     if (deferredPrompt) {
+      console.log('[usePwaDetection] Status: installable');
       return 'installable';
     }
     
     // Case 2: Running as PWA - not in browser mode
     if (currentMode !== 'browser') {
+      console.log('[usePwaDetection] Status: not-installable-already-pwa');
       return 'not-installable-already-pwa';
     }
     
-    // Case 3: Manifest uses display:browser
-    // Check both our local state and context directly to ensure we don't miss it
-    if ((manifestInfo && manifestInfo.display === 'browser') || 
-        (contextManifestInfo && contextManifestInfo.display === 'browser')) {
-      console.log('[usePwaDetection] Detected display:browser in manifest');
+    // Case 3: Manifest uses display:browser - HIGHEST PRIORITY FOR BROWSER MODE & BROWSER PATHS
+    // We prioritize this check over hasBeenInstalled to ensure proper detection
+    // Also do path-based detection for known browser display paths
+    const isBrowserPath = window.location.pathname === '/browser' || 
+                         window.location.pathname.startsWith('/browser/');
+    
+    const isBrowserDisplayMode = (manifestInfo && manifestInfo.display === 'browser') || 
+                               (contextManifestInfo && contextManifestInfo.display === 'browser') ||
+                               isBrowserPath; // Also check path as fallback
+    
+    // Debug the manifest display mode check
+    console.log('[usePwaDetection] Display mode & path check:', {
+      isBrowserDisplayMode,
+      isBrowserPath,
+      manifestDisplay: manifestInfo?.display,
+      contextManifestDisplay: contextManifestInfo?.display,
+      pathname: window.location.pathname
+    });
+    
+    if (isBrowserDisplayMode) {
+      console.log('[usePwaDetection] Status: not-installable-browser-mode (display:browser in manifest or browser path)');
       return 'not-installable-browser-mode';
     }
     
     // Case 4: Already installed but running in browser
     if (hasBeenInstalled) {
+      console.log('[usePwaDetection] Status: not-installable-already-installed');
       return 'not-installable-already-installed';
     }
     
     // Case 5: Browser doesn't support installation (default fallback)
+    console.log('[usePwaDetection] Status: not-installable-browser-unsupported');
     return 'not-installable-browser-unsupported';
   };
 
