@@ -65,7 +65,7 @@ export default {
   device_info: "Informations sur l'appareil",
   user_agent: "Agent utilisateur",
   detector_mode_mismatch:
-    "Le mode d'exécution détecté diffère de celui configuré dans le manifeste. Cela pourrait être dû au fait que votre navigateur ne prend pas en charge ce mode ou que l'application n'est pas encore installée.",
+    "Le mode d'exécution détecté diffère de celui configuré dans le manifest. Cela pourrait être dû au fait que votre navigateur ne prend pas en charge ce mode ou que l'application n'est pas encore installée.",
   status_standalone_running: "L'application fonctionne déjà en mode autonome",
   status_minimal_ui_prompt: "Vous pouvez installer cette application pour expérimenter le mode autonome complet",
   status_fullscreen_running: "L'application fonctionne déjà en mode plein écran",
@@ -74,7 +74,7 @@ export default {
   status_browser_checking: "Vérification si cette page est installable...",
   checking: "Vérification...",
   browser_mode_info:
-    "Cette page a un Web App Manifest, mais ne peut pas être installée en raison de la propriété 'display' réglée sur 'browser', ce n'est pas une PWA complète",
+    "Cette page a un Web App Manifest, mais ne peut pas être installée en raison de la propriété 'display' avec la valeur 'browser', ce n'est pas une PWA complète",
   mode_active: "Actif",
   mode_inactive: "Inactif",
   about_pwa_modes: "À propos des modes PWA",
@@ -82,13 +82,13 @@ export default {
 
   // Toast d'actualisation
   refreshing: "Actualisation...",
-  refresh_process: "Vérification du mode d'affichage, du statut d'installation et mise à jour des informations du manifeste",
+  refresh_process: "Vérification du mode d'affichage, du statut d'installation et mise à jour des informations du manifest",
 
-  // Visionneuse de manifeste
+  // Visionneuse de manifest
   manifest_viewer_title: "Web App Manifest",
   view_manifest: "Voir le manifest",
   loading: "Chargement...",
-  manifest_error: "Erreur lors du chargement du manifeste",
+  manifest_error: "Erreur lors du chargement du manifest",
   manifest_name: "Nom",
   manifest_short_name: "Nom court",
   manifest_start_url: "URL de démarrage",

@@ -48,7 +48,7 @@ export default {
   status_browser_running: "La aplicación se está ejecutando en modo navegador estándar",
   install_capability_title: "Estado de instalación",
   install_disabled_manifest_browser:
-    "El modo de visualización del manifiesto es 'browser', este modo no admite la instalación",
+    "El modo de visualización del manifest es 'browser', este modo no admite la instalación",
   install_disabled_browser_unsupported: "Tu navegador no admite la instalación de PWA",
   install_button_disabled: "Instalación no disponible",
 
@@ -65,7 +65,7 @@ export default {
   device_info: "Información del dispositivo",
   user_agent: "Agente de usuario",
   detector_mode_mismatch:
-    "El modo de ejecución detectado difiere del configurado en el manifiesto. Esto podría deberse a que tu navegador no admite este modo o a que la aplicación aún no está instalada.",
+    "El modo de ejecución detectado difiere del configurado en el manifest. Esto podría deberse a que tu navegador no admite este modo o a que la aplicación aún no está instalada.",
   status_standalone_running: "La aplicación ya se está ejecutando en modo independiente",
   status_minimal_ui_prompt: "Puedes instalar esta aplicación para experimentar el modo independiente completo",
   status_fullscreen_running: "La aplicación ya se está ejecutando en modo de pantalla completa",
@@ -74,7 +74,7 @@ export default {
   status_browser_checking: "Comprobando si esta página es instalable...",
   checking: "Comprobando...",
   browser_mode_info:
-    "Esta página tiene un Web App Manifest, pero no se puede instalar debido a la propiedad 'display' configurada como 'browser', no es una PWA completa",
+    "Esta página tiene un Web App Manifest, pero no se puede instalar debido a la propiedad 'display' con valor 'browser', no es una PWA completa",
   mode_active: "Activo",
   mode_inactive: "Inactivo",
   about_pwa_modes: "Acerca de los modos PWA",
@@ -82,13 +82,13 @@ export default {
 
   // Toast de actualización
   refreshing: "Actualizando...",
-  refresh_process: "Comprobando el modo de visualización, el estado de instalación y actualizando la información del manifiesto",
+  refresh_process: "Comprobando el modo de visualización, el estado de instalación y actualizando la información del manifest",
 
-  // Visor de manifiesto
+  // Visor de manifest
   manifest_viewer_title: "Web App Manifest",
   view_manifest: "Ver manifest",
   loading: "Cargando...",
-  manifest_error: "Error al cargar el manifiesto",
+  manifest_error: "Error al cargar el manifest",
   manifest_name: "Nombre",
   manifest_short_name: "Nombre corto",
   manifest_start_url: "URL de inicio",
