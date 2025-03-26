@@ -61,13 +61,17 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   const [isChecking, setIsChecking] = useState<boolean>(true);
   const [manifestInfo, setManifestInfo] = useState<{display?: string} | null>(null);
   
+  // Each path should have its own installation state
+  // forcedPathKey represents the display mode path being used
+  const localStorageKey = `pwa-installed-state-${forcedPathKey || 'default'}`;
+  
   // Load installation state from localStorage to persist between refreshes
   const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(() => {
     try {
-      // Check if we have a stored installation state
-      const storedState = localStorage.getItem('pwa-installed-state');
+      // Check if we have a stored installation state for this specific path
+      const storedState = localStorage.getItem(localStorageKey);
       const isInstalled = storedState === 'true';
-      console.log(`[usePwaDetection] Loaded installation state from localStorage: ${isInstalled}`);
+      console.log(`[usePwaDetection] Loaded installation state for path "${forcedPathKey}" from localStorage: ${isInstalled}`);
       return isInstalled;
     } catch (e) {
       console.error('[usePwaDetection] Error reading installation state from localStorage:', e);
@@ -78,12 +82,12 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   // Update localStorage whenever hasBeenInstalled changes
   useEffect(() => {
     try {
-      localStorage.setItem('pwa-installed-state', hasBeenInstalled ? 'true' : 'false');
-      console.log(`[usePwaDetection] Updated installation state in localStorage: ${hasBeenInstalled}`);
+      localStorage.setItem(localStorageKey, hasBeenInstalled ? 'true' : 'false');
+      console.log(`[usePwaDetection] Updated installation state for path "${forcedPathKey}" in localStorage: ${hasBeenInstalled}`);
     } catch (e) {
       console.error('[usePwaDetection] Error saving installation state to localStorage:', e);
     }
-  }, [hasBeenInstalled]);
+  }, [hasBeenInstalled, localStorageKey, forcedPathKey]);
   
   // Force checking state every time the path changes
   useEffect(() => {
@@ -328,7 +332,7 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
         clearInterval(quickCheckIntervalId);
       }
     };
-  }, [displayModes, currentMode, hasBeenInstalled]); // Depends on displayModes, current mode and installed state
+  }, [displayModes, currentMode, hasBeenInstalled, localStorageKey, forcedPathKey]); // Depends on displayModes, current mode, installed state and path
 
   // Function to prompt installation
   const promptInstall = () => {
@@ -383,9 +387,10 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     if (currentDisplayMode === 'browser' && hasBeenInstalled) {
       try {
         // Clear stored state to allow re-detection
-        localStorage.removeItem('pwa-installed-state');
+        localStorage.removeItem(localStorageKey);
         setHasBeenInstalled(false);
-        console.log(`[usePwaDetection] Manual refresh: cleared installation state`);
+        console.log(`[usePwaDetection] Manual refresh: cleared installation state for path "${forcedPathKey}"`);
+        
       } catch (e) {
         console.error('[usePwaDetection] Error clearing installation state:', e);
       }
