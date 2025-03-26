@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { usePwaDetection, InstallStatus } from "../hooks/usePwaDetection";
-import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, PackageOpen, X, MonitorSmartphone, CircleOff } from "lucide-react";
+import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, PackageOpen, X, MonitorSmartphone, CircleOff, AlertTriangle } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
+import { ManifestContext } from "../App";
 
 interface StatusCardProps {
   mode: string;
@@ -11,6 +13,21 @@ interface StatusCardProps {
 const StatusCard = ({ mode, isInstallable: propIsInstallable, expectedMode }: StatusCardProps) => {
   const { t } = useTranslation();
   const { isChecking, promptInstall, installStatus } = usePwaDetection();
+  const { manifestInfo, manifestUrl } = useContext(ManifestContext);
+  const [multipleManifests, setMultipleManifests] = useState(false);
+  
+  // 检查是否有多个manifest同时加载
+  useEffect(() => {
+    const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
+    setMultipleManifests(manifestLinks.length > 1);
+    
+    if (manifestLinks.length > 1) {
+      console.warn('[StatusCard] Multiple manifest links detected:', manifestLinks.length);
+      Array.from(manifestLinks).forEach((link, index) => {
+        console.warn(`[StatusCard] Manifest ${index + 1}:`, link.getAttribute('href'));
+      });
+    }
+  }, []);
   
   // Directly derive installable status from installStatus instead of using local state to avoid UI flickering
   // This is a computed value, not state, to prevent flickering
@@ -103,6 +120,26 @@ const StatusCard = ({ mode, isInstallable: propIsInstallable, expectedMode }: St
           <ModeIcon className={`h-6 w-6 mr-3 ${iconColorClass}`} />
           <h2 className="text-xl font-semibold text-dark dark:text-white">{modeStatusText}</h2>
         </div>
+        
+        {/* 显示清单检测警告 */}
+        {multipleManifests && (
+          <div className="flex items-start mt-2 bg-amber-50 dark:bg-amber-900/30 p-3 rounded-md">
+            <AlertTriangle className="h-5 w-5 text-amber-500 mr-2 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-amber-700 dark:text-amber-400 font-medium">多个清单问题</p>
+              <p className="text-amber-600 dark:text-amber-300 text-sm mt-1">
+                检测到多个manifest清单同时加载，可能导致安装状态检测错误。请尝试刷新页面或清除浏览器缓存。
+              </p>
+            </div>
+          </div>
+        )}
+        
+        {/* Manifest debug information - only shown when there's a manifest */}
+        {manifestInfo && manifestUrl && (
+          <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            <p>当前清单: {manifestInfo.display || "未知"} 模式 ({manifestUrl.split('?')[0]})</p>
+          </div>
+        )}
         
         {/* Install button section - shown in all modes */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">

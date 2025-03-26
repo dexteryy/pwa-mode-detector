@@ -65,9 +65,25 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     setManifestUrl(null);
     setError(null);
     
-    // First remove all existing manifest links to ensure no duplicate manifests
+    // ======== 修复manifest加载问题 ========
+    // 在添加新manifest前彻底清除所有旧的manifest链接，无论它们来自哪里
+    // 这样可以避免多个manifest同时存在的问题
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
-    existingLinks.forEach(link => link.parentNode?.removeChild(link));
+    existingLinks.forEach(link => {
+      console.log(`[ManifestHandler] Removing existing manifest link: ${link.getAttribute('href')}`);
+      link.parentNode?.removeChild(link);
+    });
+    
+    // 重置title元素，避免它被PWA缓存
+    document.title = location.startsWith('/browser') 
+      ? "PWA Mode Detector - Browser" 
+      : location.startsWith('/standalone') 
+        ? "PWA Mode Detector - Standalone"
+        : location.startsWith('/minimal-ui')
+          ? "PWA Mode Detector - Minimal UI"
+          : location.startsWith('/fullscreen')
+            ? "PWA Mode Detector - Fullscreen"
+            : "PWA Mode Detector";
     
     // For entry page ('/') or any unspecified pages, don't add any manifest and exit early
     if (location === '/' || 
@@ -87,12 +103,15 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     // Determine correct manifest URL based on path
     if (location.startsWith('/standalone')) {
       url = `/manifests/standalone.json?v=${timestamp}`;
+      console.log("[ManifestHandler] Standalone mode manifest path detected");
     } 
     else if (location.startsWith('/minimal-ui')) {
       url = `/manifests/minimal-ui.json?v=${timestamp}`;
+      console.log("[ManifestHandler] Minimal-UI mode manifest path detected");
     }
     else if (location.startsWith('/fullscreen')) {
       url = `/manifests/fullscreen.json?v=${timestamp}`;
+      console.log("[ManifestHandler] Fullscreen mode manifest path detected");
     }
     else if (location.startsWith('/browser')) {
       url = `/manifests/browser.json?v=${timestamp}`;
@@ -100,6 +119,7 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     }
     else if (location.startsWith('/pwa/')) {
       url = `/manifest.json?v=${timestamp}`;
+      console.log("[ManifestHandler] Generic PWA mode manifest path detected");
     }
     
     // If we have a valid URL, create the link tag and fetch manifest data
@@ -107,12 +127,16 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       setIsLoading(true);
       setManifestUrl(url);
       
+      // 创建一个唯一的ID属性，便于后续调试和查找
+      const manifestId = `manifest-${location.split('/')[1]}-${timestamp}`;
+      
       // Create new manifest link for PWA pages
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
       newLink.href = url;
+      newLink.id = manifestId; // 添加唯一ID方便调试
       document.head.appendChild(newLink);
-      console.log(`[ManifestHandler] Setting manifest to: ${url}`);
+      console.log(`[ManifestHandler] Setting manifest to: ${url} with ID: ${manifestId}`);
       
       // Fetch the manifest content
       fetch(url)
@@ -137,7 +161,10 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     // Also clean up all manifest links when component unmounts
     return () => {
       const links = document.querySelectorAll('link[rel="manifest"]');
-      links.forEach(link => link.parentNode?.removeChild(link));
+      links.forEach(link => {
+        console.log(`[ManifestHandler] Cleanup: removing manifest link: ${link.getAttribute('href')}`);
+        link.parentNode?.removeChild(link);
+      });
     };
   }, [location]);
   

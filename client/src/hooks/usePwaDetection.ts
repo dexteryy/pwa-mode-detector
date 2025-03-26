@@ -405,34 +405,26 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       manifestInfo,
       contextManifestInfo,
       hasBeenInstalled,
-      location: window.location.pathname
+      location: window.location.pathname,
+      localStorageKey
     });
     
     if (isChecking) {
       return 'checking';
     }
     
-    // Case 1: Installable - browser supports installation and app can be installed
-    if (deferredPrompt) {
-      console.log('[usePwaDetection] Status: installable');
-      return 'installable';
-    }
+    // ======= 检测优先级重新排序 =======
+    // 优先进行manifest和路径检查，然后才是已安装状态和显示模式
     
-    // Case 2: Running as PWA - not in browser mode
-    if (currentMode !== 'browser') {
-      console.log('[usePwaDetection] Status: not-installable-already-pwa');
-      return 'not-installable-already-pwa';
-    }
-    
-    // Case 3: Manifest uses display:browser - HIGHEST PRIORITY FOR BROWSER MODE & BROWSER PATHS
-    // We prioritize this check over hasBeenInstalled to ensure proper detection
-    // Also do path-based detection for known browser display paths
+    // Case 1: 检查manifest是否为browser模式（最高优先级）
+    // 对/browser路径也进行特殊处理
     const isBrowserPath = window.location.pathname === '/browser' || 
-                         window.location.pathname.startsWith('/browser/');
+                          window.location.pathname.startsWith('/browser/');
     
+    // 从当前页面的manifest和路径来判断
     const isBrowserDisplayMode = (manifestInfo && manifestInfo.display === 'browser') || 
-                               (contextManifestInfo && contextManifestInfo.display === 'browser') ||
-                               isBrowserPath; // Also check path as fallback
+                                (contextManifestInfo && contextManifestInfo.display === 'browser') ||
+                                isBrowserPath;
     
     // Debug the manifest display mode check
     console.log('[usePwaDetection] Display mode & path check:', {
@@ -448,14 +440,44 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       return 'not-installable-browser-mode';
     }
     
-    // Case 4: Already installed but running in browser
-    if (hasBeenInstalled) {
-      console.log('[usePwaDetection] Status: not-installable-already-installed');
-      return 'not-installable-already-installed';
+    // Case 2: 检查应用是否可安装（次高优先级）
+    // 如果有安装提示事件，说明应用肯定是可安装的
+    if (deferredPrompt) {
+      console.log('[usePwaDetection] Status: installable - install prompt available');
+      return 'installable';
     }
     
-    // Case 5: Browser doesn't support installation (default fallback)
-    console.log('[usePwaDetection] Status: not-installable-browser-unsupported');
+    // Case 3: 检查是否已在PWA模式下运行
+    // 通过匹配media query直接检测当前的显示模式，不依赖状态变量
+    if (window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: minimal-ui)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches ||
+        (window.navigator as any).standalone === true) {
+      console.log('[usePwaDetection] Status: not-installable-already-pwa - detected via media query');
+      return 'not-installable-already-pwa';
+    }
+    
+    // 只有当当前确实在浏览器模式下时，才使用存储的安装状态标志
+    if (currentMode === 'browser') {
+      try {
+        // 直接重新读取localStorage，确保使用最新状态（避免标签页过时的状态）
+        const freshStoredState = localStorage.getItem(localStorageKey);
+        const freshlyCheckedInstalled = freshStoredState === 'true';
+        
+        console.log(`[usePwaDetection] Fresh localStorage check for "${localStorageKey}": ${freshlyCheckedInstalled}`);
+        
+        // Case 4: 已安装但在浏览器中运行
+        if (freshlyCheckedInstalled) {
+          console.log('[usePwaDetection] Status: not-installable-already-installed - from fresh localStorage check');
+          return 'not-installable-already-installed';
+        }
+      } catch (e) {
+        console.error('[usePwaDetection] Error checking fresh installation state:', e);
+      }
+    }
+    
+    // Case 5: 浏览器不支持安装（默认情况）
+    console.log('[usePwaDetection] Status: not-installable-browser-unsupported - default case');
     return 'not-installable-browser-unsupported';
   };
 
