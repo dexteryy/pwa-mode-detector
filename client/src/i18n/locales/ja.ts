@@ -2,8 +2,8 @@ export default {
   // 共通
   language: "言語選択",
   language_english: "English (英語)",
-  language_chinese: "簡体中国語",
-  language_chinese_traditional: "繁体中国語",
+  language_chinese: "简体中文 (簡体中国語)",
+  language_chinese_traditional: "繁體中文 (繁体中国語)",
   language_japanese: "日本語",
   language_german: "Deutsch (ドイツ語)",
   language_french: "Français (フランス語)",
