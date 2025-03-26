@@ -14,6 +14,9 @@ const ManifestViewer: React.FC = () => {
   
   // Use the shared manifest context instead of fetching it again
   const { manifestInfo: manifest, isLoading, error } = useContext(ManifestContext);
+  
+  // 调试用：记录组件获取的manifest信息
+  console.log('[ManifestViewer] Context data:', { manifest, isLoading, error });
 
   // Format JSON for display
   const formatJson = (json: object): string => {

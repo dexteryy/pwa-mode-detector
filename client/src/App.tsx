@@ -165,15 +165,24 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       
       fetch(actualManifestPath)
         .then(response => {
+          console.log(`[ManifestHandler] Fetch response status: ${response.status}, ${response.statusText}`);
+          console.log(`[ManifestHandler] Response headers:`, 
+            Array.from(response.headers.entries()).map(([key, value]) => `${key}: ${value}`).join(', '));
+          
           if (!response.ok) {
             throw new Error(`Failed to fetch manifest: ${response.status}`);
           }
           return response.json();
         })
         .then(data => {
-          console.log('[ManifestHandler] Manifest data loaded', data);
-          setManifestInfo(data);
+          console.log('[ManifestHandler] Manifest data loaded:', JSON.stringify(data));
+          setManifestInfo(data); // 显式地更新状态
           setIsLoading(false);
+          
+          // 确认状态更新后的结果
+          setTimeout(() => {
+            console.log('[ManifestHandler] State after update, manifestInfo:', manifestInfo);
+          }, 100);
         })
         .catch(err => {
           console.error('[ManifestHandler] Error loading manifest:', err);
