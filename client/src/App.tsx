@@ -159,15 +159,29 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       console.log(`[ManifestHandler] Setting manifest to: ${url}`);
       
       // Fetch the manifest content
-      fetch(url)
+      console.log(`[ManifestHandler] Fetching manifest from: ${url}`);
+      
+      fetch(url, {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        },
+        cache: 'no-store'
+      })
         .then(response => {
           if (!response.ok) {
+            console.error(`[ManifestHandler] Server responded with status ${response.status}`);
             throw new Error(`Failed to fetch manifest: ${response.status}`);
           }
+          console.log(`[ManifestHandler] Manifest fetch successful, parsing JSON...`);
           return response.json();
         })
         .then(data => {
-          console.log('[ManifestHandler] Manifest data loaded', data);
+          console.log('[ManifestHandler] Manifest data loaded:', data);
+          if (!data || Object.keys(data).length === 0) {
+            throw new Error('Manifest data is empty');
+          }
           setManifestInfo(data);
           setIsLoading(false);
         })
@@ -175,6 +189,24 @@ function ManifestHandler({ children }: { children: ReactNode }) {
           console.error('[ManifestHandler] Error loading manifest:', err);
           setError(err.message || 'Unknown error loading manifest');
           setIsLoading(false);
+          
+          // Try to fetch the manifest directly from static path as fallback
+          const staticPath = baseUrl.replace('/manifests/', '/');
+          console.log(`[ManifestHandler] Attempting fallback fetch from: ${staticPath}`);
+          
+          fetch(`/client/public/manifests${staticPath}?v=${timestamp}`, {
+            cache: 'no-store'
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log('[ManifestHandler] Fallback manifest loaded:', data);
+              setManifestInfo(data);
+              setError(null);
+              setIsLoading(false);
+            })
+            .catch(fallbackErr => {
+              console.error('[ManifestHandler] Fallback fetch also failed:', fallbackErr);
+            });
         });
     }
   }, [location, currentManifestPath]);

@@ -4,6 +4,34 @@ import path from "path";
 import fs from "fs";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // 添加路由处理所有的 manifest 文件
+  app.get('/manifests/:name.json', (req: Request, res: Response) => {
+    const manifestName = req.params.name;
+    const manifestPath = path.join(__dirname, '../client/public/manifests', `${manifestName}.json`);
+    
+    console.log(`[Server] Serving manifest: ${manifestPath}`);
+    
+    try {
+      if (fs.existsSync(manifestPath)) {
+        // 防止缓存，确保每次都能获取最新内容
+        res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.header('Pragma', 'no-cache');
+        res.header('Expires', '0');
+        
+        const manifestContent = fs.readFileSync(manifestPath, 'utf8');
+        res.type('application/json');
+        res.send(manifestContent);
+        console.log(`[Server] Successfully served manifest: ${manifestName}.json`);
+      } else {
+        console.error(`[Server] Manifest not found: ${manifestPath}`);
+        res.status(404).send('Manifest not found');
+      }
+    } catch (error) {
+      console.error(`[Server] Error serving manifest: ${error}`);
+      res.status(500).send('Internal server error');
+    }
+  });
+
   // 添加中间件来处理 /manifest.json 请求
   app.use((req: Request, res: Response, next: NextFunction) => {
     // 只处理 /manifest.json 请求
@@ -27,6 +55,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         pathname = req.originalUrl.split("/manifest.json")[0] || "/";
       }
       
+      console.log(`[Server] Handling /manifest.json request with pathname: ${pathname}`);
+      
       // 根据路径决定返回哪个 manifest 或者什么都不返回
       if (pathname.includes("/standalone")) {
         // 对应 standalone 模式的页面
@@ -43,7 +73,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         // 对于入口页或无法识别的路径，返回空内容
         // 使用 204 No Content 响应，避免浏览器错误提示，但不会加载任何内容
-        console.log(`Handling /manifest.json request with no valid path context: ${pathname}, returning 204`);
+        console.log(`[Server] Handling /manifest.json request with no valid path context: ${pathname}, returning 204`);
         return res.status(204).end();
       }
     }
