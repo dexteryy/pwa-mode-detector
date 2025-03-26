@@ -13,7 +13,8 @@ export default {
 
   // 입장 페이지
   entry_title: "PWA 디스플레이 모드 데모",
-  entry_subtitle: "PWA가 다양하게 작동하는 방식을 보려면 디스플레이 모드를 선택하세요",
+  entry_subtitle:
+    "PWA가 다양하게 작동하는 방식을 보려면 디스플레이 모드를 선택하세요",
   what_is_pwa_display_mode: "PWA 디스플레이 모드란 무엇인가요?",
   pwa_display_mode_description:
     "Progressive Web Apps(PWA)은 사용자 장치에서 다양한 방식으로 표시될 수 있습니다. Web App Manifest의 'display' 속성은 표시 모드를 정의하고 어떤 브라우저 UI 요소가 표시되는지와 앱의 전체적인 모양에 영향을 줍니다.",
@@ -28,13 +29,14 @@ export default {
   footer_text: "PWA 디스플레이 모드 데모 | 시작하려면 모드를 선택하세요",
 
   // 디스플레이 모드
-  standalone_name: "독립 실행형 (standalone)",
+  standalone_name: "독립 실행형",
   standalone_description: "앱이 브라우저 UI 없이 자체 창에서 실행됩니다",
-  minimal_ui_name: "최소 UI (minimal-ui)",
-  minimal_ui_description: "앱이 최소한의 브라우저 컨트롤과 함께 창에서 실행됩니다",
-  fullscreen_name: "전체화면 (fullscreen)",
+  minimal_ui_name: "최소 UI",
+  minimal_ui_description:
+    "앱이 최소한의 브라우저 컨트롤과 함께 창에서 실행됩니다",
+  fullscreen_name: "전체화면",
   fullscreen_description: "앱이 브라우저 UI 없이 전체 화면을 차지합니다",
-  browser_name: "브라우저 (browser)",
+  browser_name: "브라우저",
   browser_description: "앱이 일반 브라우저 탭에서 실행됩니다",
 
   // 상태 카드
@@ -49,7 +51,8 @@ export default {
   install_capability_title: "설치 상태",
   install_disabled_manifest_browser:
     "Web App Manifest의 'display' 모드가 'browser'로 설정되어 있어 이 모드는 설치를 지원하지 않습니다",
-  install_disabled_browser_unsupported: "브라우저가 PWA 설치를 지원하지 않습니다",
+  install_disabled_browser_unsupported:
+    "브라우저가 PWA 설치를 지원하지 않습니다",
   install_button_disabled: "설치를 사용할 수 없음",
 
   // PWA 감지기
@@ -67,9 +70,11 @@ export default {
   detector_mode_mismatch:
     "감지된 실행 모드가 manifest에 구성된 것과 다릅니다. 브라우저가 이 모드를 지원하지 않거나 앱이 아직 설치되지 않았기 때문일 수 있습니다.",
   status_standalone_running: "앱이 이미 독립 실행형 모드에서 실행 중입니다",
-  status_minimal_ui_prompt: "전체 독립 실행형 모드를 경험하려면 이 앱을 설치할 수 있습니다",
+  status_minimal_ui_prompt:
+    "전체 독립 실행형 모드를 경험하려면 이 앱을 설치할 수 있습니다",
   status_fullscreen_running: "앱이 이미 전체화면 모드에서 실행 중입니다",
-  status_browser_installable: "PWA 독립 실행형 모드를 경험하려면 이 앱을 설치할 수 있습니다",
+  status_browser_installable:
+    "PWA 독립 실행형 모드를 경험하려면 이 앱을 설치할 수 있습니다",
   status_browser_not_installable: "브라우저가 PWA 설치를 지원하지 않습니다",
   status_browser_checking: "이 페이지가 설치 가능한지 확인 중...",
   checking: "확인 중...",
@@ -78,11 +83,13 @@ export default {
   mode_active: "활성화됨",
   mode_inactive: "비활성화됨",
   about_pwa_modes: "PWA 모드에 대하여",
-  pwa_different_modes: "Progressive Web Apps(PWA)은 다양한 디스플레이 모드에서 실행될 수 있습니다:",
+  pwa_different_modes:
+    "Progressive Web Apps(PWA)은 다양한 디스플레이 모드에서 실행될 수 있습니다:",
 
   // 새로고침 토스트
   refreshing: "새로고침 중...",
-  refresh_process: "디스플레이 모드, 설치 상태 확인 및 manifest 정보 업데이트 중",
+  refresh_process:
+    "디스플레이 모드, 설치 상태 확인 및 manifest 정보 업데이트 중",
 
   // 매니페스트 뷰어
   manifest_viewer_title: "Web App Manifest",
