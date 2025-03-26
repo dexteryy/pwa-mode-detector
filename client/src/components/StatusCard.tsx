@@ -10,43 +10,34 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
   const { t } = useTranslation();
   const { isChecking, promptInstall } = usePwaDetection();
   
-  // 第一部分：模式检测卡片样式
-  let modeCardClassName = "bg-white rounded-lg shadow-md p-6 mb-4 border-l-4 ";
+  // 模式检测卡片样式
+  let cardBorderColor = "border-amber-500";
   let modeIconClassName = "material-icons text-3xl mr-3 ";
   let modeIconName = "";
   let modeStatusText = "";
-  let modePromptText = "";
 
   if (mode === "standalone") {
-    modeCardClassName += "border-green-500";
+    cardBorderColor = "border-green-500";
     modeIconClassName += "text-green-500";
     modeIconName = "check_circle";
     modeStatusText = `${t('current_mode')}: ${t('standalone_name')}`;
-    modePromptText = t('status_standalone_running');
   } else if (mode === "minimal-ui") {
-    modeCardClassName += "border-blue-500";
+    cardBorderColor = "border-blue-500";
     modeIconClassName += "text-blue-500";
     modeIconName = "view_compact";
     modeStatusText = `${t('current_mode')}: ${t('minimal_ui_name')}`;
-    modePromptText = t('status_minimal_ui_prompt');
   } else if (mode === "fullscreen") {
-    modeCardClassName += "border-blue-500";
+    cardBorderColor = "border-blue-500";
     modeIconClassName += "text-blue-500";
     modeIconName = "fullscreen";
     modeStatusText = `${t('current_mode')}: ${t('fullscreen_name')}`;
-    modePromptText = t('status_fullscreen_running');
   } else {
-    modeCardClassName += "border-amber-500";
+    cardBorderColor = "border-amber-500";
     modeIconClassName += "text-amber-500";
     modeIconName = "public";
     modeStatusText = `${t('current_mode')}: ${t('browser_name')}`;
-    modePromptText = t('status_browser_running');
   }
 
-  // 第二部分：安装能力检测卡片
-  // 只在浏览器模式下显示安装能力卡片
-  const showInstallCard = mode === 'browser';
-  
   // 确定安装不能的原因
   let installDisabledReason = "";
   if (mode === 'browser' && !isInstallable && !isChecking) {
@@ -60,39 +51,35 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
   }
 
   return (
-    <>
-      {/* 第一部分：当前模式卡片 */}
-      <div className={modeCardClassName}>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center">
-          <span className={modeIconClassName + "mb-2 sm:mb-0"}>{modeIconName}</span>
-          <div>
-            <h2 className="text-xl font-semibold text-dark">{modeStatusText}</h2>
-            <p className="text-gray-500">{modePromptText}</p>
-            {mode === 'browser' && (
-              <p className="text-amber-600 mt-2 text-sm border-t border-amber-200 pt-2">{t('browser_mode_info')}</p>
-            )}
-          </div>
+    <div className={`bg-white rounded-lg shadow-md p-6 mb-4 border-l-4 ${cardBorderColor}`}>
+      <div className="flex flex-col space-y-4">
+        {/* 当前模式部分 */}
+        <div className="flex items-center">
+          <span className={modeIconClassName + "mb-0"}>{modeIconName}</span>
+          <h2 className="text-xl font-semibold text-dark">{modeStatusText}</h2>
         </div>
-      </div>
-      
-      {/* 第二部分：安装能力检测卡片 - 仅在browser模式下显示 */}
-      {showInstallCard && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8 border-l-4 border-purple-500">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4">
-            <span className={`material-icons text-3xl mr-3 mb-2 sm:mb-0 ${isChecking ? 'text-blue-500' : (isInstallable ? 'text-green-500' : 'text-gray-500')}`}>
-              {isChecking ? 'hourglass_empty' : (isInstallable ? 'system_update' : 'block')}
-            </span>
+        
+        {/* 安装按钮部分 - 仅在browser模式下显示 */}
+        {mode === 'browser' && (
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-4 border-t border-gray-200">
             <div className="flex-grow">
-              <h2 className="text-xl font-semibold text-dark">{t('install_capability_title')}</h2>
               {isChecking ? (
-                <p className="text-blue-500">{t('status_browser_checking')}</p>
+                <div className="flex items-center">
+                  <span className="material-icons text-blue-500 mr-2">hourglass_empty</span>
+                  <p className="text-blue-500">{t('status_browser_checking')}</p>
+                </div>
               ) : (
                 <>
-                  <p className={isInstallable ? 'text-green-600' : 'text-gray-500'}>
-                    {isInstallable ? t('status_browser_installable') : t('status_browser_not_installable')}
-                  </p>
+                  <div className="flex items-center">
+                    <span className={`material-icons mr-2 ${isInstallable ? 'text-green-500' : 'text-gray-500'}`}>
+                      {isInstallable ? 'system_update' : 'block'}
+                    </span>
+                    <p className={isInstallable ? 'text-green-600' : 'text-gray-500'}>
+                      {isInstallable ? t('can_be_installed') : t('not_installable')}
+                    </p>
+                  </div>
                   {!isInstallable && installDisabledReason && (
-                    <p className="text-gray-600 mt-2 text-sm border-t border-gray-200 pt-2">{installDisabledReason}</p>
+                    <p className="text-gray-600 mt-2 text-sm">{installDisabledReason}</p>
                   )}
                 </>
               )}
@@ -119,9 +106,9 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
               )}
             </div>
           </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </div>
   );
 };
 
