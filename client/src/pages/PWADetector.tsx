@@ -151,19 +151,6 @@ const PWADetector = () => {
           <p>{t('detector_title')} | {t('device_info')}: <span className="text-gray-400 text-xs">{userAgent}</span></p>
         </div>
       </footer>
-
-      {/* Install button for PWA installation - Hidden during checking */}
-      {isInstallable && !isChecking && (
-        <div className="fixed bottom-4 right-4 transition-opacity duration-300">
-          <button 
-            onClick={promptInstall}
-            className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 flex items-center"
-          >
-            <span className="material-icons mr-1">get_app</span>
-            {t('install_pwa')}
-          </button>
-        </div>
-      )}
     </div>
   );
 };
