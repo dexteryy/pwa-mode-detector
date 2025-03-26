@@ -88,6 +88,22 @@ const ManifestViewer: React.FC = () => {
         {t('manifest_viewer_title', 'Web App Manifest')}
       </h2>
       
+      {/* 显示关键 manifest 属性 */}
+      {manifest && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {manifest.display && (
+            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+              display: {manifest.display}
+            </span>
+          )}
+          {manifest.id && (
+            <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
+              id: {manifest.id}
+            </span>
+          )}
+        </div>
+      )}
+      
       <Collapsible open={isOpen} onOpenChange={setIsOpen} className="border rounded-md p-2">
         <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-gray-100 rounded transition-colors">
           <div className="flex items-center">
@@ -100,21 +116,6 @@ const ManifestViewer: React.FC = () => {
               {t('view_manifest', 'View Manifest Content')}
             </span>
           </div>
-          
-          {manifest && (
-            <div className="text-xs text-gray-500">
-              {manifest.display && (
-                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">
-                  display: {manifest.display}
-                </span>
-              )}
-              {manifest.id && (
-                <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">
-                  id: {manifest.id}
-                </span>
-              )}
-            </div>
-          )}
         </CollapsibleTrigger>
         
         <CollapsibleContent className="mt-2">
