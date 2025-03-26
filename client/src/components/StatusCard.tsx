@@ -4,9 +4,10 @@ import { usePwaDetection } from "../hooks/usePwaDetection";
 interface StatusCardProps {
   mode: string;
   isInstallable: boolean;
+  expectedMode?: string;  // 预期模式，可选参数
 }
 
-const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
+const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
   const { t } = useTranslation();
   const { isChecking, promptInstall } = usePwaDetection();
   
@@ -41,9 +42,11 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
   // 确定安装不能的原因
   let installDisabledReason = "";
   if (!isInstallable && !isChecking) {
-    // 如果是因为预期模式为browser，提供特定的消息
-    const expectedModeBrowser = mode === 'browser';
-    if (expectedModeBrowser) {
+    // 使用传入的expectedMode或默认为当前mode
+    const actualExpectedMode = expectedMode || mode;
+    
+    // 如果预期模式为browser，提供特定的消息
+    if (actualExpectedMode === 'browser') {
       installDisabledReason = t('install_disabled_manifest_browser');
     } else {
       // 其他模式（standalone、minimal-ui、fullscreen）显示浏览器不支持的消息

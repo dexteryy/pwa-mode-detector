@@ -112,7 +112,7 @@ const PWADetector = () => {
         </div>
         
         {/* Primary status card */}
-        <StatusCard mode={currentMode} isInstallable={isInstallable} />
+        <StatusCard mode={currentMode} isInstallable={isInstallable} expectedMode={expectedMode} />
 
         {/* Detection details card */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
