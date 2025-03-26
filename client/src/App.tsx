@@ -15,22 +15,26 @@ function ManifestHandler() {
     // 检查路径是否匹配 PWA 路径模式
     const match = location.match(/\/pwa\/([a-z-]+)/);
     
+    // 获取或创建 manifest 链接元素
+    let manifestLink = document.querySelector('link[rel="manifest"]') as HTMLLinkElement;
+    if (!manifestLink) {
+      const newLink = document.createElement('link');
+      newLink.rel = 'manifest';
+      document.head.appendChild(newLink);
+      manifestLink = newLink;
+    }
+    
     if (match) {
+      // 如果是 PWA 路径，设置对应的 manifest
       const displayMode = match[1];
       const manifestPath = `/manifests/${displayMode}.json`;
       
-      // 更新 manifest 链接
-      let manifestLink = document.querySelector('link[rel="manifest"]') as HTMLLinkElement;
-      
-      if (!manifestLink) {
-        const newLink = document.createElement('link');
-        newLink.rel = 'manifest';
-        document.head.appendChild(newLink);
-        manifestLink = newLink;
-      }
-      
       manifestLink.setAttribute('href', manifestPath);
       console.log(`设置 manifest 为: ${manifestPath}`);
+    } else {
+      // 如果是其他路径，设置默认 manifest
+      manifestLink.setAttribute('href', '/manifest.json');
+      console.log(`设置默认 manifest: /manifest.json`);
     }
   }, [location]);
   
