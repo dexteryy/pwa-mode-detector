@@ -1,10 +1,11 @@
 {
   "name": "PWA Mode Detector",
-  "short_name": "PwaDetector",
-  "start_url": "./",
-  "display": "standalone",
+  "short_name": "PWA Modes",
+  "start_url": "/",
+  "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",
+  "description": "探索不同PWA展示模式的应用",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
