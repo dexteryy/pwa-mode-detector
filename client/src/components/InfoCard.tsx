@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { HelpCircle } from "lucide-react";
-import { TermLinkedText } from "../lib/termLinks";
 
 const InfoCard = () => {
   const { t } = useTranslation();
@@ -12,26 +11,12 @@ const InfoCard = () => {
         {t('about_pwa_modes')}
       </h2>
       <div className="prose dark:prose-invert text-gray-700 dark:text-gray-300">
-        <p className="mb-3">
-          <TermLinkedText text={t('pwa_different_modes')} />
-        </p>
+        <p className="mb-3">{t('pwa_different_modes')}</p>
         <ul className="list-disc pl-5 space-y-2">
-          <li>
-            <strong>{t('browser_name')}：</strong>
-            <TermLinkedText text={t('browser_description')} />
-          </li>
-          <li>
-            <strong>{t('minimal_ui_name')}：</strong>
-            <TermLinkedText text={t('minimal_ui_description')} />
-          </li>
-          <li>
-            <strong>{t('standalone_name')}：</strong>
-            <TermLinkedText text={t('standalone_description')} />
-          </li>
-          <li>
-            <strong>{t('fullscreen_name')}：</strong>
-            <TermLinkedText text={t('fullscreen_description')} />
-          </li>
+          <li><strong>{t('browser_name')} (browser)：</strong>{t('browser_description')}</li>
+          <li><strong>{t('minimal_ui_name')} (minimal-ui)：</strong>{t('minimal_ui_description')}</li>
+          <li><strong>{t('standalone_name')} (standalone)：</strong>{t('standalone_description')}</li>
+          <li><strong>{t('fullscreen_name')} (fullscreen)：</strong>{t('fullscreen_description')}</li>
         </ul>
       </div>
     </div>
