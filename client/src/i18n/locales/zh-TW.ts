@@ -5,6 +5,11 @@ export default {
   language_chinese: "中文 (簡體)",
   language_chinese_traditional: "繁體中文",
   language_japanese: "日本語 (日文)",
+  language_german: "Deutsch (德文)",
+  language_french: "Français (法文)",
+  language_spanish: "Español (西班牙文)",
+  language_portuguese: "Português (葡萄牙文)",
+  language_korean: "한국어 (韓文)",
 
   // 入口頁面
   entry_title: "PWA 展示模式演示",

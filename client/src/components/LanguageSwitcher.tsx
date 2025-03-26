@@ -8,6 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { cn } from "@/lib/utils";
 
@@ -45,10 +47,33 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
         return '繁';
       case 'ja':
         return 'JP';
+      case 'ko':
+        return 'KO';
+      case 'de':
+        return 'DE';
+      case 'fr':
+        return 'FR';
+      case 'es':
+        return 'ES';
+      case 'pt':
+        return 'PT';
       default:
         return 'EN';
     }
   };
+
+  // 创建语言菜单项的函数
+  const createLanguageMenuItem = (languageCode: string, translationKey: string) => (
+    <DropdownMenuItem 
+      onClick={() => handleLanguageChange(languageCode)}
+      className={currentLanguage === languageCode ? 'bg-muted' : ''}
+    >
+      {t(translationKey)}
+      {currentLanguage === languageCode && (
+        <Check className="h-4 w-4 ml-2" />
+      )}
+    </DropdownMenuItem>
+  );
 
   return (
     <DropdownMenu>
@@ -62,50 +87,32 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
           <span className="text-sm font-medium">{getCurrentLanguageDisplay()}</span>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem 
-          onClick={() => handleLanguageChange('en')}
-          className={currentLanguage === 'en' ? 'bg-muted' : ''}
-        >
-          {t('language_english')}
-          {currentLanguage === 'en' && (
-            <Check className="h-4 w-4 ml-2" />
-          )}
-        </DropdownMenuItem>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel>{t('language')}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        
+        {/* 英语 */}
+        {createLanguageMenuItem('en', 'language_english')}
         
         <DropdownMenuSeparator />
         
-        <DropdownMenuItem 
-          onClick={() => handleLanguageChange('zh')}
-          className={currentLanguage === 'zh' ? 'bg-muted' : ''}
-        >
-          {t('language_chinese')}
-          {currentLanguage === 'zh' && (
-            <Check className="h-4 w-4 ml-2" />
-          )}
-        </DropdownMenuItem>
-        
-        <DropdownMenuItem 
-          onClick={() => handleLanguageChange('zh-TW')}
-          className={currentLanguage === 'zh-TW' ? 'bg-muted' : ''}
-        >
-          {t('language_chinese_traditional')}
-          {currentLanguage === 'zh-TW' && (
-            <Check className="h-4 w-4 ml-2" />
-          )}
-        </DropdownMenuItem>
+        {/* 东亚语言组 */}
+        <DropdownMenuGroup>
+          {createLanguageMenuItem('zh', 'language_chinese')}
+          {createLanguageMenuItem('zh-TW', 'language_chinese_traditional')}
+          {createLanguageMenuItem('ja', 'language_japanese')}
+          {createLanguageMenuItem('ko', 'language_korean')}
+        </DropdownMenuGroup>
         
         <DropdownMenuSeparator />
         
-        <DropdownMenuItem 
-          onClick={() => handleLanguageChange('ja')}
-          className={currentLanguage === 'ja' ? 'bg-muted' : ''}
-        >
-          {t('language_japanese')}
-          {currentLanguage === 'ja' && (
-            <Check className="h-4 w-4 ml-2" />
-          )}
-        </DropdownMenuItem>
+        {/* 欧洲语言组 */}
+        <DropdownMenuGroup>
+          {createLanguageMenuItem('de', 'language_german')}
+          {createLanguageMenuItem('fr', 'language_french')}
+          {createLanguageMenuItem('es', 'language_spanish')}
+          {createLanguageMenuItem('pt', 'language_portuguese')}
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
