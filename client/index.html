@@ -13,6 +13,10 @@
     <title>PWA Mode Detector</title>
     <link href="/fonts/inter/inter.css" rel="stylesheet">
     <link href="/fonts/material-icons/material-icons.css" rel="stylesheet">
+    <!-- 阻止浏览器尝试自动加载 /manifest.json -->
+    <meta name="no-default-manifest" content="true">
+    <!-- 告诉浏览器不使用默认manifest位置 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <!-- Manifest will be dynamically added for PWA pages only -->
     <script>
       // 响应系统偏好设置并设置初始主题
