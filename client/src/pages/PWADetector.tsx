@@ -6,6 +6,7 @@ import { usePwaDetection } from "@/hooks/usePwaDetection";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import IconWithFallback from "../components/IconWithFallback";
 
 const PWADetector = () => {
   const { t } = useTranslation();
@@ -60,7 +61,9 @@ const PWADetector = () => {
             <div>
               <Link href="/">
                 <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded hover:bg-blue-500 transition-colors flex items-center cursor-pointer whitespace-nowrap">
-                  <span className="material-icons text-xs mr-1">home</span>
+                  <div className="w-3 h-3 mr-1 flex items-center justify-center">
+                    <IconWithFallback name="home" size="xs" />
+                  </div>
                   {t('back_to_home')}
                 </div>
               </Link>
@@ -71,7 +74,7 @@ const PWADetector = () => {
                 className={`bg-blue-600 text-white h-6 w-6 flex items-center justify-center rounded hover:bg-blue-500 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
                 aria-label="Refresh detection"
               >
-                <span className="material-icons text-sm">refresh</span>
+                <IconWithFallback name="refresh" size="sm" />
               </button>
               <LanguageSwitcher />
             </div>
@@ -83,7 +86,9 @@ const PWADetector = () => {
       <header className="bg-blue-500 text-white shadow-md">
         <div className="container mx-auto px-4 py-5">
           <div className="flex items-center justify-center">
-            <span className="material-icons mr-2">devices</span>
+            <div className="w-6 h-6 mr-2 flex items-center justify-center">
+              <IconWithFallback name="devices" size="md" />
+            </div>
             <h1 className="text-xl font-semibold">{t('detector_title')}</h1>
           </div>
         </div>
