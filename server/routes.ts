@@ -1,15 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
-
-  // use storage to perform CRUD operations on the storage interface
-  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
+  // PWA Display Mode Detector 不需要额外的API路由
+  // 仅需要静态文件服务和Vite开发服务器
 
   const httpServer = createServer(app);
-
   return httpServer;
 }
