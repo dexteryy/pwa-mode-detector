@@ -12,26 +12,26 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
   let promptText = "";
 
   if (mode === "standalone") {
-    cardClassName += "border-success";
-    iconClassName += "text-success";
+    cardClassName += "border-green-500";
+    iconClassName += "text-green-500";
     iconName = "check_circle";
     statusText = "当前运行模式：PWA独立窗口（standalone）";
     promptText = "应用已在独立窗口模式下运行";
   } else if (mode === "minimal-ui") {
-    cardClassName += "border-info";
-    iconClassName += "text-info";
+    cardClassName += "border-blue-500";
+    iconClassName += "text-blue-500";
     iconName = "view_compact";
     statusText = "当前运行模式：最小界面（minimal-ui）";
     promptText = "您可以安装此应用以体验完整的独立窗口模式";
   } else if (mode === "fullscreen") {
-    cardClassName += "border-info";
-    iconClassName += "text-info";
+    cardClassName += "border-blue-500";
+    iconClassName += "text-blue-500";
     iconName = "fullscreen";
     statusText = "当前运行模式：全屏（fullscreen）";
     promptText = "应用已在全屏模式下运行";
   } else {
-    cardClassName += "border-warning";
-    iconClassName += "text-warning";
+    cardClassName += "border-amber-500";
+    iconClassName += "text-amber-500";
     iconName = "public";
     statusText = "当前运行模式：浏览器标签页（browser）";
     promptText = isInstallable 
