@@ -50,22 +50,22 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   const [userAgent, setUserAgent] = useState<string>("");
   const [isChecking, setIsChecking] = useState<boolean>(true);
 
-  // 每次路径变化时，强制设置为检查中状态
+  // Force checking state every time the path changes
   useEffect(() => {
-    // 重置状态
+    // Reset state
     setIsChecking(true);
-    // 重置installable状态
+    // Reset installable state
     setDeferredPrompt(null);
-    console.log(`[usePwaDetection] 路径变化: ${forcedPathKey}, 开始新检测`);
+    console.log(`[usePwaDetection] Path change: ${forcedPathKey}, starting new detection`);
 
-    // 延迟完成检查的时间，确保有足够时间接收beforeinstallprompt事件
+    // Delay completion of the check to ensure enough time to receive beforeinstallprompt event
     const timer = setTimeout(() => {
       setIsChecking(false);
-      console.log(`[usePwaDetection] 检测完成: ${forcedPathKey}`);
-    }, 3000); // 增加到3秒，给浏览器更多时间触发安装事件
+      console.log(`[usePwaDetection] Detection complete: ${forcedPathKey}`);
+    }, 3000); // Increased to 3 seconds to give browser more time to trigger installation events
 
     return () => clearTimeout(timer);
-  }, [forcedPathKey]); // 依赖 forcedPathKey，确保路径变化时重新检测
+  }, [forcedPathKey]); // Depends on forcedPathKey to ensure detection resets when path changes
 
   // Detect the current display mode
   const checkDisplayMode = () => {
@@ -122,17 +122,17 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       // Prevent Chrome 67+ from automatically showing the prompt
       e.preventDefault();
       
-      // 只在检测完成后更新安装状态，避免显示闪烁
+      // Only update installation status after detection completes to avoid UI flickering
       if (!isChecking) {
         setDeferredPrompt(e);
-        console.log(`[usePwaDetection] 收到安装提示事件并立即更新状态`);
+        console.log(`[usePwaDetection] Received install prompt event and updating status immediately`);
       } else {
-        // 在检测过程中接收到事件，保存但不立即更新界面
-        console.log(`[usePwaDetection] 收到安装提示事件，但检测尚未完成，暂存事件`);
+        // During detection process, save event but don't update UI immediately
+        console.log(`[usePwaDetection] Received install prompt event, but detection not complete yet, storing event`);
         setTimeout(() => {
           setDeferredPrompt(e);
-          console.log(`[usePwaDetection] 检测完成后更新安装状态`);
-        }, 100); // 延迟一点更新，确保状态变化在检测完成后
+          console.log(`[usePwaDetection] Updating installation status after detection complete`);
+        }, 100); // Slight delay to ensure state changes after detection completes
       }
     };
     
@@ -141,7 +141,7 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // Hide install button after app is installed
     const handleAppInstalled = () => {
       setDeferredPrompt(null);
-      console.log(`[usePwaDetection] 应用已安装`);
+      console.log(`[usePwaDetection] App has been installed`);
     };
     
     window.addEventListener("appinstalled", handleAppInstalled);
@@ -164,7 +164,7 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [displayModes]); // 只依赖 displayModes
+  }, [displayModes]); // Only depends on displayModes
 
   // Function to prompt installation
   const promptInstall = () => {
@@ -175,9 +175,9 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       // Wait for the user to respond to the prompt
       deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
         if (choiceResult.outcome === "accepted") {
-          console.log("[usePwaDetection] 用户接受安装提示");
+          console.log("[usePwaDetection] User accepted installation prompt");
         } else {
-          console.log("[usePwaDetection] 用户取消安装提示");
+          console.log("[usePwaDetection] User dismissed installation prompt");
         }
         // Clear the saved prompt
         setDeferredPrompt(null);
@@ -187,23 +187,23 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   
   // Function to manually reset the checking state (for use with refresh button)
   const resetChecking = () => {
-    // 设置为检查中状态
+    // Set to checking state
     setIsChecking(true);
-    // 重置installable状态
+    // Reset installable state
     setDeferredPrompt(null);
-    console.log(`[usePwaDetection] 手动刷新: 开始新检测`);
+    console.log(`[usePwaDetection] Manual refresh: starting new detection`);
     
-    // 延迟后完成检查
+    // Complete check after delay
     setTimeout(() => {
       setIsChecking(false);
-      console.log(`[usePwaDetection] 手动刷新: 检测完成`);
-    }, 3000); // 保持与路径变化时的检测时间一致
+      console.log(`[usePwaDetection] Manual refresh: detection complete`);
+    }, 3000); // Keep consistent with the detection time when path changes
   };
 
   return {
     displayModes,
     currentMode,
-    // 当检测中时，不返回安装状态，避免闪烁
+    // When detecting, don't return installation status to avoid UI flickering
     isInstallable: isChecking ? false : !!deferredPrompt,
     isChecking,
     promptInstall,

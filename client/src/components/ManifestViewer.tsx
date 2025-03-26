@@ -23,7 +23,7 @@ interface WebAppManifest {
   }>;
   id?: string;
   scope?: string;
-  [key: string]: any;  // 允许其他可能的属性
+  [key: string]: any;  // Allow other possible properties
 }
 
 const ManifestViewer: React.FC = () => {
@@ -39,7 +39,7 @@ const ManifestViewer: React.FC = () => {
         setIsLoading(true);
         setError(null);
         
-        // 找到页面上所有的manifest链接
+        // Find all manifest links on the page
         const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
         
         if (manifestLinks.length === 0) {
@@ -48,7 +48,7 @@ const ManifestViewer: React.FC = () => {
           return;
         }
         
-        // 使用第一个manifest链接
+        // Use the first manifest link
         const manifestUrl = manifestLinks[0].getAttribute('href');
         
         if (!manifestUrl) {
@@ -57,7 +57,7 @@ const ManifestViewer: React.FC = () => {
           return;
         }
         
-        // 请求manifest内容
+        // Request manifest content
         const response = await fetch(manifestUrl);
         
         if (!response.ok) {
@@ -76,7 +76,7 @@ const ManifestViewer: React.FC = () => {
     fetchManifest();
   }, []);
 
-  // 格式化JSON显示
+  // Format JSON for display
   const formatJson = (json: object): string => {
     return JSON.stringify(json, null, 2);
   };
