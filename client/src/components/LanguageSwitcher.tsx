@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '../i18n';
-import { Globe } from 'lucide-react';
+import { Globe, Check } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,10 +45,11 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
       <DropdownMenuTrigger asChild>
         <div className={cn(
           "text-white flex items-center justify-center cursor-pointer whitespace-nowrap", 
-          "w-10 hover:bg-blue-600/40 transition-colors",
+          "w-16 hover:bg-blue-600/40 transition-colors",
           className
         )}>
-          <Globe className="h-4 w-4" />
+          <Globe className="h-4 w-4 mr-1" />
+          <span className="text-xs font-medium">{getCurrentLanguageDisplay()}</span>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -58,7 +59,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
         >
           {t('language_english')}
           {currentLanguage === 'en' && (
-            <span className="material-icons text-xs ml-2">check</span>
+            <Check className="h-4 w-4 ml-2" />
           )}
         </DropdownMenuItem>
         <DropdownMenuItem 
@@ -67,7 +68,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
         >
           {t('language_chinese')}
           {currentLanguage === 'zh' && (
-            <span className="material-icons text-xs ml-2">check</span>
+            <Check className="h-4 w-4 ml-2" />
           )}
         </DropdownMenuItem>
       </DropdownMenuContent>
