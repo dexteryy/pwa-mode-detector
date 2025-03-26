@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import { useEffect } from "react";
 import { Globe, Layout, Smartphone, Maximize, ArrowRight, Code } from "lucide-react";
 
 // 定义 PWA 的 display 模式选项
@@ -99,88 +99,7 @@ const Entry = () => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t('what_is_pwa_display_mode')}</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {(() => {
-                const text = t('pwa_display_mode_description');
-                
-                // 定义替换模式
-                const createLinks = (inputText: string): (string | React.ReactElement)[] => {
-                  // 创建链接替换正则表达式模式，这些会应用于所有语言
-                  interface Replacement {
-                    regex: RegExp;
-                    url: string;
-                    matchIndex?: number;
-                  }
-                  
-                  const replacements: Replacement[] = [
-                    {
-                      regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b|\bプログレッシブ[・\s]?ウェブ[・\s]?アプリ\b|\bアプリケーション(?:ズ)?(?:\s*\([^)]+\))?\b|\bアプリ(?:\s*\([^)]+\))?\b|\bprogressive\b.{1,10}\bweb\b.{1,10}\bapp\b/i,
-                      url: "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
-                    },
-                    {
-                      regex: /\bWeb App Manifest\b|\bManifest(?:o|e)?\s+(?:d[aeo'])?\s*(?:aplicaci[oó]n\s+web|application\s+web|aplicativo\s+web)|\bウェブアプリマニフェスト\b|\b웹\s*앱\s*매니페스트\b|\bManifest(?:o|e)?\b|\b매니페스트\b/i,
-                      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
-                    },
-                    {
-                      regex: /[''](display)['']\s+(?:property|プロパティ|속성)|\b(display)\s+(?:propiedad|propriété|propiedade|属性|속성)|\b(display)\b|[''](표시)['']\s+속성|\[?表示\]?\s*(?:プロパティ|モード)?|\b디스플레이\s+속성\b/i,
-                      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest/display",
-                      matchIndex: 1,
-                    }
-                  ];
-                  
-                  // 开始创建React元素数组
-                  let result: (string | React.ReactElement)[] = [inputText];
-                  
-                  // 依次应用每个替换
-                  replacements.forEach(({ regex, url, matchIndex = 0 }) => {
-                    const newResult: (string | React.ReactElement)[] = [];
-                    
-                    result.forEach(part => {
-                      if (typeof part !== 'string') {
-                        newResult.push(part);
-                        return;
-                      }
-                      
-                      const matches = part.match(regex);
-                      if (!matches) {
-                        newResult.push(part);
-                        return;
-                      }
-                      
-                      const index = part.indexOf(matches[0]);
-                      const linkText = matches[matchIndex] || matches[0];
-                      
-                      // 在匹配前的文本
-                      if (index > 0) {
-                        newResult.push(part.substring(0, index));
-                      }
-                      
-                      // 链接元素
-                      newResult.push(
-                        <a
-                          key={url + index}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline dark:text-blue-400"
-                        >
-                          {linkText}
-                        </a>
-                      );
-                      
-                      // 匹配后的文本
-                      if (index + matches[0].length < part.length) {
-                        newResult.push(part.substring(index + matches[0].length));
-                      }
-                    });
-                    
-                    result = newResult;
-                  });
-                  
-                  return result;
-                };
-                
-                return createLinks(text);
-              })()}
+              {t('pwa_display_mode_description')}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('click_card_instruction')}
@@ -215,88 +134,7 @@ const Entry = () => {
               {t('technical_details')}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {(() => {
-                const text = t('technical_description');
-                
-                // 使用与上面相同的函数逻辑处理链接
-                const createLinks = (inputText: string): (string | React.ReactElement)[] => {
-                  // 创建链接替换正则表达式模式，这些会应用于所有语言
-                  interface Replacement {
-                    regex: RegExp;
-                    url: string;
-                    matchIndex?: number;
-                  }
-                  
-                  const replacements: Replacement[] = [
-                    {
-                      regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b|\bプログレッシブ[・\s]?ウェブ[・\s]?アプリ\b|\bアプリケーション(?:ズ)?(?:\s*\([^)]+\))?\b|\bアプリ(?:\s*\([^)]+\))?\b|\bprogressive\b.{1,10}\bweb\b.{1,10}\bapp\b/i,
-                      url: "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
-                    },
-                    {
-                      regex: /\bWeb App Manifest\b|\bManifest(?:o|e)?\s+(?:d[aeo'])?\s*(?:aplicaci[oó]n\s+web|application\s+web|aplicativo\s+web)|\bウェブアプリマニフェスト\b|\b웹\s*앱\s*매니페스트\b|\bManifest(?:o|e)?\b|\b매니페스트\b/i,
-                      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
-                    },
-                    {
-                      regex: /\bmanifest(?:o|e)?\b/i,
-                      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
-                    }
-                  ];
-                  
-                  // 开始创建React元素数组
-                  let result: (string | React.ReactElement)[] = [inputText];
-                  
-                  // 依次应用每个替换
-                  replacements.forEach(({ regex, url }) => {
-                    const matchIndex = 0; // 默认使用第一个匹配组
-                    const newResult: (string | React.ReactElement)[] = [];
-                    
-                    result.forEach(part => {
-                      if (typeof part !== 'string') {
-                        newResult.push(part);
-                        return;
-                      }
-                      
-                      const matches = part.match(regex);
-                      if (!matches) {
-                        newResult.push(part);
-                        return;
-                      }
-                      
-                      const index = part.indexOf(matches[0]);
-                      const linkText = matches[matchIndex] || matches[0];
-                      
-                      // 在匹配前的文本
-                      if (index > 0) {
-                        newResult.push(part.substring(0, index));
-                      }
-                      
-                      // 链接元素
-                      newResult.push(
-                        <a
-                          key={url + index}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline dark:text-blue-400"
-                        >
-                          {linkText}
-                        </a>
-                      );
-                      
-                      // 匹配后的文本
-                      if (index + matches[0].length < part.length) {
-                        newResult.push(part.substring(index + matches[0].length));
-                      }
-                    });
-                    
-                    result = newResult;
-                  });
-                  
-                  return result;
-                };
-                
-                return createLinks(text);
-              })()}
+              {t('technical_description')}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('browser_support_note')}
