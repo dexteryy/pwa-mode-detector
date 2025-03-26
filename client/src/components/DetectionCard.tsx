@@ -16,16 +16,16 @@ const DetectionCard = ({ mode, isActive }: DetectionCardProps) => {
   
   // Card styling based on active state
   const cardClassName = isActive
-    ? "border rounded-lg p-4 bg-green-50 border-green-500"
-    : "border rounded-lg p-4 bg-gray-50";
+    ? "border rounded-lg p-4 bg-green-50 dark:bg-green-900/30 border-green-500 dark:border-green-600"
+    : "border rounded-lg p-4 bg-gray-50 dark:bg-gray-800/80 dark:border-gray-700";
     
   const indicatorClassName = isActive
-    ? "inline-block w-3 h-3 rounded-full bg-green-500"
-    : "inline-block w-3 h-3 rounded-full bg-gray-300";
+    ? "inline-block w-3 h-3 rounded-full bg-green-500 dark:bg-green-400"
+    : "inline-block w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600";
     
   const statusClassName = isActive 
-    ? "text-sm text-green-600 font-medium"
-    : "text-sm text-gray-600";
+    ? "text-sm text-green-600 dark:text-green-400 font-medium"
+    : "text-sm text-gray-600 dark:text-gray-400";
     
   const statusText = isActive ? t('mode_active') : t('mode_inactive');
 

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/icons/icon-192x192.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#3B82F6" />
+    <meta name="theme-color" content="#3B82F6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1E3A8A" media="(prefers-color-scheme: dark)">
     <meta name="description" content="探索不同PWA展示模式的应用" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -13,6 +14,25 @@
     <link href="/fonts/inter/inter.css" rel="stylesheet">
     <link href="/fonts/material-icons/material-icons.css" rel="stylesheet">
     <!-- Manifest will be dynamically added for PWA pages only -->
+    <script>
+      // 响应系统偏好设置并设置初始主题
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+      
+      // 监听系统主题变化
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        if (!('theme' in localStorage)) {
+          if (event.matches) {
+            document.documentElement.classList.add('dark')
+          } else {
+            document.documentElement.classList.remove('dark')
+          }
+        }
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

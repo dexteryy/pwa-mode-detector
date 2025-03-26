@@ -70,11 +70,11 @@ const Entry = () => {
   }, []);
   
   return (
-    <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
+    <div className="bg-gray-100 dark:bg-gray-900 font-sans min-h-screen flex flex-col">
       {/* Integrated App Header - Native UI Style */}
-      <header className="bg-blue-500 text-white">
+      <header className="bg-blue-500 dark:bg-blue-800 text-white">
         {/* Top navigation bar - subtle style for native UI integration */}
-        <div className="border-b border-blue-400/30">
+        <div className="border-b border-blue-400/30 dark:border-blue-700/40">
           <div className="flex items-center justify-between px-2">
             <div></div>
             <div className="flex items-center">
@@ -96,12 +96,12 @@ const Entry = () => {
       <main className="container mx-auto px-4 py-8 flex-grow flex flex-col">
         <div className="max-w-3xl mx-auto w-full">
           {/* Introduction */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">{t('what_is_pwa_display_mode')}</h2>
-            <p className="text-gray-600 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t('what_is_pwa_display_mode')}</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               {t('pwa_display_mode_description')}
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               {t('click_card_instruction')}
             </p>
           </div>
@@ -110,14 +110,14 @@ const Entry = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {displayModes.map(mode => (
               <Link key={mode.name} href={`/${mode.name}`} className="h-full">
-                <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-500 cursor-pointer h-full flex flex-col">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-500 dark:hover:border-blue-400 cursor-pointer h-full flex flex-col">
                   <div className="flex items-center mb-4">
-                    <mode.Icon className="h-8 w-8 text-blue-500 mr-3" />
-                    <h3 className="text-lg font-semibold text-gray-800">{mode.displayName}</h3>
+                    <mode.Icon className="h-8 w-8 text-blue-500 dark:text-blue-400 mr-3" />
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{mode.displayName}</h3>
                   </div>
-                  <p className="text-gray-600 flex-grow">{mode.description}</p>
+                  <p className="text-gray-600 dark:text-gray-300 flex-grow">{mode.description}</p>
                   <div className="mt-4 flex justify-end">
-                    <span className="text-blue-500 font-medium flex items-center">
+                    <span className="text-blue-500 dark:text-blue-400 font-medium flex items-center">
                       {t('view_demo')}
                       <ArrowRight className="h-4 w-4 ml-1" />
                     </span>
@@ -128,15 +128,15 @@ const Entry = () => {
           </div>
 
           {/* Technical Details */}
-          <div className="bg-white rounded-lg shadow-md p-6 mt-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-8">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
               <Code className="h-5 w-5 mr-2" />
               {t('technical_details')}
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               {t('technical_description')}
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               {t('browser_support_note')}
             </p>
           </div>
@@ -147,7 +147,7 @@ const Entry = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-4 mt-auto">
+      <footer className="bg-gray-800 dark:bg-gray-950 text-white py-4 mt-auto">
         <div className="container mx-auto px-4 text-center text-sm">
           <p>{t('footer_text')}</p>
         </div>
