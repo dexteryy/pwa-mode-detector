@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { loadManifest, subscribeToManifest, WebAppManifest } from "@/lib/manifestLoader";
+import { loadManifest, subscribeToManifest, resetAndReloadManifest, WebAppManifest } from "@/lib/manifestLoader";
 
 interface DisplayMode {
   name: string;
@@ -319,6 +319,11 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // Reset installable state
     setDeferredPrompt(null);
     console.log(`[usePwaDetection] Manual refresh: starting new detection`);
+    
+    // Reset and reload the manifest from network
+    resetAndReloadManifest().catch(error => {
+      console.error('[usePwaDetection] Failed to reload manifest during refresh:', error);
+    });
     
     // Complete check after delay
     setTimeout(() => {
