@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { usePwaDetection } from "../hooks/usePwaDetection";
-import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, PackageOpen, X } from "lucide-react";
+import { usePwaDetection, InstallStatus } from "../hooks/usePwaDetection";
+import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, PackageOpen, X, MonitorSmartphone, CircleOff } from "lucide-react";
 
 interface StatusCardProps {
   mode: string;
@@ -10,7 +10,7 @@ interface StatusCardProps {
 
 const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
   const { t } = useTranslation();
-  const { isChecking, promptInstall } = usePwaDetection();
+  const { isChecking, promptInstall, installStatus } = usePwaDetection();
   
   // Mode detection card styling
   let cardBorderColor = "border-amber-500";
@@ -40,18 +40,50 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
     modeStatusText = `${t('current_mode')}: ${t('browser_name')}`;
   }
 
-  // Determine why installation is disabled, only when not checking
+  // Determine installation status icon and message
+  let InstallIcon = isInstallable ? PackageOpen : Ban;
+  let installTextClass = isInstallable ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400';
+  let installStatusText = isInstallable ? t('can_be_installed') : t('not_installable');
   let installDisabledReason = "";
-  if (!isInstallable && !isChecking) {
-    // Use the provided expectedMode or default to current mode
-    const actualExpectedMode = expectedMode || mode;
-    
-    // If expected mode is browser, provide a specific message
-    if (actualExpectedMode === 'browser') {
-      installDisabledReason = t('install_disabled_manifest_browser');
-    } else {
-      // For other modes (standalone, minimal-ui, fullscreen) show browser not supported message
-      installDisabledReason = t('install_disabled_browser_unsupported');
+  
+  if (!isChecking) {
+    // Handle different installation status cases
+    switch (installStatus) {
+      case 'installable':
+        InstallIcon = PackageOpen;
+        installTextClass = 'text-green-600 dark:text-green-400';
+        installStatusText = t('can_be_installed');
+        break;
+        
+      case 'not-installable-browser-mode':
+        InstallIcon = Globe;
+        installTextClass = 'text-orange-500 dark:text-orange-400';
+        installDisabledReason = t('install_disabled_manifest_browser');
+        break;
+        
+      case 'not-installable-already-pwa':
+        InstallIcon = CheckCircle;
+        installTextClass = 'text-blue-500 dark:text-blue-400';
+        installDisabledReason = t('install_disabled_already_pwa');
+        break;
+        
+      case 'not-installable-already-installed':
+        InstallIcon = MonitorSmartphone;
+        installTextClass = 'text-purple-500 dark:text-purple-400';
+        installDisabledReason = t('install_disabled_already_installed');
+        break;
+        
+      case 'not-installable-browser-unsupported':
+        InstallIcon = CircleOff;
+        installTextClass = 'text-gray-500 dark:text-gray-400';
+        installDisabledReason = t('install_disabled_browser_unsupported');
+        break;
+        
+      case 'checking':
+        InstallIcon = Hourglass;
+        installTextClass = 'text-blue-500 dark:text-blue-400';
+        installStatusText = t('checking');
+        break;
     }
   }
 

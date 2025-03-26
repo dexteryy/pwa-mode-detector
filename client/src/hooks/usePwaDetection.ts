@@ -7,11 +7,21 @@ interface DisplayMode {
   description: string;
 }
 
+// Define installation status types to differentiate between the 4 cases
+export type InstallStatus = 
+  | 'installable'              // Can be installed
+  | 'not-installable-browser-mode'    // Manifest uses display:browser
+  | 'not-installable-already-pwa'     // Already running as PWA
+  | 'not-installable-already-installed' // Already installed but running in browser
+  | 'not-installable-browser-unsupported' // Browser doesn't support installation
+  | 'checking';                // Still checking
+
 interface PwaDetection {
   displayModes: DisplayMode[];
   currentMode: string;
   isInstallable: boolean;
   isChecking: boolean;
+  installStatus: InstallStatus;
   promptInstall: () => void;
   resetChecking: () => void;
   userAgent: string;
@@ -49,6 +59,8 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [userAgent, setUserAgent] = useState<string>("");
   const [isChecking, setIsChecking] = useState<boolean>(true);
+  const [manifestInfo, setManifestInfo] = useState<{display?: string} | null>(null);
+  const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(false);
 
   // Force checking state every time the path changes
   useEffect(() => {
@@ -90,6 +102,30 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     setCurrentMode(detectedMode);
   };
 
+  // Fetch manifest information
+  useEffect(() => {
+    const fetchManifest = async () => {
+      try {
+        // Try to fetch the manifest
+        const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
+        if (manifestLinks.length > 0) {
+          const manifestUrl = manifestLinks[0].getAttribute('href');
+          if (manifestUrl) {
+            const response = await fetch(manifestUrl);
+            const data = await response.json();
+            setManifestInfo(data);
+            console.log(`[usePwaDetection] Manifest loaded:`, data);
+          }
+        }
+      } catch (error) {
+        console.error(`[usePwaDetection] Error loading manifest:`, error);
+        setManifestInfo(null);
+      }
+    };
+
+    fetchManifest();
+  }, [forcedPathKey]); // Reload manifest when path changes
+
   // Set up event listeners for display mode changes
   useEffect(() => {
     // Set user agent
@@ -97,6 +133,30 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     
     // Initial check
     checkDisplayMode();
+    
+    // Check if the app has been installed previously
+    if (window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: minimal-ui)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches ||
+        (window.navigator as any).standalone === true) {
+      // Already running as PWA
+      setHasBeenInstalled(true);
+    } else {
+      // Try to detect if already installed by checking app installed state
+      try {
+        if ('getInstalledRelatedApps' in navigator) {
+          // @ts-ignore: TypeScript doesn't know about getInstalledRelatedApps yet
+          navigator.getInstalledRelatedApps().then((relatedApps: any[]) => {
+            if (relatedApps.length > 0) {
+              setHasBeenInstalled(true);
+              console.log(`[usePwaDetection] Found this app is already installed:`, relatedApps);
+            }
+          });
+        }
+      } catch (e) {
+        console.log('[usePwaDetection] Error checking installed apps:', e);
+      }
+    }
     
     // Listen for changes in each display mode
     const mediaQueries: MediaQueryList[] = [];
@@ -110,6 +170,9 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       const handleChange = (e: MediaQueryListEvent) => {
         if (e.matches) {
           checkDisplayMode();
+          if (mode.name !== 'browser') {
+            setHasBeenInstalled(true);
+          }
         }
       };
       
@@ -200,12 +263,46 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     }, 3000); // Keep consistent with the detection time when path changes
   };
 
+  // Determine the proper installation status
+  const getInstallStatus = (): InstallStatus => {
+    if (isChecking) {
+      return 'checking';
+    }
+    
+    // Case 1: Installable - browser supports installation and app can be installed
+    if (deferredPrompt) {
+      return 'installable';
+    }
+    
+    // Case 2: Running as PWA - not in browser mode
+    if (currentMode !== 'browser') {
+      return 'not-installable-already-pwa';
+    }
+    
+    // Case 3: Manifest uses display:browser
+    if (manifestInfo && manifestInfo.display === 'browser') {
+      return 'not-installable-browser-mode';
+    }
+    
+    // Case 4: Already installed but running in browser
+    if (hasBeenInstalled) {
+      return 'not-installable-already-installed';
+    }
+    
+    // Case 5: Browser doesn't support installation (default fallback)
+    return 'not-installable-browser-unsupported';
+  };
+
+  // Calculate current installation status
+  const installStatus = getInstallStatus();
+
   return {
     displayModes,
     currentMode,
     // When detecting, don't return installation status to avoid UI flickering
     isInstallable: isChecking ? false : !!deferredPrompt,
     isChecking,
+    installStatus,
     promptInstall,
     resetChecking,
     userAgent
