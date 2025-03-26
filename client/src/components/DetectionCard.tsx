@@ -12,15 +12,15 @@ interface DetectionCardProps {
 const DetectionCard = ({ mode, isActive }: DetectionCardProps) => {
   // Card styling based on active state
   const cardClassName = isActive
-    ? "border rounded-lg p-4 bg-green-50 border-success"
+    ? "border rounded-lg p-4 bg-green-50 border-green-500"
     : "border rounded-lg p-4 bg-gray-50";
     
   const indicatorClassName = isActive
-    ? "inline-block w-3 h-3 rounded-full bg-success"
+    ? "inline-block w-3 h-3 rounded-full bg-green-500"
     : "inline-block w-3 h-3 rounded-full bg-gray-300";
     
   const statusClassName = isActive 
-    ? "text-sm text-success font-medium"
+    ? "text-sm text-green-600 font-medium"
     : "text-sm text-gray-600";
     
   const statusText = isActive ? "已启用" : "未启用";
