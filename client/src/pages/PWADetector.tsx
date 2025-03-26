@@ -6,7 +6,6 @@ import { usePwaDetection } from "@/hooks/usePwaDetection";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
-import IconWithFallback from "../components/IconWithFallback";
 
 const PWADetector = () => {
   const { t } = useTranslation();
@@ -61,9 +60,7 @@ const PWADetector = () => {
             <div>
               <Link href="/">
                 <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded hover:bg-blue-500 transition-colors flex items-center cursor-pointer whitespace-nowrap">
-                  <div className="w-3 h-3 mr-1 flex items-center justify-center">
-                    <IconWithFallback name="home" size="xs" />
-                  </div>
+                  <span className="material-icons text-xs mr-1">home</span>
                   {t('back_to_home')}
                 </div>
               </Link>
@@ -74,7 +71,7 @@ const PWADetector = () => {
                 className={`bg-blue-600 text-white h-6 w-6 flex items-center justify-center rounded hover:bg-blue-500 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
                 aria-label="Refresh detection"
               >
-                <IconWithFallback name="refresh" size="sm" />
+                <span className="material-icons text-sm">refresh</span>
               </button>
               <LanguageSwitcher />
             </div>
@@ -86,9 +83,7 @@ const PWADetector = () => {
       <header className="bg-blue-500 text-white shadow-md">
         <div className="container mx-auto px-4 py-5">
           <div className="flex items-center justify-center">
-            <div className="w-6 h-6 mr-2 flex items-center justify-center">
-              <IconWithFallback name="devices" size="md" />
-            </div>
+            <span className="material-icons mr-2">devices</span>
             <h1 className="text-xl font-semibold">{t('detector_title')}</h1>
           </div>
         </div>
@@ -99,9 +94,7 @@ const PWADetector = () => {
         {/* Manifest mode banner */}
         <div className={`mb-4 p-4 rounded-lg ${expectedMode === currentMode ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
           <div className="flex items-center">
-            <div className="w-5 h-5 mr-2 flex items-center justify-center">
-              <IconWithFallback name={expectedMode === currentMode ? 'check_circle' : 'info'} size="sm" />
-            </div>
+            <span className="material-icons mr-2">{expectedMode === currentMode ? 'check_circle' : 'info'}</span>
             <h2 className="font-semibold">
               {t('expected_mode')}: <span className="font-bold">{expectedMode}</span>
             </h2>
@@ -119,9 +112,7 @@ const PWADetector = () => {
         {/* Detection details card */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-lg font-semibold text-dark mb-4 flex items-center">
-            <div className="w-6 h-6 mr-2 flex items-center justify-center">
-              <IconWithFallback name="info" size="md" />
-            </div>
+            <span className="material-icons mr-2">info</span>
             {t('detector_subtitle')}
           </h2>
           
@@ -157,9 +148,7 @@ const PWADetector = () => {
             onClick={promptInstall}
             className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 flex items-center"
           >
-            <div className="w-5 h-5 mr-1 flex items-center justify-center">
-              <IconWithFallback name="get_app" size="sm" />
-            </div>
+            <span className="material-icons mr-1">get_app</span>
             {t('install_pwa')}
           </button>
         </div>

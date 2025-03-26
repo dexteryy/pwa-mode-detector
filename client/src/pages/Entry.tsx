@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
-import IconWithFallback from "../components/IconWithFallback";
 
 // 定义 PWA 的 display 模式选项
 interface DisplayMode {
@@ -88,16 +87,14 @@ const Entry = () => {
               <Link key={mode.name} href={`/${mode.name}`} className="h-full">
                 <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-500 cursor-pointer h-full flex flex-col">
                   <div className="flex items-center mb-4">
-                    <div className="w-10 h-10 mr-3 flex items-center justify-center">
-                      <IconWithFallback name={mode.icon} className="text-blue-500" size="xl" />
-                    </div>
+                    <span className="material-icons text-4xl text-blue-500 mr-3">{mode.icon}</span>
                     <h3 className="text-lg font-semibold text-gray-800">{mode.displayName}</h3>
                   </div>
                   <p className="text-gray-600 flex-grow">{mode.description}</p>
                   <div className="mt-4 flex justify-end">
                     <span className="text-blue-500 font-medium flex items-center">
                       {t('view_demo')}
-                      <IconWithFallback name="arrow_forward" className="ml-1" size="sm" />
+                      <span className="material-icons ml-1">arrow_forward</span>
                     </span>
                   </div>
                 </div>
@@ -108,9 +105,7 @@ const Entry = () => {
           {/* Technical Details */}
           <div className="bg-white rounded-lg shadow-md p-6 mt-8">
             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <div className="w-6 h-6 mr-2 flex items-center justify-center">
-                <IconWithFallback name="code" size="md" />
-              </div>
+              <span className="material-icons mr-2">code</span>
               {t('technical_details')}
             </h2>
             <p className="text-gray-600 mb-4">

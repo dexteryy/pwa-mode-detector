@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import IconWithFallback from "./IconWithFallback";
 
 const InfoCard = () => {
   const { t } = useTranslation();
@@ -7,9 +6,7 @@ const InfoCard = () => {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-lg font-semibold text-dark mb-4 flex items-center">
-        <div className="w-6 h-6 mr-2 flex items-center justify-center">
-          <IconWithFallback name="help_outline" size="md" />
-        </div>
+        <span className="material-icons mr-2">help_outline</span>
         {t('about_pwa_modes')}
       </h2>
       <div className="prose text-gray-700">
