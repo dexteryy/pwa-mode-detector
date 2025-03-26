@@ -1,7 +1,9 @@
 {
+  "id": "pwa-mode-detector-main",
   "name": "PWA Mode Detector",
   "short_name": "PWA Modes",
   "start_url": "/",
+  "scope": "/",
   "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",

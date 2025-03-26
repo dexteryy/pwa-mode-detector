@@ -3,12 +3,31 @@ import StatusCard from "@/components/StatusCard";
 import DetectionCard from "@/components/DetectionCard";
 import InfoCard from "@/components/InfoCard";
 import { usePwaDetection } from "@/hooks/usePwaDetection";
-import { Link, useRoute } from "wouter";
+import { Link, useLocation } from "wouter";
 
 const PWADetector = () => {
-  // 从URL参数中获取预期的display模式
-  const [, params] = useRoute("/pwa/:display");
-  const expectedMode = params?.display || "standalone";
+  // 从URL路径中获取预期的display模式
+  const [path] = useLocation();
+  
+  // 判断当前路径对应的显示模式
+  let expectedMode = "standalone";
+  if (path === "/standalone") {
+    expectedMode = "standalone";
+  } else if (path === "/minimal-ui") {
+    expectedMode = "minimal-ui";
+  } else if (path === "/fullscreen") {
+    expectedMode = "fullscreen";
+  } else if (path === "/browser") {
+    expectedMode = "browser";
+  } else if (path.startsWith("/pwa/")) {
+    // 向下兼容旧路径
+    const match = path.match(/\/pwa\/([a-z-]+)/);
+    if (match) {
+      expectedMode = match[1];
+    }
+  }
+  
+  console.log("当前路径:", path, "预期模式:", expectedMode);
   
   const { 
     displayModes, 
