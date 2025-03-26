@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface DisplayMode {
@@ -108,7 +108,17 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     setCurrentMode(detectedMode);
   };
 
-  // Fetch manifest information
+  // Global cache for manifests (using module scope to maintain across hook calls)
+  const manifestCache: Map<string, any> = (() => {
+    // Module-scoped variable maintains state between renders
+    if (!(window as any).__manifestCache) {
+      (window as any).__manifestCache = new Map<string, any>();
+      console.log('[usePwaDetection] Creating global manifest cache');
+    }
+    return (window as any).__manifestCache;
+  })();
+  
+  // Fetch manifest information - with caching to avoid multiple requests
   useEffect(() => {
     const fetchManifest = async () => {
       try {
@@ -117,10 +127,24 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
         if (manifestLinks.length > 0) {
           const manifestUrl = manifestLinks[0].getAttribute('href');
           if (manifestUrl) {
+            // Check if we've already loaded this manifest URL in this session
+            if (manifestCache.has(manifestUrl)) {
+              console.log(`[usePwaDetection] Using cached manifest data for ${manifestUrl}`);
+              setManifestInfo(manifestCache.get(manifestUrl));
+              return;
+            }
+            
+            // Load manifest once per URL
+            console.log(`[usePwaDetection] Fetching manifest from ${manifestUrl}`);
             const response = await fetch(manifestUrl);
             const data = await response.json();
+            
+            // Cache the result
+            manifestCache.set(manifestUrl, data);
+            
+            // Update state
             setManifestInfo(data);
-            console.log(`[usePwaDetection] Manifest loaded:`, data);
+            console.log(`[usePwaDetection] Manifest loaded from ${manifestUrl}:`, data);
           }
         }
       } catch (error) {
@@ -130,7 +154,9 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     };
 
     fetchManifest();
-  }, [forcedPathKey]); // Reload manifest when path changes
+    
+    // No cleanup needed for the cache as it's kept via window global
+  }, [forcedPathKey]); // Reload manifest only when path changes
 
   // Set up event listeners for display mode changes
   useEffect(() => {

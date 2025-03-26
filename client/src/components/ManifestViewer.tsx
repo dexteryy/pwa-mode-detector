@@ -26,6 +26,13 @@ interface WebAppManifest {
   [key: string]: any;  // Allow other possible properties
 }
 
+// Use the same global manifest cache as usePwaDetection
+if (!(window as any).__manifestCache) {
+  (window as any).__manifestCache = new Map<string, WebAppManifest>();
+  console.log('[ManifestViewer] Initializing global manifest cache');
+}
+const manifestCache = (window as any).__manifestCache;
+
 const ManifestViewer: React.FC = () => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +40,11 @@ const ManifestViewer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Only fetch the manifest when the collapsible is opened
   useEffect(() => {
+    // Skip fetching if not open to save resources
+    if (!isOpen) return;
+    
     const fetchManifest = async () => {
       try {
         setIsLoading(true);
@@ -57,6 +68,14 @@ const ManifestViewer: React.FC = () => {
           return;
         }
         
+        // Check if manifest is already in cache
+        if (manifestCache.has(manifestUrl)) {
+          console.log('[ManifestViewer] Using cached manifest data');
+          setManifest(manifestCache.get(manifestUrl) || null);
+          setIsLoading(false);
+          return;
+        }
+        
         // Request manifest content
         const response = await fetch(manifestUrl);
         
@@ -65,6 +84,11 @@ const ManifestViewer: React.FC = () => {
         }
         
         const data = await response.json();
+        
+        // Cache the manifest data
+        manifestCache.set(manifestUrl, data);
+        
+        // Update state
         setManifest(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error fetching manifest');
@@ -74,7 +98,7 @@ const ManifestViewer: React.FC = () => {
     };
     
     fetchManifest();
-  }, []);
+  }, [isOpen]);
 
   // Format JSON for display
   const formatJson = (json: object): string => {
