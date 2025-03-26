@@ -11,7 +11,17 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const LanguageSwitcher: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n, ready } = useTranslation();
+  
+  // 如果 i18n 还没准备好，显示一个简单的加载图标
+  if (!ready) {
+    return (
+      <Button variant="outline" size="icon" className="rounded-full opacity-50">
+        <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent"></div>
+      </Button>
+    );
+  }
+  
   const currentLanguage = i18n.language;
 
   const handleLanguageChange = (language: string) => {
