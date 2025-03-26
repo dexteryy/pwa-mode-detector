@@ -2,164 +2,254 @@
  * 用于处理翻译文本中的关键技术术语，自动添加MDN或web.dev的参考链接
  */
 
-interface TermDefinition {
-  term: RegExp;
-  url: string;
-  prefix?: string;
+interface TermInfo {
+  term: string;   // 需要匹配的术语文本
+  url: string;    // 链接URL
 }
 
-// 关键术语定义及其对应链接
-const TERM_DEFINITIONS: Record<string, TermDefinition[]> = {
+// 为每种语言定义关键术语列表
+const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
   // 英文
   en: [
     { 
-      term: /\b(Progressive Web Apps?)\b|\b(PWAs?)\b/g, 
+      term: "Progressive Web App", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: /\b(Web App Manifest)\b/g, 
+      term: "PWA", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Progressive Web Apps", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "PWAs", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Web App Manifest", 
       url: "https://developer.mozilla.org/en-US/docs/Web/Manifest" 
     },
     { 
-      term: /\bdisplay\b(?! mode)/g, 
-      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest/display",
-      prefix: "'" 
+      term: "'display'", 
+      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest/display"
     }
   ],
   
   // 简体中文
   zh: [
     { 
-      term: /\b(PWA)(?:\s*（渐进式(?:网络|Web)应用）)?\b|(渐进式(?:网络|Web)应用)/g,  
+      term: "PWA", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: /\b(Web App Manifest)\b/g, 
+      term: "渐进式网络应用", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "渐进式Web应用", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Web App Manifest", 
       url: "https://developer.mozilla.org/zh-CN/docs/Web/Manifest" 
     },
     { 
-      term: /\bdisplay\b(?! 属性|\s+模式)/g, 
-      url: "https://developer.mozilla.org/zh-CN/docs/Web/Manifest/display",
-      prefix: "'" 
+      term: "网页应用清单", 
+      url: "https://developer.mozilla.org/zh-CN/docs/Web/Manifest" 
+    },
+    { 
+      term: "'display'", 
+      url: "https://developer.mozilla.org/zh-CN/docs/Web/Manifest/display"
     }
   ],
   
   // 繁体中文
-  "zh-TW": [
+  'zh-TW': [
     { 
-      term: /\b(PWA)(?:\s*（漸進式(?:網絡|Web)應用）)?\b|(漸進式(?:網絡|Web)應用)/g, 
+      term: "PWA", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: /\b(Web App Manifest)\b/g, 
+      term: "漸進式網路應用", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "漸進式Web應用", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Web App Manifest", 
       url: "https://developer.mozilla.org/zh-TW/docs/Web/Manifest" 
     },
     { 
-      term: /\bdisplay\b(?! 屬性|\s+模式)/g, 
-      url: "https://developer.mozilla.org/zh-TW/docs/Web/Manifest/display",
-      prefix: "'" 
+      term: "網頁應用程式資訊清單", 
+      url: "https://developer.mozilla.org/zh-TW/docs/Web/Manifest" 
+    },
+    { 
+      term: "'display'", 
+      url: "https://developer.mozilla.org/zh-TW/docs/Web/Manifest/display"
     }
   ],
   
   // 日语
   ja: [
     { 
-      term: /\b(PWA)(?:\s*（プログレッシブ\s*ウェブ\s*アプリ）)?\b|(プログレッシブ\s*ウェブ\s*アプリ)/g, 
+      term: "PWA", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: /\b(Web App Manifest)\b/g, 
+      term: "プログレッシブ ウェブ アプリ", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Web App Manifest", 
       url: "https://developer.mozilla.org/ja/docs/Web/Manifest" 
     },
     { 
-      term: /\bdisplay\b(?! 属性|\s+モード)/g, 
-      url: "https://developer.mozilla.org/ja/docs/Web/Manifest/display",
-      prefix: "'" 
+      term: "ウェブアプリマニフェスト", 
+      url: "https://developer.mozilla.org/ja/docs/Web/Manifest" 
+    },
+    { 
+      term: "'display'", 
+      url: "https://developer.mozilla.org/ja/docs/Web/Manifest/display"
     }
   ],
   
   // 德语
   de: [
     { 
-      term: /\b(Progressive Web Apps?)\b|\b(PWAs?)\b/g, 
+      term: "Progressive Web App", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: /\b(Web App Manifest)\b/g, 
+      term: "PWA", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Progressive Web Apps", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Web App Manifest", 
       url: "https://developer.mozilla.org/de/docs/Web/Manifest" 
     },
     { 
-      term: /\bdisplay\b(?! Eigenschaft|\s+Modus)/g, 
-      url: "https://developer.mozilla.org/de/docs/Web/Manifest/display",
-      prefix: "'" 
+      term: "'display'", 
+      url: "https://developer.mozilla.org/de/docs/Web/Manifest/display"
     }
   ],
   
   // 法语
   fr: [
     { 
-      term: /\b(Progressive Web Apps?)\b|\b(PWAs?)\b/g, 
+      term: "Progressive Web App", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: /\b(Web App Manifest)\b/g, 
+      term: "PWA", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Progressive Web Apps", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "application web progressive", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Web App Manifest", 
       url: "https://developer.mozilla.org/fr/docs/Web/Manifest" 
     },
     { 
-      term: /\bdisplay\b(?! propriété|\s+mode)/g, 
-      url: "https://developer.mozilla.org/fr/docs/Web/Manifest/display",
-      prefix: "'" 
+      term: "manifeste d'application web", 
+      url: "https://developer.mozilla.org/fr/docs/Web/Manifest" 
+    },
+    { 
+      term: "'display'", 
+      url: "https://developer.mozilla.org/fr/docs/Web/Manifest/display"
     }
   ],
   
   // 西班牙语
   es: [
     { 
-      term: /\b(Progressive Web Apps?)\b|\b(PWAs?)\b/g, 
+      term: "Progressive Web App", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: /\b(Web App Manifest)\b/g, 
+      term: "PWA", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "aplicación web progresiva", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Web App Manifest", 
       url: "https://developer.mozilla.org/es/docs/Web/Manifest" 
     },
     { 
-      term: /\bdisplay\b(?! propiedad|\s+modo)/g, 
-      url: "https://developer.mozilla.org/es/docs/Web/Manifest/display",
-      prefix: "'" 
+      term: "manifiesto de aplicación web", 
+      url: "https://developer.mozilla.org/es/docs/Web/Manifest" 
+    },
+    { 
+      term: "'display'", 
+      url: "https://developer.mozilla.org/es/docs/Web/Manifest/display"
     }
   ],
   
   // 葡萄牙语
   pt: [
     { 
-      term: /\b(Progressive Web Apps?)\b|\b(PWAs?)\b/g, 
+      term: "Progressive Web App", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: /\b(Web App Manifest)\b/g, 
+      term: "PWA", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "aplicativo web progressivo", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Web App Manifest", 
       url: "https://developer.mozilla.org/pt-BR/docs/Web/Manifest" 
     },
     { 
-      term: /\bdisplay\b(?! propriedade|\s+modo)/g, 
-      url: "https://developer.mozilla.org/pt-BR/docs/Web/Manifest/display",
-      prefix: "'" 
+      term: "manifesto de aplicativo web", 
+      url: "https://developer.mozilla.org/pt-BR/docs/Web/Manifest" 
+    },
+    { 
+      term: "'display'", 
+      url: "https://developer.mozilla.org/pt-BR/docs/Web/Manifest/display"
     }
   ],
   
   // 韩语
   ko: [
     { 
-      term: /\b(PWA)(?:\s*（프로그레시브\s*웹\s*앱）)?\b|(프로그레시브\s*웹\s*앱)/g, 
+      term: "PWA", 
       url: "https://web.dev/progressive-web-apps/" 
     },
     { 
-      term: /\b(Web App Manifest)\b/g, 
+      term: "프로그레시브 웹 앱", 
+      url: "https://web.dev/progressive-web-apps/" 
+    },
+    { 
+      term: "Web App Manifest", 
       url: "https://developer.mozilla.org/ko/docs/Web/Manifest" 
     },
     { 
-      term: /\bdisplay\b(?! 속성|\s+모드)/g, 
-      url: "https://developer.mozilla.org/ko/docs/Web/Manifest/display",
-      prefix: "'" 
+      term: "웹 앱 매니페스트", 
+      url: "https://developer.mozilla.org/ko/docs/Web/Manifest" 
+    },
+    { 
+      term: "'display'", 
+      url: "https://developer.mozilla.org/ko/docs/Web/Manifest/display"
     }
   ]
 };
@@ -173,30 +263,47 @@ const TERM_DEFINITIONS: Record<string, TermDefinition[]> = {
 export function addLinksToTerms(text: string, lang: string): string {
   if (!text) return text;
 
-  // 调试日志
-  console.log(`Adding links to: "${text.substring(0, 30)}..." for language: ${lang}`);
-
-  // 如果没有该语言的定义，使用英文
-  const definitions = TERM_DEFINITIONS[lang] || TERM_DEFINITIONS['en'];
+  // 获取对应语言的术语列表，如果不存在，使用英文
+  const terms = TERMS_BY_LANGUAGE[lang] || TERMS_BY_LANGUAGE['en'];
   
-  // 遍历定义，添加链接
-  let result = text;
-  for (const definition of definitions) {
-    result = result.replace(definition.term, (match) => {
-      const prefix = definition.prefix || '';
-      console.log(`Match found: "${match}" - adding link to: ${definition.url}`);
-      return `${prefix}<a href='${definition.url}' target='_blank' rel='noopener'>${match.replace(prefix, '')}</a>`;
-    });
+  // 按术语长度降序排序，确保先匹配最长的术语
+  const sortedTerms = [...terms].sort((a, b) => b.term.length - a.term.length);
+  
+  // 使用一个简单的算法来避免HTML重叠问题：
+  // 1. 将文本分割成块以标记哪些部分已被处理
+  const blocks: { text: string; processed: boolean }[] = [{ text, processed: false }];
+  
+  // 2. 对每个术语，扫描所有未处理的块
+  for (const { term, url } of sortedTerms) {
+    for (let i = 0; i < blocks.length; i++) {
+      const block = blocks[i];
+      
+      // 跳过已处理的块
+      if (block.processed) continue;
+      
+      // 在块中查找术语
+      const index = block.text.indexOf(term);
+      if (index === -1) continue;
+      
+      // 找到匹配，将块分割为3部分：前部，链接部分，后部
+      const before = block.text.substring(0, index);
+      const linked = `<a href="${url}" target="_blank" rel="noopener">${term}</a>`;
+      const after = block.text.substring(index + term.length);
+      
+      // 替换原块为3个新块
+      blocks.splice(i, 1,
+        { text: before, processed: false },
+        { text: linked, processed: true },
+        { text: after, processed: false }
+      );
+      
+      // 调整索引以考虑新块
+      i += 2;
+    }
   }
   
-  // 如果有变更，记录日志
-  if (result !== text) {
-    console.log(`Text changed. Original length: ${text.length}, New length: ${result.length}`);
-  } else {
-    console.log(`No matches found in text`);
-  }
-  
-  return result;
+  // 3. 合并所有块以获取最终文本
+  return blocks.map(b => b.text).join('');
 }
 
 /**
@@ -206,7 +313,7 @@ export function addLinksToTerms(text: string, lang: string): string {
  * @returns 更新后的i18n资源对象
  */
 export function addLinksToI18nResources(resources: Record<string, any>, keys: string[]): Record<string, any> {
-  const result = { ...resources };
+  const result = JSON.parse(JSON.stringify(resources)); // 深拷贝以避免修改原对象
   
   // 遍历所有语言
   for (const lang in result) {
@@ -215,7 +322,9 @@ export function addLinksToI18nResources(resources: Record<string, any>, keys: st
     // 为每个指定的key添加链接
     for (const key of keys) {
       if (result[lang].translation[key]) {
-        result[lang].translation[key] = addLinksToTerms(result[lang].translation[key], lang);
+        const originalText = result[lang].translation[key];
+        const linkedText = addLinksToTerms(originalText, lang);
+        result[lang].translation[key] = linkedText;
       }
     }
   }
