@@ -20,15 +20,16 @@ const ManifestViewer: React.FC = () => {
   // Use the shared manifest context instead of fetching it again 
   const { manifestInfo: manifest, manifestUrl, isLoading, error } = useContext(ManifestContext);
 
-  // Add debugging effects
+  // 只在组件挂载时检查一次，避免重复请求
   useEffect(() => {
     console.log('[ManifestViewer] Current manifest context:', { manifest, manifestUrl, isLoading, error });
     
-    // If we still don't have manifest data, try to load it directly
-    if (!manifest && !isLoading && !localManifest && !localLoading) {
+    // 检查是否已经有 manifest 数据或者正在加载
+    // 如果没有，只尝试加载一次
+    if (!manifest && !isLoading && !localManifest) {
       loadManifestDirectly();
     }
-  }, [manifest, manifestUrl, isLoading, error]);
+  }, []);
   
   // Function to load manifest directly based on current path
   const loadManifestDirectly = () => {

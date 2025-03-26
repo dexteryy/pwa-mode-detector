@@ -124,9 +124,9 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       return;
     }
     
-    // Skip if this is the same manifest we're already using
-    if (baseUrl === currentManifestPath) {
-      console.log(`[ManifestHandler] Manifest already set to ${baseUrl}, skipping reload`);
+    // 优化：如果是同一个manifest并且已经加载过数据，直接使用缓存
+    if (baseUrl === currentManifestPath && manifestInfo) {
+      console.log(`[ManifestHandler] Manifest already loaded for ${baseUrl}, using cached data:`, manifestInfo);
       return;
     }
     
