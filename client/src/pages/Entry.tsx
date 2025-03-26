@@ -105,7 +105,13 @@ const Entry = () => {
                 // 定义替换模式
                 const createLinks = (inputText: string): (string | React.ReactElement)[] => {
                   // 创建链接替换正则表达式模式，这些会应用于所有语言
-                  const replacements = [
+                  interface Replacement {
+                    regex: RegExp;
+                    url: string;
+                    matchIndex?: number;
+                  }
+                  
+                  const replacements: Replacement[] = [
                     {
                       regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b/,
                       url: "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
@@ -211,72 +217,85 @@ const Entry = () => {
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               {(() => {
                 const text = t('technical_description');
-                // 创建链接替换正则表达式模式，这些会应用于所有语言
-                const replacements = [
-                  {
-                    regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b/,
-                    url: "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
-                  },
-                  {
-                    regex: /\bWeb App Manifest\b/,
-                    url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
-                  },
-                  {
-                    regex: /\bmanifest\b/i,
-                    url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
+                
+                // 使用与上面相同的函数逻辑处理链接
+                const createLinks = (inputText: string): (string | React.ReactElement)[] => {
+                  // 创建链接替换正则表达式模式，这些会应用于所有语言
+                  interface Replacement {
+                    regex: RegExp;
+                    url: string;
+                    matchIndex?: number;
                   }
-                ];
-                
-                // 开始创建React元素数组
-                let result = [text];
-                
-                // 依次应用每个替换
-                replacements.forEach(({ regex, url, matchIndex = 0 }) => {
-                  const newResult = [];
                   
-                  result.forEach(part => {
-                    if (typeof part !== 'string') {
-                      newResult.push(part);
-                      return;
+                  const replacements: Replacement[] = [
+                    {
+                      regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b/,
+                      url: "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
+                    },
+                    {
+                      regex: /\bWeb App Manifest\b/,
+                      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
+                    },
+                    {
+                      regex: /\bmanifest\b/i,
+                      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
                     }
+                  ];
+                  
+                  // 开始创建React元素数组
+                  let result: (string | React.ReactElement)[] = [inputText];
+                  
+                  // 依次应用每个替换
+                  replacements.forEach(({ regex, url }) => {
+                    const matchIndex = 0; // 默认使用第一个匹配组
+                    const newResult: (string | React.ReactElement)[] = [];
                     
-                    const matches = part.match(regex);
-                    if (!matches) {
-                      newResult.push(part);
-                      return;
-                    }
+                    result.forEach(part => {
+                      if (typeof part !== 'string') {
+                        newResult.push(part);
+                        return;
+                      }
+                      
+                      const matches = part.match(regex);
+                      if (!matches) {
+                        newResult.push(part);
+                        return;
+                      }
+                      
+                      const index = part.indexOf(matches[0]);
+                      const linkText = matches[matchIndex] || matches[0];
+                      
+                      // 在匹配前的文本
+                      if (index > 0) {
+                        newResult.push(part.substring(0, index));
+                      }
+                      
+                      // 链接元素
+                      newResult.push(
+                        <a
+                          key={url + index}
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline dark:text-blue-400"
+                        >
+                          {linkText}
+                        </a>
+                      );
+                      
+                      // 匹配后的文本
+                      if (index + matches[0].length < part.length) {
+                        newResult.push(part.substring(index + matches[0].length));
+                      }
+                    });
                     
-                    const index = part.indexOf(matches[0]);
-                    const linkText = matches[matchIndex] || matches[0];
-                    
-                    // 在匹配前的文本
-                    if (index > 0) {
-                      newResult.push(part.substring(0, index));
-                    }
-                    
-                    // 链接元素
-                    newResult.push(
-                      <a
-                        key={url + index}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline dark:text-blue-400"
-                      >
-                        {linkText}
-                      </a>
-                    );
-                    
-                    // 匹配后的文本
-                    if (index + matches[0].length < part.length) {
-                      newResult.push(part.substring(index + matches[0].length));
-                    }
+                    result = newResult;
                   });
                   
-                  result = newResult;
-                });
+                  return result;
+                };
                 
-                return result;
+                return createLinks(text);
               })()}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
