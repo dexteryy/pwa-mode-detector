@@ -2,7 +2,29 @@ import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import { useEffect } from "react";
-import { Globe, Layout, Smartphone, Maximize, ArrowRight, Code } from "lucide-react";
+import { Globe, Layout, Smartphone, Maximize, ArrowRight, Code, ExternalLink } from "lucide-react";
+
+// 技术术语及其链接
+const technicalTermLinks = {
+  PWA: "https://web.dev/progressive-web-apps/",
+  "Web App Manifest": "https://developer.mozilla.org/en-US/docs/Web/Manifest",
+  Manifest: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
+  display: "https://developer.mozilla.org/en-US/docs/Web/Manifest/display",
+};
+
+// 替换文本中的技术术语为链接
+const linkifyTechnicalTerms = (text: string) => {
+  if (!text) return text;
+  
+  let result = text;
+  Object.entries(technicalTermLinks).forEach(([term, url]) => {
+    // 使用正则表达式匹配整个单词
+    const regex = new RegExp(`\\b${term}\\b`, 'g');
+    result = result.replace(regex, `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-500 inline-flex items-center">${term}<ExternalLink class="h-3 w-3 ml-1" /></a>`);
+  });
+  
+  return result;
+};
 
 // 定义 PWA 的 display 模式选项
 interface DisplayMode {
@@ -42,6 +64,10 @@ const getDisplayModes = (t: any): DisplayMode[] => [
 const Entry = () => {
   const { t } = useTranslation();
   const displayModes = getDisplayModes(t);
+  
+  // 处理带有链接的文本
+  const processedPwaDisplayModeDescription = linkifyTechnicalTerms(t('pwa_display_mode_description'));
+  const processedTechnicalDescription = linkifyTechnicalTerms(t('technical_description'));
 
   // 入口页面加载时主动移除所有的 manifest 链接
   useEffect(() => {
@@ -98,8 +124,7 @@ const Entry = () => {
           {/* Introduction */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t('what_is_pwa_display_mode')}</h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('pwa_display_mode_description')}
+            <p className="text-gray-600 dark:text-gray-300 mb-4" dangerouslySetInnerHTML={{ __html: processedPwaDisplayModeDescription }}>
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('click_card_instruction')}
@@ -133,8 +158,7 @@ const Entry = () => {
               <Code className="h-5 w-5 mr-2" />
               {t('technical_details')}
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('technical_description')}
+            <p className="text-gray-600 dark:text-gray-300 mb-4" dangerouslySetInnerHTML={{ __html: processedTechnicalDescription }}>
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('browser_support_note')}
