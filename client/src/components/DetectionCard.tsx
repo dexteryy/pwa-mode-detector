@@ -32,7 +32,7 @@ const DetectionCard = ({ mode, isActive }: DetectionCardProps) => {
   return (
     <div className={cardClassName}>
       <div className="flex justify-between items-center mb-2">
-        <h3 className="font-medium">{mode.displayName} ({mode.name})</h3>
+        <h3 className="font-medium">{mode.displayName}</h3>
         <span className={indicatorClassName}></span>
       </div>
       <p className={statusClassName}>{statusText}</p>
