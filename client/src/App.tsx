@@ -83,17 +83,23 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     // Log for debugging
     console.log(`[ManifestHandler] Processing path: ${pathWithoutParams}`);
     
-    // For entry page ('/') only, don't add any manifest and exit early
+    // 对于入口页面，不需要manifest
     if (location === '/') {
       console.log('[ManifestHandler] Entry page detected, no manifest needed');
       
-      // If we previously had a manifest, clean it up
-      if (currentManifestPath) {
-        const existingLinks = document.querySelectorAll('link[rel="manifest"]');
-        existingLinks.forEach(link => link.parentNode?.removeChild(link));
+      // 如果之前有manifest链接，移除它
+      const existingManifestLink = document.querySelector('link[rel="manifest"]');
+      if (existingManifestLink) {
+        existingManifestLink.parentNode?.removeChild(existingManifestLink);
+        console.log('[ManifestHandler] Removed manifest link from document');
+      }
+      
+      // 只有在状态需要更改时才更新状态，避免不必要的渲染
+      if (currentManifestPath || manifestInfo || manifestUrl) {
         setCurrentManifestPath(null);
         setManifestInfo(null);
         setManifestUrl(null);
+        console.log('[ManifestHandler] Reset manifest state for entry page');
       }
       return;
     }
@@ -130,45 +136,45 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       return;
     }
     
-    // Clean up existing manifest if we're changing to a new one
-    const existingLinks = document.querySelectorAll('link[rel="manifest"]');
-    if (existingLinks.length > 0) {
-      console.log(`[ManifestHandler] Removing ${existingLinks.length} existing manifest links`);
-      existingLinks.forEach(link => link.parentNode?.removeChild(link));
-    }
-    
-    // Reset state for new manifest loading
-    setManifestInfo(null);
+    // 只有在路径变更时才重置状态
+    // 这样可以避免不必要的状态重置和重复请求
     setError(null);
     
     // If we have a valid URL, create the link tag and fetch manifest data
     if (baseUrl) {
-      // Add timestamp to prevent caching issues
-      const timestamp = new Date().getTime();
-      const url = `${baseUrl}?v=${timestamp}`;
+      // 不再添加时间戳，避免重复请求
+      const url = baseUrl;
       
       setIsLoading(true);
       setManifestUrl(url);
       setCurrentManifestPath(baseUrl);
       
-      // Create new manifest link for PWA pages
-      const newLink = document.createElement('link');
-      newLink.rel = 'manifest';
-      newLink.href = url;
-      document.head.appendChild(newLink);
-      console.log(`[ManifestHandler] Setting manifest to: ${url}`);
+      // 检查现有的manifest链接
+      const existingManifestLink = document.querySelector('link[rel="manifest"]');
+      
+      // 如果已经有相同的链接，则不做任何改变
+      if (existingManifestLink && existingManifestLink.getAttribute('href') === url) {
+        console.log(`[ManifestHandler] Manifest link already set to ${url}, no change needed`);
+      } else {
+        // 创建新的manifest链接
+        const newLink = document.createElement('link');
+        newLink.rel = 'manifest';
+        newLink.href = url;
+        
+        // 如果有旧的链接，替换它；否则直接添加新链接
+        if (existingManifestLink) {
+          document.head.replaceChild(newLink, existingManifestLink);
+        } else {
+          document.head.appendChild(newLink);
+        }
+        console.log(`[ManifestHandler] Setting manifest link to: ${url}`);
+      }
       
       // 从服务器获取 manifest 数据
       console.log(`[ManifestHandler] Fetching manifest from: ${url}`);
       
-      fetch(url, {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0'
-        },
-        cache: 'no-store'
-      })
+      // 允许使用浏览器缓存，减少重复请求
+      fetch(url)
         .then(response => {
           if (!response.ok) {
             console.error(`[ManifestHandler] Server responded with status ${response.status}`);
