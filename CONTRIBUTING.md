@@ -17,7 +17,6 @@ Thank you for considering contributing to the PWA Display Mode Detector project!
   - [Commit Message Convention](#commit-message-convention)
   - [Code Style](#code-style)
 - [Pull Request Process](#pull-request-process)
-- [Release Process](#release-process)
 
 English | [简体中文](./CONTRIBUTING.zh.md)
 
@@ -159,14 +158,6 @@ Before submitting your code, ensure that it:
 4. Request a review from at least one maintainer
 5. Address any issues raised during code review
 6. Once approved, your PR will be merged
-
-## Release Process
-
-Project maintainers will handle the release process. We follow semantic versioning:
-
-- Major version (x.0.0): Incompatible API changes
-- Minor version (0.x.0): Backwards-compatible functionality additions
-- Patch version (0.0.x): Backwards-compatible bug fixes
 
 ---
 
