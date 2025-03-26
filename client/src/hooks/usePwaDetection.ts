@@ -65,13 +65,22 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   // 确定当前路径是否为入口页面（'/'）
   const isEntryPage = !forcedPathKey || forcedPathKey === '/';
   
-  // 为每个路径设置不同的安装状态存储键
-  // 但是如果是入口页面，则不应该有安装状态
-  const localStorageKey = isEntryPage 
-    ? 'pwa-no-install-entry-page' // 使用一个明确的键名表示这不是安装状态键
+  // 每个标签页使用独立的会话ID，避免跨标签页干扰
+  const [sessionId] = useState(() => 
+    `session-${Math.random().toString(36).substring(2, 10)}-${Date.now()}`
+  );
+  
+  // 创建特定于此页面和会话的键，避免不同标签页互相干扰
+  // 标记为"可信"的键仅在确认安装成功后使用
+  const sessionStorageKey = isEntryPage 
+    ? 'pwa-no-install-entry-page' 
+    : `pwa-session-state-${forcedPathKey || 'default'}-${sessionId}`;
+    
+  const trustedStorageKey = isEntryPage
+    ? 'pwa-no-install-entry-page'
     : `pwa-installed-state-${forcedPathKey || 'default'}`;
   
-  // 从localStorage加载安装状态，确保在刷新后保持
+  // 从本地存储加载安装状态，确保会话间一致性
   const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(() => {
     // 入口页永远不应该被标记为已安装
     if (isEntryPage) {
@@ -80,18 +89,27 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     }
     
     try {
-      // 检查当前路径的存储状态
-      const storedState = localStorage.getItem(localStorageKey);
-      const isInstalled = storedState === 'true';
-      console.log(`[usePwaDetection] Loaded installation state for path "${forcedPathKey}" from localStorage: ${isInstalled}`);
-      return isInstalled;
+      // 先尝试读取可信的全局安装状态（由已成功安装的页面设置）
+      const trustedState = localStorage.getItem(trustedStorageKey);
+      
+      // 如果找到可信状态并且是已安装，优先使用它
+      if (trustedState === 'true') {
+        console.log(`[usePwaDetection] Found trusted installation record for path "${forcedPathKey}"`);
+        return true;
+      }
+      
+      // 默认情况：未安装
+      // 注意：不再从localStorage加载可能不可信的false状态
+      console.log(`[usePwaDetection] No trusted installation record found for path "${forcedPathKey}", assuming not installed`);
+      return false;
     } catch (e) {
       console.error('[usePwaDetection] Error reading installation state from localStorage:', e);
       return false;
     }
   });
 
-  // Update localStorage whenever hasBeenInstalled changes
+  // 仅当确认安装完成时，才将状态写入localStorage
+  // 这样可以避免错误地将"未安装"状态传播到其他标签页
   useEffect(() => {
     // 入口页面不应该存储任何安装状态
     if (isEntryPage) {
@@ -106,14 +124,25 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       return;
     }
     
-    // 对于其他页面，正常存储安装状态
-    try {
-      localStorage.setItem(localStorageKey, hasBeenInstalled ? 'true' : 'false');
-      console.log(`[usePwaDetection] Updated installation state for path "${forcedPathKey}" in localStorage: ${hasBeenInstalled}`);
-    } catch (e) {
-      console.error('[usePwaDetection] Error saving installation state to localStorage:', e);
+    // 仅当状态为"已安装"时，才写入可信全局存储
+    // 这确保只有真正已安装的状态才会传播到其他标签页
+    if (hasBeenInstalled) {
+      try {
+        localStorage.setItem(trustedStorageKey, 'true');
+        console.log(`[usePwaDetection] Updated trusted installation state for path "${forcedPathKey}": true`);
+      } catch (e) {
+        console.error('[usePwaDetection] Error saving trusted installation state:', e);
+      }
     }
-  }, [hasBeenInstalled, localStorageKey, forcedPathKey, isEntryPage]);
+    
+    // 无论状态如何，总是更新当前会话的状态（这不会影响其他标签页）
+    try {
+      sessionStorage.setItem(sessionStorageKey, hasBeenInstalled ? 'true' : 'false');
+      console.log(`[usePwaDetection] Updated session installation state: ${hasBeenInstalled} (${sessionId})`);
+    } catch (e) {
+      console.error('[usePwaDetection] Error saving session installation state:', e);
+    }
+  }, [hasBeenInstalled, trustedStorageKey, sessionStorageKey, forcedPathKey, isEntryPage, sessionId]);
   
   // Force checking state every time the path changes
   useEffect(() => {
@@ -347,7 +376,7 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
         clearInterval(quickCheckIntervalId);
       }
     };
-  }, [displayModes, currentMode, hasBeenInstalled, localStorageKey, forcedPathKey, manifestInfo]); // Depends on displayModes, current mode, installed state, manifest and path
+  }, [displayModes, currentMode, hasBeenInstalled, trustedStorageKey, sessionStorageKey, forcedPathKey, manifestInfo, sessionId]); // Depends on displayModes, current mode, installed state, keys, manifest and path
 
   // Function to prompt installation
   const promptInstall = () => {
@@ -394,20 +423,21 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // Reset installable state
     setDeferredPrompt(null);
     
-    // Detect if we need to clear installation state
-    // This is important to handle browser address bar installations
-    // If we're running in browser mode but still have hasBeenInstalled=true,
-    // allow a manual refresh to clear that state so we can detect fresh again
+    // 检测是否需要清除安装状态
+    // 这对于处理浏览器地址栏安装至关重要
+    // 如果在浏览器模式中运行但hasBeenInstalled=true，
+    // 允许手动刷新以清除该状态，以便重新检测
     const currentDisplayMode = getCurrentDisplayMode();
     if (currentDisplayMode === 'browser' && hasBeenInstalled) {
       try {
-        // Clear stored state to allow re-detection
-        localStorage.removeItem(localStorageKey);
+        // 清除所有存储状态以允许重新检测
+        localStorage.removeItem(trustedStorageKey);
+        sessionStorage.removeItem(sessionStorageKey);
         setHasBeenInstalled(false);
-        console.log(`[usePwaDetection] Manual refresh: cleared installation state for path "${forcedPathKey}"`);
+        console.log(`[usePwaDetection] Manual refresh: cleared all installation states for path "${forcedPathKey}"`);
         
       } catch (e) {
-        console.error('[usePwaDetection] Error clearing installation state:', e);
+        console.error('[usePwaDetection] Error clearing installation states:', e);
       }
     }
     
@@ -420,9 +450,9 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     }, 3000); // Keep consistent with the detection time when path changes
   };
 
-  // Determine the proper installation status
+  // 确定正确的安装状态
   const getInstallStatus = (): InstallStatus => {
-    // Log all states for debugging
+    // 记录所有状态以进行调试
     console.log('[usePwaDetection] Status check', {
       isChecking,
       deferredPrompt: !!deferredPrompt,
@@ -431,7 +461,9 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       contextManifestInfo,
       hasBeenInstalled,
       location: window.location.pathname,
-      localStorageKey
+      trustedStorageKey,
+      sessionStorageKey,
+      sessionId
     });
     
     if (isChecking) {
@@ -485,15 +517,15 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // 只有当当前确实在浏览器模式下时，才使用存储的安装状态标志
     if (currentMode === 'browser') {
       try {
-        // 直接重新读取localStorage，确保使用最新状态（避免标签页过时的状态）
-        const freshStoredState = localStorage.getItem(localStorageKey);
-        const freshlyCheckedInstalled = freshStoredState === 'true';
+        // 直接重新读取可信的全局存储，确保使用最新状态
+        const freshTrustedState = localStorage.getItem(trustedStorageKey);
+        const freshlyCheckedInstalled = freshTrustedState === 'true';
         
-        console.log(`[usePwaDetection] Fresh localStorage check for "${localStorageKey}": ${freshlyCheckedInstalled}`);
+        console.log(`[usePwaDetection] Fresh trusted storage check: ${freshlyCheckedInstalled} (${sessionId})`);
         
         // Case 4: 已安装但在浏览器中运行
         if (freshlyCheckedInstalled) {
-          console.log('[usePwaDetection] Status: not-installable-already-installed - from fresh localStorage check');
+          console.log('[usePwaDetection] Status: not-installable-already-installed - from fresh trusted storage check');
           return 'not-installable-already-installed';
         }
       } catch (e) {
