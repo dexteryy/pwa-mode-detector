@@ -2,7 +2,9 @@ export default {
   // Common
   language: "Choose Language",
   language_english: "English",
-  language_chinese: "中文 (Chinese)",
+  language_chinese: "中文 (Simplified Chinese)",
+  language_chinese_traditional: "繁體中文 (Traditional Chinese)",
+  language_japanese: "日本語 (Japanese)",
 
   // Entry page
   entry_title: "PWA Display Mode Demo",
