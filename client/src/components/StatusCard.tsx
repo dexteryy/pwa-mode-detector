@@ -107,20 +107,12 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
             ) : (
               <>
                 <div className="flex items-center">
-                  {isInstallable ? (
-                    <PackageOpen className="h-5 w-5 text-green-500 dark:text-green-400 mr-2 flex-shrink-0" />
-                  ) : (
-                    <Ban className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
-                  )}
-                  <p className={
-                    isInstallable 
-                      ? 'text-green-600 dark:text-green-400' 
-                      : 'text-gray-500 dark:text-gray-400'
-                  }>
-                    {isInstallable ? t('can_be_installed') : t('not_installable')}
+                  <InstallIcon className={`h-5 w-5 ${installTextClass} mr-2 flex-shrink-0`} />
+                  <p className={installTextClass}>
+                    {installStatusText}
                   </p>
                 </div>
-                {!isInstallable && installDisabledReason && (
+                {installDisabledReason && (
                   <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm">{installDisabledReason}</p>
                 )}
               </>

@@ -53,6 +53,10 @@ export default {
     "Display mode in manifest is set to 'browser', which doesn't support installation",
   install_disabled_browser_unsupported:
     "Your browser doesn't support PWA installation",
+  install_disabled_already_pwa:
+    "Already running as a PWA window, cannot install again",
+  install_disabled_already_installed:
+    "App is already installed on this device, cannot install again",
   install_button_disabled: "Installation not available",
 
   // PWA Detector

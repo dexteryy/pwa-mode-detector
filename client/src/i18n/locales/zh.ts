@@ -50,6 +50,10 @@ export default {
   install_disabled_manifest_browser:
     "manifest中的display属性设置为'browser'，此模式不支持安装",
   install_disabled_browser_unsupported: "您的浏览器不支持PWA安装",
+  install_disabled_already_pwa:
+    "已经在PWA窗口中运行，无法再次安装",
+  install_disabled_already_installed:
+    "应用已经安装在此设备上，无法再次安装",
   install_button_disabled: "安装功能不可用",
 
   // PWA 检测器
