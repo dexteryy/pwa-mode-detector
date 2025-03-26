@@ -34,7 +34,7 @@ const Home = () => {
           </div>
           <button 
             onClick={handleRefresh}
-            className={`bg-white text-primary p-2 rounded-full hover:bg-blue-50 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
+            className={`bg-white text-primary w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-50 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
             aria-label="Refresh detection"
           >
             <span className="material-icons">refresh</span>
