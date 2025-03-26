@@ -210,12 +210,13 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       setManifestUrl(url);
       setCurrentManifestPath(baseUrl);
       
-      // Create new manifest link for PWA pages
+      // 使用动态路径和时间戳，重新指向通过服务器拦截的manifest
+      // 这将允许服务器根据当前路径决定提供哪个manifest
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
-      newLink.href = url;
+      newLink.href = `/manifest.json?ts=${timestamp}&path=${encodeURIComponent(pathWithoutParams)}`;
       document.head.appendChild(newLink);
-      console.log(`[ManifestHandler] Setting manifest to: ${url}`);
+      console.log(`[ManifestHandler] Setting manifest to: ${newLink.href}`);
       
       // Fetch the manifest content
       fetch(url)
