@@ -100,47 +100,49 @@ const PWADetector = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 flex-grow flex flex-col">
-        {/* Manifest mode banner */}
-        <div className={`mb-4 p-4 rounded-lg ${expectedMode === currentMode ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
-          <div className="flex items-center">
-            <span className="material-icons mr-2">{expectedMode === currentMode ? 'check_circle' : 'info'}</span>
-            <h2 className="font-semibold">
-              {t('expected_mode')}: <span className="font-bold">{expectedMode}</span>
-            </h2>
+        <div className="max-w-3xl mx-auto w-full">
+          {/* Manifest mode banner */}
+          <div className={`mb-4 p-4 rounded-lg ${expectedMode === currentMode ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+            <div className="flex items-center">
+              <span className="material-icons mr-2">{expectedMode === currentMode ? 'check_circle' : 'info'}</span>
+              <h2 className="font-semibold">
+                {t('expected_mode')}: <span className="font-bold">{expectedMode}</span>
+              </h2>
+            </div>
+            {expectedMode !== currentMode && (
+              <p className="mt-2 text-sm">
+                {t('detector_mode_mismatch')}
+              </p>
+            )}
           </div>
-          {expectedMode !== currentMode && (
-            <p className="mt-2 text-sm">
-              {t('detector_mode_mismatch')}
-            </p>
-          )}
-        </div>
-        
-        {/* Primary status card */}
-        <StatusCard mode={currentMode} isInstallable={isInstallable} expectedMode={expectedMode} />
-
-        {/* Detection details card */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-lg font-semibold text-dark mb-4 flex items-center">
-            <span className="material-icons mr-2">info</span>
-            {t('detector_subtitle')}
-          </h2>
           
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {displayModes.map(mode => (
-              <DetectionCard 
-                key={mode.name} 
-                mode={mode} 
-                isActive={mode.name === currentMode} 
-              />
-            ))}
+          {/* Primary status card */}
+          <StatusCard mode={currentMode} isInstallable={isInstallable} expectedMode={expectedMode} />
+  
+          {/* Detection details card */}
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 className="text-lg font-semibold text-dark mb-4 flex items-center">
+              <span className="material-icons mr-2">info</span>
+              {t('detector_subtitle')}
+            </h2>
+            
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {displayModes.map(mode => (
+                <DetectionCard 
+                  key={mode.name} 
+                  mode={mode} 
+                  isActive={mode.name === currentMode} 
+                />
+              ))}
+            </div>
           </div>
+  
+          {/* Information card */}
+          <InfoCard />
+          
+          {/* Spacer to push footer to bottom when content is short */}
+          <div className="flex-grow"></div>
         </div>
-
-        {/* Information card */}
-        <InfoCard />
-        
-        {/* Spacer to push footer to bottom when content is short */}
-        <div className="flex-grow"></div>
       </main>
 
       {/* Footer */}
