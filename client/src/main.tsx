@@ -2,23 +2,6 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-// 注册 service worker 用于 PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    // 获取当前的路径前缀，用于不同的PWA应用
-    const pathMatch = window.location.pathname.match(/^(\/pwa\/[^\/]+)/);
-    const scopePath = pathMatch ? pathMatch[1] : '/';
-    
-    navigator.serviceWorker.register('/sw.js', { scope: '/' })
-      .then((registration) => {
-        console.log('ServiceWorker registered with scope:', registration.scope);
-      })
-      .catch((error) => {
-        console.error('ServiceWorker registration failed:', error);
-      });
-  });
-}
-
 // 确保 manifest 正确加载
 const ensureManifest = () => {
   // 检查是否已有 manifest 链接
