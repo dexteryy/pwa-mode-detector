@@ -62,20 +62,12 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   const [isChecking, setIsChecking] = useState<boolean>(true);
   const [manifestInfo, setManifestInfo] = useState<{display?: string} | null>(null);
   
-  // Each path should have its own installation state
-  // forcedPathKey represents the display mode path being used
-  const localStorageKey = `pwa-installed-state-${forcedPathKey || 'default'}`;
-  
   // Check if this is the entry page (not a valid PWA path)
   const isEntryPath = !forcedPathKey || 
                       forcedPathKey === 'default' || 
                       window.location.pathname === '/';
   
-  // Generate storage keys with path-specific names
-  const sessionKey = `session-${forcedPathKey || 'default'}`;
-  
-  // Load installation state from localStorage to persist between refreshes
-  // but add additional safeguard to check session-specific state first
+  // Simple detection for whether app is running in PWA mode - no storage
   const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(() => {
     // Entry page should never show as installed
     if (isEntryPath) {
@@ -83,66 +75,9 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       return false;
     }
     
-    try {
-      // First check sessionStorage (tab-specific) for most recent installation state
-      // This takes precedence over localStorage to prevent cross-tab contamination
-      const sessionState = sessionStorage.getItem(sessionKey);
-      
-      if (sessionState !== null) {
-        const isSessionInstalled = sessionState === 'true';
-        console.log(`[usePwaDetection] Loaded session-specific installation state for "${forcedPathKey}": ${isSessionInstalled}`);
-        return isSessionInstalled;
-      }
-      
-      // Fall back to localStorage only if no session state exists
-      const storedState = localStorage.getItem(localStorageKey);
-      const isInstalled = storedState === 'true';
-      console.log(`[usePwaDetection] No session state found, using stored state for "${forcedPathKey}": ${isInstalled}`);
-      
-      // Immediately set session state to match localStorage to avoid inconsistency
-      sessionStorage.setItem(sessionKey, storedState || 'false');
-      
-      return isInstalled;
-    } catch (e) {
-      console.error('[usePwaDetection] Error reading installation state:', e);
-      return false;
-    }
+    // Default to false - we'll detect if we're running in PWA mode in the initial effect
+    return false;
   });
-
-  // Update both storage types whenever hasBeenInstalled changes
-  useEffect(() => {
-    // Skip storage updates for entry page
-    if (isEntryPath) {
-      console.log('[usePwaDetection] Entry page, skipping installation state storage');
-      return;
-    }
-    
-    // Only store state for specific PWA paths
-    const currentPath = window.location.pathname;
-    const isPwaPath = 
-      currentPath === '/standalone' || 
-      currentPath === '/minimal-ui' || 
-      currentPath === '/fullscreen' ||
-      currentPath.startsWith('/pwa/');
-      
-    if (!isPwaPath) {
-      console.log(`[usePwaDetection] Not a valid PWA path (${currentPath}), skipping state storage`);
-      return;
-    }
-    
-    try {
-      // Always update sessionStorage (tab-specific)
-      sessionStorage.setItem(sessionKey, hasBeenInstalled ? 'true' : 'false');
-      
-      // Also update localStorage for persistence between tabs
-      // but only if this is a legitimate installation (not just a display mode)
-      localStorage.setItem(localStorageKey, hasBeenInstalled ? 'true' : 'false');
-      
-      console.log(`[usePwaDetection] Updated installation state for "${forcedPathKey}": ${hasBeenInstalled}`);
-    } catch (e) {
-      console.error('[usePwaDetection] Error saving installation state:', e);
-    }
-  }, [hasBeenInstalled, localStorageKey, sessionKey, forcedPathKey, isEntryPath]);
   
   // Force checking state every time the path changes
   useEffect(() => {
@@ -376,7 +311,7 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
         clearInterval(quickCheckIntervalId);
       }
     };
-  }, [displayModes, currentMode, hasBeenInstalled, localStorageKey, forcedPathKey, manifestInfo]); // Depends on displayModes, current mode, installed state, manifest and path
+  }, [displayModes, currentMode, hasBeenInstalled, forcedPathKey, manifestInfo]); 
 
   // Function to prompt installation
   const promptInstall = () => {
@@ -423,9 +358,9 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // Reset installable state
     setDeferredPrompt(null);
     
-    // Skip storage-related operations for the entry page
+    // Skip additional operations for the entry page
     if (isEntryPath) {
-      console.log('[usePwaDetection] Entry page detected, skipping storage operations in refresh');
+      console.log('[usePwaDetection] Entry page detected, skipping operations in refresh');
       
       // Complete check after delay
       setTimeout(() => {
@@ -437,8 +372,6 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     
     // Detect if we need to clear installation state
     // This is important to handle browser address bar installations
-    // If we're running in browser mode but still have hasBeenInstalled=true,
-    // allow a manual refresh to clear that state so we can detect fresh again
     const currentDisplayMode = getCurrentDisplayMode();
     
     // Get current path-based mode for more accurate checking
@@ -457,7 +390,7 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     const manifestDisplay = manifestInfo?.display || contextManifestInfo?.display;
     const hasPathMismatch = manifestDisplay && manifestDisplay !== pathBasedMode;
     
-    // Clear state if:
+    // Reset installation state if:
     // 1. We're in browser mode but hasBeenInstalled is true (likely false state)
     // 2. There's a mismatch between manifest display and current path
     // 3. User explicitly wants a fresh installation check for supported path
@@ -466,23 +399,18 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
         hasPathMismatch || 
         !isSupportedPwaPath || 
         pathBasedMode === 'browser') {
-      try {
-        // Clear both storage types for this path
-        localStorage.removeItem(localStorageKey);
-        sessionStorage.removeItem(sessionKey);
-        setHasBeenInstalled(false);
-        console.log(`[usePwaDetection] Manual refresh: cleared installation state for path "${forcedPathKey}"`);
-        console.log('[usePwaDetection] Storage state reset reason:', { 
-          inBrowserMode: currentDisplayMode === 'browser', 
-          hasBeenInstalled, 
-          pathBasedMode,
-          manifestDisplay,
-          hasPathMismatch,
-          isSupportedPwaPath
-        });
-      } catch (e) {
-        console.error('[usePwaDetection] Error clearing installation state:', e);
-      }
+      
+      // Just reset React state - no storage operations
+      setHasBeenInstalled(false);
+      console.log(`[usePwaDetection] Manual refresh: reset installation state for path "${forcedPathKey}"`);
+      console.log('[usePwaDetection] State reset reason:', { 
+        inBrowserMode: currentDisplayMode === 'browser', 
+        hasBeenInstalled, 
+        pathBasedMode,
+        manifestDisplay,
+        hasPathMismatch,
+        isSupportedPwaPath
+      });
     }
     
     console.log(`[usePwaDetection] Manual refresh: starting new detection`);
@@ -514,9 +442,7 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       manifestInfo,
       contextManifestInfo,
       hasBeenInstalled,
-      location: currentPath,
-      sessionStorage: sessionStorage.getItem(sessionKey),
-      localStorage: localStorage.getItem(localStorageKey)
+      location: currentPath
     });
     
     if (isChecking) {
