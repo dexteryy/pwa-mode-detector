@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import TechTermLink, { TECH_TERM_URLS, TechTermKey } from "./TechTermLink";
 
 interface ModeInfo {
   name: string;
@@ -30,27 +29,10 @@ const DetectionCard = ({ mode, isActive }: DetectionCardProps) => {
     
   const statusText = isActive ? t('mode_active') : t('mode_inactive');
 
-  // 将模式名称映射到TechTermKey类型
-  const getModeKey = (name: string): TechTermKey => {
-    switch(name) {
-      case 'browser': return 'browser';
-      case 'minimal-ui': return 'minimal-ui';
-      case 'standalone': return 'standalone';
-      case 'fullscreen': return 'fullscreen';
-      default: return 'display'; // 默认返回display属性文档
-    }
-  };
-
-  const modeKey = getModeKey(mode.name);
-
   return (
     <div className={cardClassName}>
       <div className="flex justify-between items-center mb-2">
-        <h3 className="font-medium">
-          <TechTermLink term={mode.displayName} url={TECH_TERM_URLS[modeKey]}>
-            {mode.displayName}
-          </TechTermLink>
-        </h3>
+        <h3 className="font-medium">{mode.displayName}</h3>
         <span className={indicatorClassName}></span>
       </div>
       <p className={statusClassName}>{statusText}</p>

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { usePwaDetection } from "../hooks/usePwaDetection";
 import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, PackageOpen, X } from "lucide-react";
-import TechTermLink, { TECH_TERM_URLS, TechTermKey } from "./TechTermLink";
 
 interface StatusCardProps {
   mode: string;
@@ -17,34 +16,28 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
   let cardBorderColor = "border-amber-500";
   let iconColorClass = "text-amber-500";
   let ModeIcon = Globe;
-  let modeDisplayName = "";
-  let modeKey: TechTermKey = "browser"; // 默认值
-  // modeStatusText变量已删除，不再使用
+  let modeStatusText = "";
 
   if (mode === "standalone") {
     cardBorderColor = "border-green-500";
     iconColorClass = "text-green-500";
     ModeIcon = CheckCircle;
-    modeDisplayName = t('standalone_name');
-    modeKey = "standalone";
+    modeStatusText = `${t('current_mode')}: ${t('standalone_name')}`;
   } else if (mode === "minimal-ui") {
     cardBorderColor = "border-blue-500";
     iconColorClass = "text-blue-500";
     ModeIcon = Minimize;
-    modeDisplayName = t('minimal_ui_name');
-    modeKey = "minimal-ui";
+    modeStatusText = `${t('current_mode')}: ${t('minimal_ui_name')}`;
   } else if (mode === "fullscreen") {
     cardBorderColor = "border-blue-500";
     iconColorClass = "text-blue-500";
     ModeIcon = Maximize;
-    modeDisplayName = t('fullscreen_name');
-    modeKey = "fullscreen";
+    modeStatusText = `${t('current_mode')}: ${t('fullscreen_name')}`;
   } else {
     cardBorderColor = "border-amber-500";
     iconColorClass = "text-amber-500";
     ModeIcon = Globe;
-    modeDisplayName = t('browser_name');
-    modeKey = "browser";
+    modeStatusText = `${t('current_mode')}: ${t('browser_name')}`;
   }
 
   // 确定安装不能的原因，仅在非检查状态时
@@ -68,12 +61,7 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
         {/* 当前模式部分 */}
         <div className="flex items-center">
           <ModeIcon className={`h-6 w-6 mr-3 ${iconColorClass}`} />
-          <h2 className="text-xl font-semibold text-dark dark:text-white">
-            {t('current_mode')}: {' '}
-            <TechTermLink term={modeDisplayName} url={TECH_TERM_URLS[modeKey]}>
-              {modeDisplayName}
-            </TechTermLink>
-          </h2>
+          <h2 className="text-xl font-semibold text-dark dark:text-white">{modeStatusText}</h2>
         </div>
         
         {/* 安装按钮部分 - 在所有模式下显示 */}
@@ -129,13 +117,7 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
                   } transition-colors w-full sm:w-auto`}
                 >
                   <Download className="h-4 w-4 mr-1" />
-                  {t('install_pwa').replace(/PWA/g, match => {
-                    return (
-                      <TechTermLink key="pwa-install" term={match} url={TECH_TERM_URLS.PWA}>
-                        {match}
-                      </TechTermLink>
-                    );
-                  })}
+                  {t('install_pwa')}
                 </button>
                 
                 {/* 当安装不可用时，显示悬浮提示 */}
