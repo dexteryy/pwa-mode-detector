@@ -46,7 +46,7 @@ export default {
   "status_minimal_ui_prompt": "您可以安装此应用以体验完整的独立窗口模式",
   "status_fullscreen_running": "应用已在全屏模式下运行",
   "status_browser_installable": "您可以安装此应用以体验 PWA 独立窗口模式",
-  "status_browser_not_installable": "您的浏览器不支持安装 PWA 应用",
+  "status_browser_not_installable": "此页面虽然具有 Web App Manifest，但由于 display 属性设置为 'browser'，因此无法安装，不是完整的 PWA",
   "mode_active": "已启用",
   "mode_inactive": "未启用",
   "about_pwa_modes": "关于 PWA 模式",
