@@ -17,6 +17,30 @@ interface PwaDetection {
   userAgent: string;
 }
 
+// 使用全局状态避免多次检测
+let globalCheckState = {
+  deferredPrompt: null as any,
+  isChecking: true,
+  hasCompletedInitialCheck: false,
+  // 状态更新时的回调
+  listeners: [] as Function[]
+};
+
+// 注册状态变化监听器
+function registerStateChangeListener(listener: Function) {
+  globalCheckState.listeners.push(listener);
+  return () => {
+    globalCheckState.listeners = globalCheckState.listeners.filter(l => l !== listener);
+  };
+}
+
+// 更新全局状态
+function updateGlobalState(updates: Partial<typeof globalCheckState>) {
+  Object.assign(globalCheckState, updates);
+  // 通知所有监听器
+  globalCheckState.listeners.forEach(listener => listener());
+}
+
 export function usePwaDetection(): PwaDetection {
   const { t } = useTranslation();
   
@@ -46,10 +70,24 @@ export function usePwaDetection(): PwaDetection {
 
   // State for tracking current mode and installability
   const [currentMode, setCurrentMode] = useState<string>("browser");
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [userAgent, setUserAgent] = useState<string>("");
-  const [isChecking, setIsChecking] = useState<boolean>(true);
-  const [hasCompletedInitialCheck, setHasCompletedInitialCheck] = useState<boolean>(false);
+  // 将状态连接到全局状态
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(globalCheckState.deferredPrompt);
+  const [isChecking, setIsChecking] = useState<boolean>(globalCheckState.isChecking);
+  const [hasCompletedInitialCheck, setHasCompletedInitialCheck] = useState<boolean>(
+    globalCheckState.hasCompletedInitialCheck
+  );
+
+  // 监听全局状态变化
+  useEffect(() => {
+    const unregister = registerStateChangeListener(() => {
+      setDeferredPrompt(globalCheckState.deferredPrompt);
+      setIsChecking(globalCheckState.isChecking);
+      setHasCompletedInitialCheck(globalCheckState.hasCompletedInitialCheck);
+    });
+    
+    return unregister;
+  }, []);
 
   // Detect the current display mode
   const checkDisplayMode = () => {
@@ -101,23 +139,29 @@ export function usePwaDetection(): PwaDetection {
       mediaQuery.addEventListener("change", handleChange);
     });
     
-    // 设置为检查状态，并等待延迟完成初始检查
-    const checkingTimer = setTimeout(() => {
-      // 初始检查完成后，设置检查状态为false
-      setHasCompletedInitialCheck(true);
-      setIsChecking(false);
-    }, 2000); // 增加时间确保安装状态可以被正确确定
+    // 只在全局状态未完成检查时才执行初始检查
+    let checkingTimer: any = null;
+    if (!globalCheckState.hasCompletedInitialCheck) {
+      // 设置为检查状态，并等待延迟完成初始检查
+      checkingTimer = setTimeout(() => {
+        // 初始检查完成后，更新全局状态
+        updateGlobalState({
+          hasCompletedInitialCheck: true,
+          isChecking: false
+        });
+      }, 2000); // 增加时间确保安装状态可以被正确确定
+    }
     
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent Chrome 67+ from automatically showing the prompt
       e.preventDefault();
       // Stash the event so it can be triggered later
-      setDeferredPrompt(e);
+      updateGlobalState({ deferredPrompt: e });
       
       // 如果初始检查已完成，则可以立即设置isChecking为false
-      if (hasCompletedInitialCheck) {
-        setIsChecking(false);
+      if (globalCheckState.hasCompletedInitialCheck) {
+        updateGlobalState({ isChecking: false });
       }
       // 如果初始检查未完成，让定时器继续执行
     };
@@ -126,7 +170,7 @@ export function usePwaDetection(): PwaDetection {
     
     // Hide install button after app is installed
     const handleAppInstalled = () => {
-      setDeferredPrompt(null);
+      updateGlobalState({ deferredPrompt: null });
     };
     
     window.addEventListener("appinstalled", handleAppInstalled);
@@ -142,7 +186,7 @@ export function usePwaDetection(): PwaDetection {
     
     // Cleanup
     return () => {
-      clearTimeout(checkingTimer);
+      if (checkingTimer) clearTimeout(checkingTimer);
       mediaQueries.forEach((mediaQuery, index) => {
         mediaQuery.removeEventListener("change", handlers[index]);
       });
@@ -150,7 +194,7 @@ export function usePwaDetection(): PwaDetection {
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [displayModes, hasCompletedInitialCheck]); // Add displayModes and hasCompletedInitialCheck as dependencies
+  }, [displayModes]); // 只依赖 displayModes，不再依赖 hasCompletedInitialCheck
 
   // Function to prompt installation
   const promptInstall = () => {
@@ -165,22 +209,26 @@ export function usePwaDetection(): PwaDetection {
         } else {
           console.log("User dismissed the install prompt");
         }
-        // Clear the saved prompt
-        setDeferredPrompt(null);
+        // Clear the saved prompt in global state
+        updateGlobalState({ deferredPrompt: null });
       });
     }
   };
   
   // Function to manually reset the checking state (for use with refresh button)
   const resetChecking = () => {
-    // 重置所有检查状态
-    setIsChecking(true);
-    setHasCompletedInitialCheck(false);
+    // 重置全局检查状态
+    updateGlobalState({
+      isChecking: true,
+      hasCompletedInitialCheck: false
+    });
     
     // 延迟后完成检查
     setTimeout(() => {
-      setHasCompletedInitialCheck(true);
-      setIsChecking(false);
+      updateGlobalState({
+        hasCompletedInitialCheck: true,
+        isChecking: false
+      });
     }, 2000);
   };
 
