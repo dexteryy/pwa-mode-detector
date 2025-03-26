@@ -113,15 +113,15 @@ const Entry = () => {
                   
                   const replacements: Replacement[] = [
                     {
-                      regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b/,
+                      regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b|\bプログレッシブ[・\s]?ウェブ[・\s]?アプリ\b|\bアプリケーション(?:ズ)?(?:\s*\([^)]+\))?\b|\bアプリ(?:\s*\([^)]+\))?\b|\bprogressive\b.{1,10}\bweb\b.{1,10}\bapp\b/i,
                       url: "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
                     },
                     {
-                      regex: /\bWeb App Manifest\b/,
+                      regex: /\bWeb App Manifest\b|\bManifest(?:o|e)?\s+(?:d[aeo'])?\s*(?:aplicaci[oó]n\s+web|application\s+web|aplicativo\s+web)|\bウェブアプリマニフェスト\b|\b웹\s*앱\s*매니페스트\b|\bManifest(?:o|e)?\b|\b매니페스트\b/i,
                       url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
                     },
                     {
-                      regex: /[''](display)['']\s+property|\b(display)\s+属性|\b(display)\b/,
+                      regex: /[''](display)['']\s+(?:property|プロパティ|속성)|\b(display)\s+(?:propiedad|propriété|propiedade|属性|속성)|\b(display)\b|[''](표시)['']\s+속성|\[?表示\]?\s*(?:プロパティ|モード)?|\b디스플레이\s+속성\b/i,
                       url: "https://developer.mozilla.org/en-US/docs/Web/Manifest/display",
                       matchIndex: 1,
                     }
@@ -229,15 +229,15 @@ const Entry = () => {
                   
                   const replacements: Replacement[] = [
                     {
-                      regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b/,
+                      regex: /\bPWA(?:\s*\([^)]+\))?s?\b|\bProgressive Web Apps?\b|\bプログレッシブ[・\s]?ウェブ[・\s]?アプリ\b|\bアプリケーション(?:ズ)?(?:\s*\([^)]+\))?\b|\bアプリ(?:\s*\([^)]+\))?\b|\bprogressive\b.{1,10}\bweb\b.{1,10}\bapp\b/i,
                       url: "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps",
                     },
                     {
-                      regex: /\bWeb App Manifest\b/,
+                      regex: /\bWeb App Manifest\b|\bManifest(?:o|e)?\s+(?:d[aeo'])?\s*(?:aplicaci[oó]n\s+web|application\s+web|aplicativo\s+web)|\bウェブアプリマニフェスト\b|\b웹\s*앱\s*매니페스트\b|\bManifest(?:o|e)?\b|\b매니페스트\b/i,
                       url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
                     },
                     {
-                      regex: /\bmanifest\b/i,
+                      regex: /\bmanifest(?:o|e)?\b/i,
                       url: "https://developer.mozilla.org/en-US/docs/Web/Manifest",
                     }
                   ];
