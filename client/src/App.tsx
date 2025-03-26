@@ -83,13 +83,9 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     // Log for debugging
     console.log(`[ManifestHandler] Processing path: ${pathWithoutParams}`);
     
-    // For entry page ('/') or any unspecified pages, don't add any manifest and exit early
-    // Also explicitly exit for the '/browser' path, as it's a special mode
-    if (location === '/' || 
-        (pathWithoutParams !== '/standalone' && 
-         pathWithoutParams !== '/minimal-ui' && 
-         pathWithoutParams !== '/fullscreen')) {
-      console.log('[ManifestHandler] Entry page or non-PWA path detected, no manifest needed');
+    // For entry page ('/') only, don't add any manifest and exit early
+    if (location === '/') {
+      console.log('[ManifestHandler] Entry page detected, no manifest needed');
       
       // If we previously had a manifest, clean it up
       if (currentManifestPath) {
