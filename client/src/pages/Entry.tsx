@@ -71,13 +71,13 @@ const Entry = () => {
           {/* Display Mode Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {displayModes.map(mode => (
-              <Link key={mode.name} href={`/${mode.name}`}>
-                <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-500 cursor-pointer">
+              <Link key={mode.name} href={`/${mode.name}`} className="h-full">
+                <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-500 cursor-pointer h-full flex flex-col">
                   <div className="flex items-center mb-4">
                     <span className="material-icons text-4xl text-blue-500 mr-3">{mode.icon}</span>
                     <h3 className="text-lg font-semibold text-gray-800">{mode.displayName}</h3>
                   </div>
-                  <p className="text-gray-600">{mode.description}</p>
+                  <p className="text-gray-600 flex-grow">{mode.description}</p>
                   <div className="mt-4 flex justify-end">
                     <span className="text-blue-500 font-medium flex items-center">
                       {t('view_demo')}
