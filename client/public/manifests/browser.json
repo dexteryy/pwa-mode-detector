@@ -5,7 +5,7 @@
   "display": "browser",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",
-  "description": "浏览器模式下的PWA演示",
+  "description": "PWA 运行在浏览器模式",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

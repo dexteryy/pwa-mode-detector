@@ -5,7 +5,7 @@
   "display": "minimal-ui",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",
-  "description": "最小界面模式下的PWA演示",
+  "description": "PWA 运行在最小界面模式",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
