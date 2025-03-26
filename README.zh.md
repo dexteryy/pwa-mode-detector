@@ -2,45 +2,48 @@
 
 <div align="center">
   <img src="client/public/icons/icon-512x512.png" alt="PWA Mode Detector logo" width="120">
-  <h3>一个用于展示和测试PWA不同显示模式的工具</h3>
+  <h3>一个用于分析和测试渐进式Web应用显示模式的高级工具</h3>
 </div>
 
 ![许可证](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-v18-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-v5-blue)
 ![PWA](https://img.shields.io/badge/PWA-ready-brightgreen)
+![i18n](https://img.shields.io/badge/i18n-8种语言-orange)
 
 [English](./README.md) | 简体中文
 
 ## 简介
 
-PWA 展示模式检测器是一个专为开发者设计的工具，用于展示和测试渐进式Web应用（PWA）在不同显示模式下的行为和外观。该工具允许你体验和比较 PWA 的四种主要展示模式：`standalone`、`minimal-ui`、`fullscreen` 和 `browser`。
+PWA 展示模式检测器是一款为开发者设计的高级工具，用于分析、展示和测试渐进式Web应用（PWA）在不同显示模式下的行为。该应用提供了关于PWA如何在各种环境中运行的上下文感知分析，让你能够体验和比较四种主要的PWA显示模式：`standalone`（独立窗口）、`minimal-ui`（最小界面）、`fullscreen`（全屏）和 `browser`（浏览器）。
 
 <div align="center">
   <img src="screenshots/preview.png" alt="应用预览" width="80%">
 </div>
 
-## 特性
+## 核心功能
 
-- ✅ **实时模式检测**：自动识别当前 PWA 的运行模式
-- ✅ **多模式支持**：测试四种不同的 PWA 显示模式
-- ✅ **独立安装**：每种模式可以作为独立 PWA 安装
-- ✅ **响应式设计**：在各种设备上都能良好工作
-- ✅ **用户代理信息**：显示当前环境的详细浏览器信息
-- ✅ **安装按钮**：在支持的环境中提供直观的安装体验
+- ✅ **实时模式监测**：即时识别并持续监控当前PWA的运行模式
+- ✅ **智能上下文分析**：提供关于PWA运行环境的详细洞察
+- ✅ **多模式安装测试**：测试所有四种PWA显示模式的安装和行为
+- ✅ **独立作用域安装**：每种模式都可以作为独立PWA同时安装
+- ✅ **动态清单管理**：根据用户上下文自动提供适当的清单文件
+- ✅ **细粒度可安装性分析**：精确确定PWA为何可安装或不可安装
+- ✅ **用户代理与浏览器智能**：显示详细的环境信息
+- ✅ **多语言支持**：支持8种语言，自动检测用户语言
+- ✅ **响应式UI**：在移动设备、平板电脑和桌面设备上无缝运行
 
-## 四种显示模式
+## 显示模式详解
 
-1. **独立窗口模式 (standalone)**：PWA 在没有浏览器界面的独立窗口中运行，类似于原生应用
-2. **最小界面模式 (minimal-ui)**：PWA 在带有最小浏览器控件的窗口中运行
-3. **全屏模式 (fullscreen)**：PWA 占据整个屏幕，没有任何浏览器界面
-4. **浏览器模式 (browser)**：PWA 在常规浏览器标签页中运行
+1. **独立窗口模式**（`display: standalone`）：PWA在没有浏览器界面的独立窗口中运行，类似于原生应用。拥有自己的窗口，出现在任务切换器中，不显示浏览器控件。
+
+2. **最小界面模式**（`display: minimal-ui`）：PWA在带有最小浏览器控件的窗口中运行。显示最小的浏览器UI元素，如后退按钮和可能的URL栏。
+
+3. **全屏模式**（`display: fullscreen`）：PWA占据整个屏幕，没有任何浏览器界面。提供最大的屏幕空间，没有任何浏览器元素，适合沉浸式体验。
+
+4. **浏览器模式**（`display: browser`）：PWA在常规浏览器标签页中运行。演示如何设置此显式模式会阻止PWA被安装。
 
 ## 开始使用
-
-### 在线演示
-
-访问 [https://pwa-mode-detector.example.com](https://pwa-mode-detector.example.com) 查看在线演示。
 
 ### 本地运行
 
@@ -72,22 +75,54 @@ npm run build
 
 ## 技术栈
 
-- **前端框架**：React + TypeScript
-- **构建工具**：Vite
-- **CSS框架**：Tailwind CSS + shadcn/ui
-- **路由**：wouter
-- **数据获取**：TanStack Query
-- **后端**：Express.js
+- **前端**：React 18 + TypeScript
+- **状态管理**：React Hooks + Context API
+- **构建系统**：Vite 带热模块替换（HMR）
+- **样式**：Tailwind CSS 主题定制 + shadcn/ui 组件
+- **路由**：wouter（轻量级React路由器）
+- **API客户端**：TanStack Query（React Query v5）
+- **后端**：Express.js 服务器，带动态清单管理
+- **国际化**：i18next 带语言自动检测
+- **PWA功能**：Web App Manifest, 可安装性检测, 显示模式媒体查询
+- **开发工具**：TypeScript, ESLint, Prettier
 
 ## 工作原理
 
-该应用通过以下方式工作：
+该应用实现了多种高级技术：
 
-1. 用户可以从主页选择要测试的 PWA 显示模式
-2. 每个模式都有自己的 `manifest.json` 文件，定义了 `display` 属性和其他相关配置
-3. 应用通过 `window.matchMedia()` 检测当前实际的显示模式
-4. 比较实际模式和预期模式，提供视觉反馈
-5. 每种模式都配置了独立的 `scope`，允许它们作为独立 PWA 同时安装
+1. **动态清单拦截**：服务器拦截对不同路径的请求，并根据请求的显示模式提供适当的manifest.json文件。
+
+2. **上下文感知PWA检测**：应用使用多种检测方法，包括：
+   - `window.matchMedia('(display-mode: standalone)')` 检测当前显示模式
+   - 可用时使用 `navigator.getInstalledRelatedApps()` API
+   - 使用 `BeforeInstallPromptEvent` 检测安装能力
+   - 通过 `navigator.standalone` 检测iOS独立模式
+
+3. **智能安装状态分析**：应用使用复杂算法确定PWA不可安装的确切原因：
+   - 已经作为PWA运行
+   - 浏览器不支持PWA安装
+   - 清单使用 `display: browser` 模式
+   - 已安装但在浏览器模式下运行
+
+4. **清单作用域隔离**：每种显示模式在自己的作用域下运行（`/standalone`, `/minimal-ui`等），允许同一应用的多种不同显示模式同时安装。
+
+5. **高级事件监控**：应用监控显示模式变化、可见性变化和安装事件，提供实时更新而无需刷新页面。
+
+6. **带术语链接的国际化**：使用i18next，并配备自定义系统，自动为关键技术术语添加参考链接，用于教育目的。
+
+## 多语言支持
+
+该应用支持8种语言，并自动检测浏览器语言：
+
+- 英语 (en)
+- 简体中文 (zh)
+- 繁体中文 (zh-TW)
+- 日语 (ja)
+- 韩语 (ko)
+- 德语 (de)
+- 法语 (fr)
+- 西班牙语 (es)
+- 葡萄牙语 (pt)
 
 ## 贡献
 
@@ -108,5 +143,5 @@ npm run build
 
 <div align="center">
   <p>如果这个项目对你有帮助，请考虑给它一个⭐️</p>
-  <p>Made with ❤️ for the PWA community</p>
+  <p>用❤️为PWA社区倾心打造</p>
 </div>
