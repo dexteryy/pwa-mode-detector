@@ -67,14 +67,12 @@ const PWADetector = () => {
       <div className="bg-blue-700 text-white">
         <div className="container mx-auto px-0">
           <div className="flex items-center justify-between">
-            <div>
-              <Link href="/">
-                <div className="text-white h-10 px-4 flex items-center justify-center cursor-pointer whitespace-nowrap min-w-20 hover:bg-blue-600/40 transition-colors">
-                  <span className="material-icons text-sm mr-1">arrow_back</span>
-                  {t('back_to_home')}
-                </div>
-              </Link>
-            </div>
+            <Link href="/">
+              <div className="text-white h-10 pl-2 pr-3 flex items-center cursor-pointer whitespace-nowrap hover:bg-blue-600/40 transition-colors">
+                <span className="material-icons text-sm mr-1">arrow_back</span>
+                {t('back_to_home')}
+              </div>
+            </Link>
             <div className="flex items-center">
               <button 
                 onClick={handleRefresh}
