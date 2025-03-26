@@ -137,6 +137,33 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // Set user agent
     setUserAgent(navigator.userAgent);
     
+    // Add a special handler for browser refresh after installation
+    // This is important for catching installations from browser UI buttons
+    const detectIfNewlyInstalled = () => {
+      // If we're not in the browser mode and weren't previously installed,
+      // then we must have just been installed from the browser UI
+      const detectedMode = getCurrentDisplayMode();
+      if (detectedMode !== 'browser' && !hasBeenInstalled) {
+        console.log(`[usePwaDetection] Detected installation from browser UI, current mode: ${detectedMode}`);
+        setHasBeenInstalled(true);
+        
+        // Also update the current mode immediately
+        if (detectedMode !== currentMode) {
+          setCurrentMode(detectedMode);
+        }
+      }
+    };
+    
+    // Run this check immediately
+    detectIfNewlyInstalled();
+    
+    // Also set up a short interval to check specifically for browser UI installations
+    // This is more aggressive than our normal interval but only runs for a short time after load
+    const quickCheckIntervalId = setInterval(detectIfNewlyInstalled, 1000);
+    setTimeout(() => {
+      clearInterval(quickCheckIntervalId);
+    }, 5000); // Only check aggressively for the first 5 seconds
+    
     // Initial check
     checkDisplayMode();
     
@@ -268,12 +295,17 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       
-      // Clear the periodic check interval
+      // Clear all interval timers
       if (intervalId) {
         clearInterval(intervalId);
       }
+      
+      // Also clear the quick check interval if it's still running
+      if (quickCheckIntervalId) {
+        clearInterval(quickCheckIntervalId);
+      }
     };
-  }, [displayModes]); // Only depends on displayModes
+  }, [displayModes, currentMode, hasBeenInstalled]); // Depends on displayModes, current mode and installed state
 
   // Function to prompt installation
   const promptInstall = () => {
