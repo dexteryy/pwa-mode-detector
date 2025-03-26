@@ -45,16 +45,21 @@ const Entry = () => {
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
       {/* Navigation Bar */}
       <div className="bg-blue-700 text-white">
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex items-center justify-end gap-2">
-            <LanguageSwitcher />
+        <div className="container mx-auto px-4 py-1">
+          <div className="flex items-center justify-between">
+            <div>
+              {/* 空白的左侧区域，保持布局平衡 */}
+            </div>
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </div>
       
       {/* Main Header */}
       <header className="bg-blue-500 text-white shadow-md">
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-4 py-7">
           <div className="text-center">
             <h1 className="text-2xl font-bold">{t('entry_title')}</h1>
             <p className="mt-2 text-blue-100">{t('entry_subtitle')}</p>

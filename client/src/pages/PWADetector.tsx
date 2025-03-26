@@ -55,29 +55,33 @@ const PWADetector = () => {
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
       {/* Navigation Bar */}
       <div className="bg-blue-700 text-white">
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex items-center justify-end gap-2">
-            <Link href="/">
-              <div className="bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-500 transition-colors flex items-center cursor-pointer">
-                <span className="material-icons text-sm mr-1">home</span>
-                {t('back_to_home')}
-              </div>
-            </Link>
-            <button 
-              onClick={handleRefresh}
-              className={`bg-blue-600 text-white w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-500 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
-              aria-label="Refresh detection"
-            >
-              <span className="material-icons">refresh</span>
-            </button>
-            <LanguageSwitcher />
+        <div className="container mx-auto px-4 py-1">
+          <div className="flex items-center justify-between">
+            <div>
+              <Link href="/">
+                <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded hover:bg-blue-500 transition-colors flex items-center cursor-pointer whitespace-nowrap">
+                  <span className="material-icons text-xs mr-1">home</span>
+                  {t('back_to_home')}
+                </div>
+              </Link>
+            </div>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handleRefresh}
+                className={`bg-blue-600 text-white h-6 w-6 flex items-center justify-center rounded hover:bg-blue-500 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
+                aria-label="Refresh detection"
+              >
+                <span className="material-icons text-sm">refresh</span>
+              </button>
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </div>
       
       {/* Main Header */}
       <header className="bg-blue-500 text-white shadow-md">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-5">
           <div className="flex items-center justify-center">
             <span className="material-icons mr-2">devices</span>
             <h1 className="text-xl font-semibold">{t('detector_title')}</h1>
