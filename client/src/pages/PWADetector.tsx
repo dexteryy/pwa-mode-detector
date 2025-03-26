@@ -7,6 +7,7 @@ import { usePwaDetection } from "@/hooks/usePwaDetection";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import TechTermLink, { TECH_TERM_URLS, TechTermKey } from "../components/TechTermLink";
 import { ArrowLeft, RefreshCw, Smartphone, CheckCircle, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -18,7 +19,7 @@ const PWADetector = () => {
   const [path] = useLocation();
   
   // 判断当前路径对应的显示模式
-  let expectedMode = "standalone";
+  let expectedMode: TechTermKey = "standalone";
   if (path === "/standalone") {
     expectedMode = "standalone";
   } else if (path === "/minimal-ui") {
@@ -31,7 +32,12 @@ const PWADetector = () => {
     // 向下兼容旧路径
     const match = path.match(/\/pwa\/([a-z-]+)/);
     if (match) {
-      expectedMode = match[1];
+      const mode = match[1];
+      // 检查是否是有效的显示模式
+      if (mode === "browser" || mode === "minimal-ui" || 
+          mode === "standalone" || mode === "fullscreen") {
+        expectedMode = mode as TechTermKey;
+      }
     }
   }
   
@@ -124,12 +130,46 @@ const PWADetector = () => {
                 <Info className="h-5 w-5 mr-2" />
               )}
               <h2 className="font-semibold">
-                {t('expected_mode')}: <span className="font-bold">{expectedMode}</span>
+                {t('expected_mode')}: <span className="font-bold">
+                  <TechTermLink 
+                    term={expectedMode} 
+                    url={
+                      expectedMode === 'browser' ? TECH_TERM_URLS.browser :
+                      expectedMode === 'minimal-ui' ? TECH_TERM_URLS['minimal-ui'] :
+                      expectedMode === 'standalone' ? TECH_TERM_URLS.standalone :
+                      expectedMode === 'fullscreen' ? TECH_TERM_URLS.fullscreen :
+                      TECH_TERM_URLS.display
+                    }
+                  >
+                    {expectedMode}
+                  </TechTermLink>
+                </span>
               </h2>
             </div>
             {expectedMode !== currentMode && (
               <p className="mt-2 text-sm">
-                {t('detector_mode_mismatch')}
+                {t('detector_mode_mismatch')
+                  .replace(/PWA/g, match => 
+                    `<pwa>${match}</pwa>`
+                  )
+                  .replace(/manifest/g, match => 
+                    `<manifest>${match}</manifest>`
+                  )
+                  .split(/<(pwa|manifest)>([^<]+)<\/\1>/g)
+                  .map((part, i, array) => {
+                    if (i % 3 === 0) return part;
+                    const type = array[i-1];
+                    const content = array[i];
+                    
+                    if (type === 'pwa') {
+                      return <TechTermLink key={i} term={content} url={TECH_TERM_URLS.PWA}>{content}</TechTermLink>;
+                    }
+                    if (type === 'manifest') {
+                      return <TechTermLink key={i} term={content} url={TECH_TERM_URLS['Web App Manifest']}>{content}</TechTermLink>;
+                    }
+                    return part;
+                  })
+                }
               </p>
             )}
           </div>
@@ -169,7 +209,9 @@ const PWADetector = () => {
       {/* Footer */}
       <footer className="bg-gray-800 dark:bg-gray-950 text-white py-4 mt-auto">
         <div className="container mx-auto px-4 text-center text-sm">
-          <p>{t('detector_title')} | {t('device_info')}: <span className="text-gray-400 dark:text-gray-500 text-xs">{userAgent}</span></p>
+          <p>
+            <TechTermLink term={t('detector_title')} url={TECH_TERM_URLS.PWA}>{t('detector_title')}</TechTermLink> | {t('device_info')}: <span className="text-gray-400 dark:text-gray-500 text-xs">{userAgent}</span>
+          </p>
         </div>
       </footer>
     </div>

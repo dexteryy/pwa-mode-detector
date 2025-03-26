@@ -24,8 +24,19 @@ const TechTermLink: React.FC<TechTermLinkProps> = ({ term, url, children }) => {
   );
 };
 
+// 术语URL映射类型
+export type TechTermKey = 
+  | 'PWA' 
+  | 'Progressive Web App' 
+  | 'Web App Manifest' 
+  | 'display' 
+  | 'browser' 
+  | 'minimal-ui' 
+  | 'standalone' 
+  | 'fullscreen';
+
 // 术语URL映射
-export const TECH_TERM_URLS = {
+export const TECH_TERM_URLS: Record<TechTermKey, string> = {
   PWA: 'https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps',
   'Progressive Web App': 'https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps',
   'Web App Manifest': 'https://developer.mozilla.org/en-US/docs/Web/Manifest',
