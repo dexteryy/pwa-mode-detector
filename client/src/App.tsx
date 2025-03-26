@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import PWADetector from "@/pages/PWADetector";
 import Entry from "@/pages/Entry";
 import { useEffect } from "react";
+import { updateGlobalState } from "./hooks/usePwaDetection";
 
 // 根据路径参数动态设置 manifest
 function ManifestHandler() {
@@ -27,6 +28,22 @@ function ManifestHandler() {
     
     // 确保不会出现缓存问题，添加随机参数避免缓存
     const timestamp = new Date().getTime();
+    
+    // 当路径变化时，重置检查状态
+    const isPwaPath = location.startsWith('/standalone') || 
+                     location.startsWith('/minimal-ui') || 
+                     location.startsWith('/fullscreen') || 
+                     location.startsWith('/browser') || 
+                     location.startsWith('/pwa/');
+                     
+    if (isPwaPath) {
+      // 重置检查状态为"正在检查"
+      updateGlobalState({
+        isChecking: true,
+        hasCompletedInitialCheck: false
+      });
+      console.log('路径变化，重置检查状态:', location);
+    }
     
     // 为 PWA 页面创建新的 manifest 链接
     if (location.startsWith('/standalone')) {
