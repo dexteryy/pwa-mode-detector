@@ -153,12 +153,15 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     let checkingTimer: any = null;
     // 设置为检查状态，并等待延迟完成初始检查
     checkingTimer = setTimeout(() => {
-      // 检查完成后，更新全局状态
+      // 检查完成后，同时更新全局状态和本地状态
       updateGlobalState({
         hasCompletedInitialCheck: true,
         isChecking: false
       });
-      console.log(`[usePwaDetection] 检测完成: ${forcedPathKey}`);
+      // 一定要更新本地状态，否则显示不出结果
+      setIsChecking(false);
+      setHasCompletedInitialCheck(true);
+      console.log(`[usePwaDetection] 检测完成: ${forcedPathKey}, 状态已更新`);
     }, 2000); // 增加时间确保安装状态可以被正确确定
     
     // Listen for beforeinstallprompt event
@@ -168,11 +171,17 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       // Stash the event so it can be triggered later
       updateGlobalState({ deferredPrompt: e });
       
+      // 更新本地deferredPrompt状态
+      setDeferredPrompt(e);
+      
       // 如果初始检查已完成，则可以立即设置isChecking为false
       if (globalCheckState.hasCompletedInitialCheck) {
         updateGlobalState({ isChecking: false });
+        setIsChecking(false); // 也更新本地状态
       }
       // 如果初始检查未完成，让定时器继续执行
+      
+      console.log(`[usePwaDetection] 收到安装提示事件`);
     };
     
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -180,6 +189,8 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // Hide install button after app is installed
     const handleAppInstalled = () => {
       updateGlobalState({ deferredPrompt: null });
+      setDeferredPrompt(null);
+      console.log(`[usePwaDetection] 应用已安装`);
     };
     
     window.addEventListener("appinstalled", handleAppInstalled);
@@ -214,30 +225,44 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       // Wait for the user to respond to the prompt
       deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
         if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the install prompt");
+          console.log("[usePwaDetection] 用户接受安装提示");
         } else {
-          console.log("User dismissed the install prompt");
+          console.log("[usePwaDetection] 用户取消安装提示");
         }
-        // Clear the saved prompt in global state
+        // Clear the saved prompt in global state and local state
         updateGlobalState({ deferredPrompt: null });
+        setDeferredPrompt(null);
       });
     }
   };
   
   // Function to manually reset the checking state (for use with refresh button)
   const resetChecking = () => {
-    // 重置全局检查状态
+    // 重置全局检查状态和本地状态
     updateGlobalState({
       isChecking: true,
       hasCompletedInitialCheck: false
     });
     
+    // 同时更新本地状态
+    setIsChecking(true);
+    setHasCompletedInitialCheck(false);
+    
+    console.log(`[usePwaDetection] 手动刷新: 开始新检测`);
+    
     // 延迟后完成检查
     setTimeout(() => {
+      // 同时更新全局状态和本地状态
       updateGlobalState({
         hasCompletedInitialCheck: true,
         isChecking: false
       });
+      
+      // 更新本地状态
+      setIsChecking(false);
+      setHasCompletedInitialCheck(true);
+      
+      console.log(`[usePwaDetection] 手动刷新: 检测完成`);
     }, 2000);
   };
 
