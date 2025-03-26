@@ -149,20 +149,15 @@ const PWADetector = () => {
         </div>
       </footer>
 
-      {/* Install button for PWA installation - Still visible during UI checking but disabled */}
-      {isInstallable && (
+      {/* Install button for PWA installation - Hidden during checking */}
+      {isInstallable && !isChecking && (
         <div className="fixed bottom-4 right-4 transition-opacity duration-300">
           <button 
             onClick={promptInstall}
-            disabled={isChecking}
-            className={`px-4 py-2 rounded-full shadow-lg flex items-center ${
-              isChecking 
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                : 'bg-blue-500 text-white hover:bg-blue-600'
-            }`}
+            className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 flex items-center"
           >
-            <span className="material-icons mr-1">{isChecking ? 'hourglass_empty' : 'get_app'}</span>
-            {isChecking ? t('checking') : t('install_pwa')}
+            <span className="material-icons mr-1">get_app</span>
+            {t('install_pwa')}
           </button>
         </div>
       )}
