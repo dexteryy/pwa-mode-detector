@@ -29,7 +29,7 @@ const PWADetector = () => {
   };
 
   return (
-    <div className="bg-gray-100 font-sans min-h-screen">
+    <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-blue-500 text-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -56,7 +56,7 @@ const PWADetector = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow flex flex-col">
         {/* Manifest mode banner */}
         <div className={`mb-4 p-4 rounded-lg ${expectedMode === currentMode ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
           <div className="flex items-center">
@@ -95,10 +95,13 @@ const PWADetector = () => {
 
         {/* Information card */}
         <InfoCard />
+        
+        {/* Spacer to push footer to bottom when content is short */}
+        <div className="flex-grow"></div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-4 mt-8">
+      <footer className="bg-gray-800 text-white py-4 mt-auto">
         <div className="container mx-auto px-4 text-center text-sm">
           <p>PWA Mode Detector | 检测环境：<span className="text-gray-400 text-xs">{userAgent}</span></p>
         </div>

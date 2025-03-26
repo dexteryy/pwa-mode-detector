@@ -30,7 +30,7 @@ const displayModes = [
 
 const Entry = () => {
   return (
-    <div className="bg-gray-100 font-sans min-h-screen">
+    <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-blue-500 text-white shadow-md">
         <div className="container mx-auto px-4 py-6">
@@ -40,8 +40,8 @@ const Entry = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+      <main className="container mx-auto px-4 py-8 flex-grow flex flex-col">
+        <div className="max-w-3xl mx-auto w-full">
           {/* Introduction */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">什么是 PWA 展示模式？</h2>
@@ -91,11 +91,14 @@ const Entry = () => {
               要获得完整的 PWA 体验，请使用支持 PWA 的浏览器（如 Chrome、Edge、Safari）并安装应用。
             </p>
           </div>
+          
+          {/* Spacer to push footer to bottom when content is short */}
+          <div className="flex-grow"></div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-4 mt-8">
+      <footer className="bg-gray-800 text-white py-4 mt-auto">
         <div className="container mx-auto px-4 text-center text-sm">
           <p>PWA 展示模式演示 | 选择一种模式开始体验</p>
         </div>
