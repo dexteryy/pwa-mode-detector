@@ -66,45 +66,29 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   // forcedPathKey represents the display mode path being used
   const localStorageKey = `pwa-installed-state-${forcedPathKey || 'default'}`;
   
-  // Use an improved installation state approach that combines localStorage (for persistence) 
-  // with sessionStorage (for tab-specific overrides)
-  const sessionStorageKey = `pwa-installed-state-session-${forcedPathKey || 'default'}`;
-  
+  // Load installation state from localStorage to persist between refreshes
   const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(() => {
     try {
-      // First check if we have a session-specific override
-      const sessionState = sessionStorage.getItem(sessionStorageKey);
-      if (sessionState !== null) {
-        const isInstalledSession = sessionState === 'true';
-        console.log(`[usePwaDetection] Using session-specific installation state for "${forcedPathKey}": ${isInstalledSession}`);
-        return isInstalledSession;
-      }
-      
-      // Otherwise fall back to the shared localStorage state
+      // Check if we have a stored installation state for this specific path
       const storedState = localStorage.getItem(localStorageKey);
       const isInstalled = storedState === 'true';
       console.log(`[usePwaDetection] Loaded installation state for path "${forcedPathKey}" from localStorage: ${isInstalled}`);
       return isInstalled;
     } catch (e) {
-      console.error('[usePwaDetection] Error reading installation state:', e);
+      console.error('[usePwaDetection] Error reading installation state from localStorage:', e);
       return false;
     }
   });
 
-  // Update both storage types whenever hasBeenInstalled changes
+  // Update localStorage whenever hasBeenInstalled changes
   useEffect(() => {
     try {
-      // First update the tab-specific state
-      sessionStorage.setItem(sessionStorageKey, hasBeenInstalled ? 'true' : 'false');
-      console.log(`[usePwaDetection] Updated session storage state for "${forcedPathKey}": ${hasBeenInstalled}`);
-      
-      // Then update the shared state 
       localStorage.setItem(localStorageKey, hasBeenInstalled ? 'true' : 'false');
-      console.log(`[usePwaDetection] Updated localStorage state for "${forcedPathKey}": ${hasBeenInstalled}`);
+      console.log(`[usePwaDetection] Updated installation state for path "${forcedPathKey}" in localStorage: ${hasBeenInstalled}`);
     } catch (e) {
-      console.error('[usePwaDetection] Error saving installation state:', e);
+      console.error('[usePwaDetection] Error saving installation state to localStorage:', e);
     }
-  }, [hasBeenInstalled, localStorageKey, sessionStorageKey, forcedPathKey]);
+  }, [hasBeenInstalled, localStorageKey, forcedPathKey]);
   
   // Force checking state every time the path changes
   useEffect(() => {
@@ -421,74 +405,57 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       manifestInfo,
       contextManifestInfo,
       hasBeenInstalled,
-      location: window.location.pathname,
-      forcedPathKey
+      location: window.location.pathname
     });
     
     if (isChecking) {
       return 'checking';
     }
     
-    // Case 1: First always prioritize display:browser in manifests
-    // This ensures browser display mode is always correctly detected regardless of other state
+    // Case 1: Installable - browser supports installation and app can be installed
+    if (deferredPrompt) {
+      console.log('[usePwaDetection] Status: installable');
+      return 'installable';
+    }
+    
+    // Case 2: Running as PWA - not in browser mode
+    if (currentMode !== 'browser') {
+      console.log('[usePwaDetection] Status: not-installable-already-pwa');
+      return 'not-installable-already-pwa';
+    }
+    
+    // Case 3: Manifest uses display:browser - HIGHEST PRIORITY FOR BROWSER MODE & BROWSER PATHS
+    // We prioritize this check over hasBeenInstalled to ensure proper detection
+    // Also do path-based detection for known browser display paths
     const isBrowserPath = window.location.pathname === '/browser' || 
                          window.location.pathname.startsWith('/browser/');
     
     const isBrowserDisplayMode = (manifestInfo && manifestInfo.display === 'browser') || 
                                (contextManifestInfo && contextManifestInfo.display === 'browser') ||
-                               isBrowserPath || // Also check path as a fallback
-                               forcedPathKey === 'browser'; // Check explicit forced path
+                               isBrowserPath; // Also check path as fallback
     
     // Debug the manifest display mode check
-    console.log('[usePwaDetection] Browser display check:', {
+    console.log('[usePwaDetection] Display mode & path check:', {
       isBrowserDisplayMode,
       isBrowserPath,
       manifestDisplay: manifestInfo?.display,
       contextManifestDisplay: contextManifestInfo?.display,
-      pathname: window.location.pathname,
-      forcedPathKey
+      pathname: window.location.pathname
     });
     
     if (isBrowserDisplayMode) {
-      console.log('[usePwaDetection] Status: not-installable-browser-mode (display:browser detected)');
+      console.log('[usePwaDetection] Status: not-installable-browser-mode (display:browser in manifest or browser path)');
       return 'not-installable-browser-mode';
     }
     
-    // Case 2: Installable - browser supports installation and app can be installed
-    // PROMOTE THIS CHECK to second priority - it means we have a fresh prompt
-    if (deferredPrompt) {
-      console.log('[usePwaDetection] Status: installable - prompt available');
-      return 'installable';
-    }
-    
-    // Case 3: Running as PWA - not in browser mode
-    if (currentMode !== 'browser') {
-      console.log('[usePwaDetection] Status: not-installable-already-pwa (running in PWA mode)');
-      return 'not-installable-already-pwa';
-    }
-    
     // Case 4: Already installed but running in browser
-    // This now only applies if we HAVEN'T detected browser display mode
-    // and we're actually running in browser mode
     if (hasBeenInstalled) {
-      // Double check if the local storage might have been shared between paths incorrectly
-      // by checking if the key is specifically for this path
-      const checkIsSessionStorage = sessionStorage.getItem(sessionStorageKey) === 'true';
-      
-      // Only trust this state if explicitly set in the current session or if path matches
-      if (checkIsSessionStorage || forcedPathKey === localStorageKey.split('-').pop()) {
-        console.log('[usePwaDetection] Status: not-installable-already-installed (reliable state)');
-        return 'not-installable-already-installed';
-      } else {
-        // We have a shared localStorage value but it might be from another path
-        // and we don't have a session override, so we're less confident
-        console.log('[usePwaDetection] Ignoring potentially incorrect cross-path installation state');
-        // Fall through to final case
-      }
+      console.log('[usePwaDetection] Status: not-installable-already-installed');
+      return 'not-installable-already-installed';
     }
     
     // Case 5: Browser doesn't support installation (default fallback)
-    console.log('[usePwaDetection] Status: not-installable-browser-unsupported (fallback)');
+    console.log('[usePwaDetection] Status: not-installable-browser-unsupported');
     return 'not-installable-browser-unsupported';
   };
 
