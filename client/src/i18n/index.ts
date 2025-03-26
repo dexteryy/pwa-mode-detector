@@ -80,9 +80,8 @@ function getInitialLanguage(): string {
 // 需要添加链接的文本键
 const KEYS_WITH_LINKS = [
   'pwa_display_mode_description',
-  'technical_description',
-  'pwa_different_modes',
-  'browser_mode_info'
+  'about_pwa_modes',
+  'technical_description'
 ];
 
 // 为所有语言资源添加链接
