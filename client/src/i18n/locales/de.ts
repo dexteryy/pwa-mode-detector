@@ -65,7 +65,7 @@ export default {
   device_info: "Geräteinformationen",
   user_agent: "User Agent",
   detector_mode_mismatch:
-    "Der erkannte Ausführungsmodus unterscheidet sich vom im Manifest konfigurierten. Dies könnte daran liegen, dass Ihr Browser diesen Modus nicht unterstützt oder die App noch nicht installiert ist.",
+    "Der erkannte Ausführungsmodus unterscheidet sich vom im manifest konfigurierten. Dies könnte daran liegen, dass Ihr Browser diesen Modus nicht unterstützt oder die App noch nicht installiert ist.",
   status_standalone_running: "Die App läuft bereits im eigenständigen Modus",
   status_minimal_ui_prompt: "Sie können diese App installieren, um den vollständigen eigenständigen Modus zu erleben",
   status_fullscreen_running: "Die App läuft bereits im Vollbildmodus",
@@ -74,7 +74,7 @@ export default {
   status_browser_checking: "Überprüfe, ob diese Seite installierbar ist...",
   checking: "Überprüfe...",
   browser_mode_info:
-    "Diese Seite hat ein Web App Manifest, kann aber aufgrund der Display-Eigenschaft 'browser' nicht installiert werden, ist keine vollständige PWA",
+    "Diese Seite hat ein Web App Manifest, kann aber aufgrund der 'display'-Eigenschaft mit Wert 'browser' nicht installiert werden, ist keine vollständige PWA",
   mode_active: "Aktiv",
   mode_inactive: "Inaktiv",
   about_pwa_modes: "Über PWA-Modi",

@@ -48,7 +48,7 @@ export default {
   status_browser_running: "앱이 표준 브라우저 모드에서 실행 중입니다",
   install_capability_title: "설치 상태",
   install_disabled_manifest_browser:
-    "매니페스트 디스플레이 모드가 'browser'로 설정되어 있어 이 모드는 설치를 지원하지 않습니다",
+    "Web App Manifest의 'display' 모드가 'browser'로 설정되어 있어 이 모드는 설치를 지원하지 않습니다",
   install_disabled_browser_unsupported: "브라우저가 PWA 설치를 지원하지 않습니다",
   install_button_disabled: "설치를 사용할 수 없음",
 
@@ -65,7 +65,7 @@ export default {
   device_info: "기기 정보",
   user_agent: "사용자 에이전트",
   detector_mode_mismatch:
-    "감지된 실행 모드가 매니페스트에 구성된 것과 다릅니다. 브라우저가 이 모드를 지원하지 않거나 앱이 아직 설치되지 않았기 때문일 수 있습니다.",
+    "감지된 실행 모드가 manifest에 구성된 것과 다릅니다. 브라우저가 이 모드를 지원하지 않거나 앱이 아직 설치되지 않았기 때문일 수 있습니다.",
   status_standalone_running: "앱이 이미 독립 실행형 모드에서 실행 중입니다",
   status_minimal_ui_prompt: "전체 독립 실행형 모드를 경험하려면 이 앱을 설치할 수 있습니다",
   status_fullscreen_running: "앱이 이미 전체화면 모드에서 실행 중입니다",
@@ -74,21 +74,21 @@ export default {
   status_browser_checking: "이 페이지가 설치 가능한지 확인 중...",
   checking: "확인 중...",
   browser_mode_info:
-    "이 페이지는 웹 앱 매니페스트를 가지고 있지만 디스플레이 속성이 'browser'로 설정되어 있어 설치할 수 없으며, 완전한 PWA가 아닙니다",
+    "이 페이지는 Web App Manifest를 가지고 있지만 'display' 속성이 'browser'로 설정되어 있어 설치할 수 없으며, 완전한 PWA가 아닙니다",
   mode_active: "활성화됨",
   mode_inactive: "비활성화됨",
   about_pwa_modes: "PWA 모드에 대하여",
-  pwa_different_modes: "프로그레시브 웹 앱(PWA)은 다양한 디스플레이 모드에서 실행될 수 있습니다:",
+  pwa_different_modes: "Progressive Web Apps(PWA)은 다양한 디스플레이 모드에서 실행될 수 있습니다:",
 
   // 새로고침 토스트
   refreshing: "새로고침 중...",
-  refresh_process: "디스플레이 모드, 설치 상태 확인 및 매니페스트 정보 업데이트 중",
+  refresh_process: "디스플레이 모드, 설치 상태 확인 및 manifest 정보 업데이트 중",
 
   // 매니페스트 뷰어
-  manifest_viewer_title: "웹 앱 매니페스트",
-  view_manifest: "매니페스트 보기",
+  manifest_viewer_title: "Web App Manifest",
+  view_manifest: "Manifest 보기",
   loading: "로딩 중...",
-  manifest_error: "매니페스트 로딩 오류",
+  manifest_error: "Manifest 로딩 오류",
   manifest_name: "이름",
   manifest_short_name: "짧은 이름",
   manifest_start_url: "시작 URL",
