@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Collapsible,
@@ -6,27 +6,14 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ArrowDownIcon, ArrowRightIcon, FileJson, AlertCircle } from 'lucide-react';
-import { ManifestContext, WebAppManifest } from '../App';
+import { ManifestContext } from '../App';
 
 const ManifestViewer: React.FC = () => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [localManifest, setLocalManifest] = useState<WebAppManifest | null>(null);
   
   // Use the shared manifest context instead of fetching it again
   const { manifestInfo: manifest, isLoading, error } = useContext(ManifestContext);
-  
-  // 调试用：记录组件获取的manifest信息
-  console.log('[ManifestViewer] Context data:', { manifest, isLoading, error });
-  
-  // 当manifest上下文变化时更新本地状态
-  useEffect(() => {
-    console.log('[ManifestViewer] Manifest changed in context, updating local state');
-    if (manifest) {
-      setLocalManifest(manifest);
-      console.log('[ManifestViewer] Local manifest updated:', manifest);
-    }
-  }, [manifest]);
 
   // Format JSON for display
   const formatJson = (json: object): string => {
@@ -72,46 +59,43 @@ const ManifestViewer: React.FC = () => {
             </div>
           )}
           
-          {/* 使用 localManifest 或 manifest，优先使用上下文的manifest，因为它可能更新 */}
-          {(manifest || localManifest) && !isLoading && !error && (
+          {manifest && !isLoading && !error && (
             <div>
-              {/* 显示 manifest 信息 */}
               <div className="mb-2 flex flex-wrap gap-2">
-                {/* 使用展示manifest数据 */}
-                {(manifest || localManifest)?.name && (
+                {manifest.name && (
                   <span className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-1 rounded text-xs">
-                    {t('manifest_name', 'Name')}: {(manifest || localManifest)?.name}
+                    {t('manifest_name', 'Name')}: {manifest.name}
                   </span>
                 )}
-                {(manifest || localManifest)?.short_name && (
+                {manifest.short_name && (
                   <span className="bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-1 rounded text-xs">
-                    {t('manifest_short_name', 'Short Name')}: {(manifest || localManifest)?.short_name}
+                    {t('manifest_short_name', 'Short Name')}: {manifest.short_name}
                   </span>
                 )}
-                {(manifest || localManifest)?.display && (
+                {manifest.display && (
                   <span className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-1 rounded text-xs">
-                    display: {(manifest || localManifest)?.display}
+                    display: {manifest.display}
                   </span>
                 )}
-                {(manifest || localManifest)?.id && (
+                {manifest.id && (
                   <span className="bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 px-2 py-1 rounded text-xs">
-                    id: {(manifest || localManifest)?.id}
+                    id: {manifest.id}
                   </span>
                 )}
-                {(manifest || localManifest)?.start_url && (
+                {manifest.start_url && (
                   <span className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-1 rounded text-xs">
-                    {t('manifest_start_url', 'Start URL')}: {(manifest || localManifest)?.start_url}
+                    {t('manifest_start_url', 'Start URL')}: {manifest.start_url}
                   </span>
                 )}
-                {(manifest || localManifest)?.scope && (
+                {manifest.scope && (
                   <span className="bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 px-2 py-1 rounded text-xs">
-                    {t('manifest_scope', 'Scope')}: {(manifest || localManifest)?.scope}
+                    {t('manifest_scope', 'Scope')}: {manifest.scope}
                   </span>
                 )}
               </div>
               
               <pre className="bg-gray-50 dark:bg-gray-900 p-4 rounded overflow-auto text-xs dark:text-gray-300 h-60">
-                {formatJson(manifest || localManifest || {})}
+                {formatJson(manifest)}
               </pre>
             </div>
           )}

@@ -158,47 +158,23 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       document.head.appendChild(newLink);
       console.log(`[ManifestHandler] Setting manifest to: ${url}`);
       
-      // 添加时间戳和随机数来避免缓存问题
-      const cacheBuster = `?t=${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
-      const actualManifestPath = `${baseUrl}${cacheBuster}`; // 例如 /manifests/standalone.json?t=123456789
-      console.log(`[ManifestHandler] Fetching manifest with cache buster: ${actualManifestPath}`);
-      
-      fetch(actualManifestPath, {
-        method: 'GET',
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-      })
+      // Fetch the manifest content
+      fetch(url)
         .then(response => {
-          console.log(`[ManifestHandler] Fetch response status: ${response.status}, ${response.statusText}`);
-          console.log(`[ManifestHandler] Response headers:`, 
-            Array.from(response.headers.entries()).map(([key, value]) => `${key}: ${value}`).join(', '));
-          
           if (!response.ok) {
             throw new Error(`Failed to fetch manifest: ${response.status}`);
           }
           return response.json();
         })
         .then(data => {
-          console.log('[ManifestHandler] Manifest data loaded:', JSON.stringify(data));
-          
-          // 使用函数形式的setState以确保使用最新的状态
+          console.log('[ManifestHandler] Manifest data loaded', data);
           setManifestInfo(data);
           setIsLoading(false);
-          setError(null); // 清除可能存在的错误
-          
-          // 使用异步确认状态更新
-          setTimeout(() => {
-            console.log('[ManifestHandler] State after update, manifestInfo:', manifestInfo);
-          }, 100);
         })
         .catch(err => {
           console.error('[ManifestHandler] Error loading manifest:', err);
           setError(err.message || 'Unknown error loading manifest');
           setIsLoading(false);
-          setManifestInfo(null); // 出错时清除旧数据
         });
     }
   }, [location, currentManifestPath]);
