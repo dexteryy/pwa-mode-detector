@@ -21,8 +21,8 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="rounded-full">
-          <Globe className="h-[1.2rem] w-[1.2rem]" />
+        <Button variant="outline" size="icon" className="rounded-full flex items-center justify-center">
+          <Globe className="h-[1.2rem] w-[1.2rem] opacity-100" />
           <span className="sr-only">{t('language')}</span>
         </Button>
       </DropdownMenuTrigger>

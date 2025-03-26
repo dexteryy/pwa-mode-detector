@@ -15,29 +15,36 @@ export default {
   "technical_description": "Each PWA app uses the same codebase but has different Web App Manifest configurations. The application will detect the current actual runtime mode and compare it with the expected mode declared in the manifest.",
   "browser_support_note": "For the full PWA experience, use a PWA-supporting browser (like Chrome, Edge, Safari) and install the application.",
   "footer_text": "PWA Display Mode Demo | Select a mode to start the experience",
-
+  
   // Display modes
   "standalone_name": "Standalone Mode",
   "standalone_description": "App runs in its own window, without any browser UI",
+  "browser_name": "Browser Mode",
+  "browser_description": "App runs in a regular browser tab",
   "minimal_ui_name": "Minimal UI Mode",
   "minimal_ui_description": "App runs in a window with minimal browser controls",
   "fullscreen_name": "Fullscreen Mode",
   "fullscreen_description": "App takes up the entire screen without any browser UI",
-  "browser_name": "Browser Mode",
-  "browser_description": "App runs in a regular browser tab",
+  
+  // Status card
+  "current_status": "Current Status",
+  "running_as": "Running as:",
+  "browser_tab": "Browser Tab",
+  "pwa_standalone": "PWA Standalone",
+  "can_be_installed": "Can be installed",
+  "already_installed": "Already installed",
+  "install_pwa": "Install PWA",
+  "refresh_detection": "Refresh",
 
   // PWA Detector
   "detector_title": "PWA Display Mode Detector",
   "detector_subtitle": "This tool detects how your PWA is currently running",
   "current_mode": "Current Mode",
   "expected_mode": "Expected Mode",
-  "running_as": "Running as",
-  "browser_tab": "Browser Tab",
   "pwa_window": "PWA Window",
   "status_title": "Status",
   "installable": "Installable",
   "not_installable": "Not Installable",
-  "install_pwa": "Install PWA",
   "back_to_home": "Back to Home",
   "device_info": "Device Information",
   "user_agent": "User Agent",
