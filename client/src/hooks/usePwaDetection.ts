@@ -177,6 +177,7 @@ export function usePwaDetection(): PwaDetection {
     isInstallable: !!deferredPrompt,
     isChecking,
     promptInstall,
+    resetChecking,
     userAgent
   };
 }

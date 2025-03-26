@@ -39,6 +39,7 @@ const PWADetector = () => {
     isInstallable,
     isChecking,
     promptInstall,
+    resetChecking,
     userAgent 
   } = usePwaDetection();
   
@@ -47,6 +48,9 @@ const PWADetector = () => {
   // Handle manual refresh
   const handleRefresh = () => {
     setIsRefreshing(true);
+    // 重置检查状态
+    resetChecking();
+    // 动画效果
     setTimeout(() => {
       setIsRefreshing(false);
     }, 500);
