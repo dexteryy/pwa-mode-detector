@@ -123,8 +123,17 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       console.log("[ManifestHandler] Browser mode manifest path detected (display:browser)");
     }
     else if (pathWithoutParams.startsWith('/pwa/')) {
-      baseUrl = '/manifest.json';
-      exactPathMatch = true;
+      // Extract the display mode from the URL
+      const displayMode = pathWithoutParams.split('/pwa/')[1];
+      // Check if the display mode matches one of our existing manifest files
+      if (['standalone', 'minimal-ui', 'fullscreen', 'browser'].includes(displayMode)) {
+        baseUrl = `/manifests/${displayMode}.json`;
+        exactPathMatch = true;
+        console.log(`[ManifestHandler] PWA path detected with mode: ${displayMode}`);
+      } else {
+        console.log(`[ManifestHandler] PWA path with unknown display mode: ${displayMode}`);
+        exactPathMatch = false;
+      }
     }
     
     // Skip loading if path is ambiguous and doesn't exactly match a manifest
