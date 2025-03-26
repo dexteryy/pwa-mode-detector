@@ -20,12 +20,10 @@ const ManifestViewer: React.FC = () => {
   // Use the shared manifest context instead of fetching it again 
   const { manifestInfo: manifest, manifestUrl, isLoading, error } = useContext(ManifestContext);
 
-  // 只在组件挂载时检查一次，避免重复请求
+  // Only check once when component mounts to avoid duplicate requests
   useEffect(() => {
-    console.log('[ManifestViewer] Current manifest context:', { manifest, manifestUrl, isLoading, error });
-    
-    // 检查是否已经有 manifest 数据或者正在加载
-    // 如果没有，只尝试加载一次
+    // Check if manifest data already exists or is loading
+    // If not, only try to load it once
     if (!manifest && !isLoading && !localManifest) {
       loadManifestDirectly();
     }
@@ -50,10 +48,9 @@ const ManifestViewer: React.FC = () => {
     
     setLocalLoading(true);
     
-    // 从服务器获取 manifest 文件
-    console.log(`[ManifestViewer] Fetching manifest data for ${manifestType} from server`);
+    // Fetch manifest file from server
     
-    // 直接从服务器加载 manifest 数据
+    // Load manifest data directly from server
     fetch(`/manifests/${manifestType}.json?v=${new Date().getTime()}`, {
       cache: 'no-store',
       headers: {
@@ -64,12 +61,10 @@ const ManifestViewer: React.FC = () => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(`[ManifestViewer] Directly loaded ${manifestType} manifest:`, data);
         setLocalManifest(data);
         setLocalLoading(false);
       })
       .catch(err => {
-        console.error(`[ManifestViewer] Error loading ${manifestType} manifest:`, err);
         setLocalError(`Failed to load manifest: ${err.message}`);
         setLocalLoading(false);
       });

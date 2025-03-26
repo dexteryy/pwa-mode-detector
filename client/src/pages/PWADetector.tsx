@@ -29,7 +29,7 @@ const PWADetector = () => {
     expectedMode = "browser";
   }
   
-  console.log("Current path:", path, "Expected mode:", expectedMode);
+
   
   // Pass current path as a forced refresh key to the hook
   const { 

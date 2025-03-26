@@ -1,15 +1,15 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
-// 导入i18n配置
+// Import i18n configuration
 import "./i18n";
 
-// 确保 manifest 正确加载
+// Ensure manifest is loaded correctly
 const ensureManifest = () => {
-  // 检查是否已有 manifest 链接
+  // Check if manifest link already exists
   const existingManifest = document.querySelector('link[rel="manifest"]');
   
-  // 如果没有或者是 base64 编码的，则添加或替换为正确的链接
+  // If it doesn't exist or is base64 encoded, add or replace with the correct link
   if (!existingManifest || existingManifest.getAttribute('href')?.startsWith('data:')) {
     if (existingManifest) {
       existingManifest.remove();
@@ -19,15 +19,13 @@ const ensureManifest = () => {
     manifestLink.rel = 'manifest';
     manifestLink.href = '/manifest.json';
     document.head.appendChild(manifestLink);
-    
-    console.log('PWA manifest updated dynamically');
   }
 };
 
-// 页面加载完成后确保 manifest 正确
+// Ensure manifest is correct after page load completes
 window.addEventListener('DOMContentLoaded', ensureManifest);
 
-// 立即尝试确保 manifest 正确（以防 DOMContentLoaded 已经触发）
+// Try to ensure manifest is correct immediately (in case DOMContentLoaded has already fired)
 ensureManifest();
 
 createRoot(document.getElementById("root")!).render(<App />);

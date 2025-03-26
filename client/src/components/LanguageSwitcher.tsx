@@ -21,7 +21,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
   const { t, i18n } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   
-  // 监听语言变化，确保UI状态与实际语言同步
+  // Listen for language changes to ensure UI state is synchronized with the actual language
   useEffect(() => {
     const handleLanguageChanged = () => {
       setCurrentLanguage(i18n.language);
@@ -38,7 +38,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
     changeLanguage(language);
   };
   
-  // 显示当前语言的简写或图标
+  // Display abbreviation or icon for the current language
   const getCurrentLanguageDisplay = () => {
     switch (currentLanguage) {
       case 'zh':
@@ -62,7 +62,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
     }
   };
 
-  // 创建语言菜单项的函数
+  // Function to create language menu items
   const createLanguageMenuItem = (languageCode: string, translationKey: string) => (
     <DropdownMenuItem 
       onClick={() => handleLanguageChange(languageCode)}
@@ -91,12 +91,12 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
         <DropdownMenuLabel>{t('language')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         
-        {/* 英语 */}
+        {/* English */}
         {createLanguageMenuItem('en', 'language_english')}
         
         <DropdownMenuSeparator />
         
-        {/* 东亚语言组 */}
+        {/* East Asian languages */}
         <DropdownMenuGroup>
           {createLanguageMenuItem('zh', 'language_chinese')}
           {createLanguageMenuItem('zh-TW', 'language_chinese_traditional')}
@@ -106,7 +106,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
         
         <DropdownMenuSeparator />
         
-        {/* 欧洲语言组 */}
+        {/* European languages */}
         <DropdownMenuGroup>
           {createLanguageMenuItem('de', 'language_german')}
           {createLanguageMenuItem('fr', 'language_french')}

@@ -51,25 +51,23 @@ function ManifestHandler({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [currentManifestPath, setCurrentManifestPath] = useState<string | null>(null);
   
-  // 使用useRef跟踪manifest请求状态，避免重复请求
+  // Use useRef to track manifest request status, preventing duplicate requests
   const manifestRequested = useRef<Record<string, boolean>>({});
   
-  // 组件挂载和卸载时的清理
+  // Cleanup when component mounts and unmounts
   useEffect(() => {
-    // 移除可能阻止缓存的meta标签
+    // Remove meta tags that might prevent caching
     const noCacheMeta = document.querySelector('meta[http-equiv="Cache-Control"]');
     if (noCacheMeta) {
       noCacheMeta.parentNode?.removeChild(noCacheMeta);
-      console.log('[ManifestHandler] Removed no-cache meta tag to allow caching');
     }
     
-    // 清理函数 - 当组件卸载时执行
+    // Cleanup function - executes when component unmounts
     return () => {
       const links = document.querySelectorAll('link[rel="manifest"]');
       links.forEach(link => link.parentNode?.removeChild(link));
-      console.log('[ManifestHandler] Cleanup on unmount: removed all manifest links');
     };
-  }, []); // 空依赖数组表示仅在挂载和卸载时执行
+  }, []); // Empty dependency array means this runs only on mount and unmount
   
   // 处理路径变化时的manifest加载
   useEffect(() => {
