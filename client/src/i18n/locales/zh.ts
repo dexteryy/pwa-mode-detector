@@ -73,6 +73,10 @@ export default {
   about_pwa_modes: "关于 PWA 模式",
   pwa_different_modes: "PWA（渐进式 Web 应用）可以在不同的显示模式下运行：",
 
+  // 刷新提示
+  refreshing: "正在刷新...",
+  refresh_process: "正在检查显示模式、安装状态及更新应用清单信息",
+
   // Manifest 查看器
   manifest_viewer_title: "Web App Manifest",
   view_manifest: "查看清单内容",

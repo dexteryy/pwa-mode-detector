@@ -67,6 +67,10 @@ export default {
   "about_pwa_modes": "About PWA Modes",
   "pwa_different_modes": "Progressive Web Apps (PWAs) can run in different display modes:",
   
+  // Refresh notifications
+  "refreshing": "Refreshing...",
+  "refresh_process": "Checking display mode, installation status, and updating manifest information",
+  
   // Manifest viewer
   "manifest_viewer_title": "Web App Manifest",
   "view_manifest": "View Manifest Content",

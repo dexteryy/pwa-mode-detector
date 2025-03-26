@@ -8,9 +8,11 @@ import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import { ArrowLeft, RefreshCw, Smartphone, CheckCircle, Info } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const PWADetector = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   
   // 从URL路径中获取预期的display模式
   const [path] = useLocation();
@@ -54,8 +56,17 @@ const PWADetector = () => {
   // Handle manual refresh
   const handleRefresh = () => {
     setIsRefreshing(true);
+    
+    // 显示正在刷新的提示消息
+    toast({
+      title: t('refreshing'),
+      description: t('refresh_process'),
+      duration: 3000,
+    });
+    
     // 重置检查状态
     resetChecking();
+    
     // 动画效果
     setTimeout(() => {
       setIsRefreshing(false);
