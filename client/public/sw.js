@@ -1,9 +1,16 @@
 // Service Worker for PWA
-const CACHE_NAME = 'pwa-detector-v1';
+const CACHE_NAME = 'pwa-detector-v2';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json',
+  '/manifests/standalone.json',
+  '/manifests/minimal-ui.json',
+  '/manifests/fullscreen.json',
+  '/manifests/browser.json',
+  '/pwa/standalone',
+  '/pwa/minimal-ui',
+  '/pwa/fullscreen',
+  '/pwa/browser',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
   '/icons/maskable-icon.png'

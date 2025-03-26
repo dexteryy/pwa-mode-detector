@@ -20,12 +20,13 @@ function ManifestHandler() {
       const manifestPath = `/manifests/${displayMode}.json`;
       
       // 更新 manifest 链接
-      let manifestLink = document.querySelector('link[rel="manifest"]');
+      let manifestLink = document.querySelector('link[rel="manifest"]') as HTMLLinkElement;
       
       if (!manifestLink) {
-        manifestLink = document.createElement('link');
-        manifestLink.rel = 'manifest';
-        document.head.appendChild(manifestLink);
+        const newLink = document.createElement('link');
+        newLink.rel = 'manifest';
+        document.head.appendChild(newLink);
+        manifestLink = newLink;
       }
       
       manifestLink.setAttribute('href', manifestPath);

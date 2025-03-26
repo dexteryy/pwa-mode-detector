@@ -3,9 +3,13 @@ import StatusCard from "@/components/StatusCard";
 import DetectionCard from "@/components/DetectionCard";
 import InfoCard from "@/components/InfoCard";
 import { usePwaDetection } from "@/hooks/usePwaDetection";
-import { Link } from "wouter";
+import { Link, useRoute } from "wouter";
 
 const PWADetector = () => {
+  // 从URL参数中获取预期的display模式
+  const [, params] = useRoute("/pwa/:display");
+  const expectedMode = params?.display || "standalone";
+  
   const { 
     displayModes, 
     currentMode, 
@@ -53,6 +57,21 @@ const PWADetector = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
+        {/* Manifest mode banner */}
+        <div className={`mb-4 p-4 rounded-lg ${expectedMode === currentMode ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+          <div className="flex items-center">
+            <span className="material-icons mr-2">{expectedMode === currentMode ? 'check_circle' : 'info'}</span>
+            <h2 className="font-semibold">
+              当前 PWA 预期运行模式: <span className="font-bold">{expectedMode}</span>
+            </h2>
+          </div>
+          {expectedMode !== currentMode && (
+            <p className="mt-2 text-sm">
+              检测到的实际运行模式与 manifest 中配置的不同。这可能是因为浏览器不支持该模式或者应用尚未安装。
+            </p>
+          )}
+        </div>
+        
         {/* Primary status card */}
         <StatusCard mode={currentMode} isInstallable={isInstallable} />
 

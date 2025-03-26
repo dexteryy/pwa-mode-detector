@@ -1,0 +1,29 @@
+{
+  "name": "PWA Mode Detector - Browser",
+  "short_name": "PWA Browser",
+  "start_url": "/pwa/browser",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "description": "PWA 运行在浏览器模式",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

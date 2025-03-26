@@ -5,7 +5,11 @@ import "./index.css";
 // 注册 service worker 用于 PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
+    // 获取当前的路径前缀，用于不同的PWA应用
+    const pathMatch = window.location.pathname.match(/^(\/pwa\/[^\/]+)/);
+    const scopePath = pathMatch ? pathMatch[1] : '/';
+    
+    navigator.serviceWorker.register('/sw.js', { scope: '/' })
       .then((registration) => {
         console.log('ServiceWorker registered with scope:', registration.scope);
       })
