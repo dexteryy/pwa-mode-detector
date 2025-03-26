@@ -2,8 +2,8 @@ export default {
   // 共通
   language: "言語選択",
   language_english: "English (英語)",
-  language_chinese: "中文 (簡体中国語)",
-  language_chinese_traditional: "繁體中文 (繁体中国語)",
+  language_chinese: "簡体中国語",
+  language_chinese_traditional: "繁体中国語",
   language_japanese: "日本語",
   language_german: "Deutsch (ドイツ語)",
   language_french: "Français (フランス語)",
@@ -33,7 +33,8 @@ export default {
   browser_name: "ブラウザモード",
   browser_description: "通常のブラウザタブでアプリを実行",
   minimal_ui_name: "最小UIモード",
-  minimal_ui_description: "最小限のブラウザコントロールを備えたウィンドウでアプリを実行",
+  minimal_ui_description:
+    "最小限のブラウザコントロールを備えたウィンドウでアプリを実行",
   fullscreen_name: "フルスクリーンモード",
   fullscreen_description: "ブラウザUIなしで画面全体を占めるアプリ",
 
@@ -68,10 +69,12 @@ export default {
   user_agent: "ユーザーエージェント",
   detector_mode_mismatch:
     "検出された実行モードがマニフェストで設定されているものと異なります。これはブラウザがこのモードをサポートしていないか、アプリがインストールされていないためかもしれません。",
-  status_standalone_running: "アプリケーションはスタンドアロンウィンドウモードで実行中です",
+  status_standalone_running:
+    "アプリケーションはスタンドアロンウィンドウモードで実行中です",
   status_minimal_ui_prompt:
     "このアプリをインストールして、完全なスタンドアロンウィンドウモードを体験できます",
-  status_fullscreen_running: "アプリケーションはフルスクリーンモードで実行中です",
+  status_fullscreen_running:
+    "アプリケーションはフルスクリーンモードで実行中です",
   status_browser_installable:
     "このアプリをインストールして、PWAスタンドアロンウィンドウモードを体験できます",
   status_browser_not_installable:

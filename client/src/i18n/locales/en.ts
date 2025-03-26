@@ -2,7 +2,7 @@ export default {
   // Common
   language: "Choose Language",
   language_english: "English",
-  language_chinese: "中文 (Simplified Chinese)",
+  language_chinese: "简体中文 (Simplified Chinese)",
   language_chinese_traditional: "繁體中文 (Traditional Chinese)",
   language_japanese: "日本語 (Japanese)",
   language_german: "Deutsch (German)",
