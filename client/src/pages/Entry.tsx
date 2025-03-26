@@ -1,7 +1,7 @@
+import React, { useEffect } from "react";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
-import { useEffect } from "react";
 import { Globe, Layout, Smartphone, Maximize, ArrowRight, Code } from "lucide-react";
 
 // 定义 PWA 的 display 模式选项
@@ -99,7 +99,49 @@ const Entry = () => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t('what_is_pwa_display_mode')}</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('pwa_display_mode_description')}
+              {t('pwa_display_mode_description').split('Progressive Web Apps').map((part, i, arr) => 
+                i === 0 ? (
+                  <React.Fragment key={i}>
+                    {part}
+                    <a 
+                      href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline dark:text-blue-400"
+                    >
+                      Progressive Web Apps
+                    </a>
+                  </React.Fragment>
+                ) : part.split('Web App Manifest').map((subPart, j, subArr) => 
+                    j === 0 ? (
+                      <React.Fragment key={`${i}-${j}`}>
+                        {subPart}
+                        <a 
+                          href="https://developer.mozilla.org/en-US/docs/Web/Manifest" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline dark:text-blue-400"
+                        >
+                          Web App Manifest
+                        </a>
+                      </React.Fragment>
+                    ) : subPart.split('\'display\' property').map((propPart, k, propArr) => 
+                        k === 0 ? (
+                          <React.Fragment key={`${i}-${j}-${k}`}>
+                            {propPart}
+                            <a 
+                              href="https://developer.mozilla.org/en-US/docs/Web/Manifest/display" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline dark:text-blue-400"
+                            >
+                              'display' property
+                            </a>
+                          </React.Fragment>
+                        ) : propPart
+                      )
+                  )
+              )}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('click_card_instruction')}
@@ -134,7 +176,21 @@ const Entry = () => {
               {t('technical_details')}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              {t('technical_description')}
+              {t('technical_description').split('Web App Manifest').map((part, i) => 
+                i === 0 ? (
+                  <React.Fragment key={i}>
+                    {part}
+                    <a 
+                      href="https://developer.mozilla.org/en-US/docs/Web/Manifest" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline dark:text-blue-400"
+                    >
+                      Web App Manifest
+                    </a>
+                  </React.Fragment>
+                ) : part
+              )}
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               {t('browser_support_note')}
