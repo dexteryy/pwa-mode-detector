@@ -49,7 +49,7 @@ export default {
   "status_title": "状态",
   "installable": "可安装",
   "not_installable": "不可安装",
-  "back_to_home": "选择其他 PWA 展示模式",
+  "back_to_home": "选择模式",
   "device_info": "设备信息",
   "user_agent": "用户代理",
   "detector_mode_mismatch": "检测到的实际运行模式与 manifest 中配置的不同。这可能是因为浏览器不支持该模式或者应用尚未安装。",

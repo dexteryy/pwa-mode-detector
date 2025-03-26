@@ -50,7 +50,7 @@ export default {
   "status_title": "Status",
   "installable": "Installable",
   "not_installable": "Not Installable",
-  "back_to_home": "Choose Another PWA Display Mode",
+  "back_to_home": "Choose Mode",
   "device_info": "Device Information",
   "user_agent": "User Agent",
   "detector_mode_mismatch": "The detected runtime mode differs from what is configured in the manifest. This may be because the browser does not support this mode or the app has not been installed.",

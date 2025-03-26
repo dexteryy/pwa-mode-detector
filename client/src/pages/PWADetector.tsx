@@ -68,7 +68,7 @@ const PWADetector = () => {
           <div className="flex items-center justify-between">
             <div>
               <Link href="/">
-                <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded hover:bg-blue-500 transition-colors flex items-center cursor-pointer whitespace-nowrap">
+                <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded hover:bg-blue-500 transition-colors flex items-center justify-center cursor-pointer whitespace-nowrap min-w-20">
                   <span className="material-icons text-xs mr-1">home</span>
                   {t('back_to_home')}
                 </div>
