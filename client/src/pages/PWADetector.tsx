@@ -61,7 +61,7 @@ const PWADetector = () => {
     toast({
       title: t('refreshing'),
       description: t('refresh_process'),
-      duration: 3000,
+      duration: 5000,
     });
     
     // 重置检查状态
