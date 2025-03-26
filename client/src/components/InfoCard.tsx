@@ -13,21 +13,7 @@ const DISPLAY_MODE_LINKS = {
 const linkClass = "text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline font-medium";
 
 const InfoCard = () => {
-  const { t, i18n } = useTranslation();
-  
-  // 根据当前语言获取正确的MDN链接
-  const getLocalizedLink = (baseLink: string) => {
-    const lang = i18n.language;
-    if (lang === 'zh') return baseLink.replace('/docs/', '/zh-CN/docs/');
-    if (lang === 'zh-TW') return baseLink.replace('/docs/', '/zh-TW/docs/');
-    if (lang === 'ja') return baseLink.replace('/docs/', '/ja/docs/');
-    if (lang === 'fr') return baseLink.replace('/docs/', '/fr/docs/');
-    if (lang === 'de') return baseLink.replace('/docs/', '/de/docs/');
-    if (lang === 'es') return baseLink.replace('/docs/', '/es/docs/');
-    if (lang === 'pt') return baseLink.replace('/docs/', '/pt-BR/docs/');
-    if (lang === 'ko') return baseLink.replace('/docs/', '/ko/docs/');
-    return baseLink; // 默认英文
-  };
+  const { t } = useTranslation();
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
@@ -40,7 +26,7 @@ const InfoCard = () => {
         <ul className="list-disc pl-5 space-y-2">
           <li>
             <strong>{t('browser_name')} (
-              <a href={getLocalizedLink(DISPLAY_MODE_LINKS.browser)} 
+              <a href={DISPLAY_MODE_LINKS.browser} 
                  target="_blank" 
                  rel="noopener" 
                  className={linkClass}>browser</a>
@@ -49,7 +35,7 @@ const InfoCard = () => {
           </li>
           <li>
             <strong>{t('minimal_ui_name')} (
-              <a href={getLocalizedLink(DISPLAY_MODE_LINKS.minimalUi)} 
+              <a href={DISPLAY_MODE_LINKS.minimalUi} 
                  target="_blank" 
                  rel="noopener" 
                  className={linkClass}>minimal-ui</a>
@@ -58,7 +44,7 @@ const InfoCard = () => {
           </li>
           <li>
             <strong>{t('standalone_name')} (
-              <a href={getLocalizedLink(DISPLAY_MODE_LINKS.standalone)} 
+              <a href={DISPLAY_MODE_LINKS.standalone} 
                  target="_blank" 
                  rel="noopener" 
                  className={linkClass}>standalone</a>
@@ -67,7 +53,7 @@ const InfoCard = () => {
           </li>
           <li>
             <strong>{t('fullscreen_name')} (
-              <a href={getLocalizedLink(DISPLAY_MODE_LINKS.fullscreen)} 
+              <a href={DISPLAY_MODE_LINKS.fullscreen} 
                  target="_blank" 
                  rel="noopener" 
                  className={linkClass}>fullscreen</a>

@@ -21,11 +21,11 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     },
     { 
       term: "Web App Manifest", 
-      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "'display'", 
-      url: "https://developer.mozilla.org/en-US/docs/Web/Manifest/display"
+      url: "https://developer.mozilla.org/docs/Web/Manifest/display"
     }
   ],
   
@@ -37,15 +37,15 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     },
     { 
       term: "Web App Manifest", 
-      url: "https://developer.mozilla.org/zh-CN/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "网页应用清单", 
-      url: "https://developer.mozilla.org/zh-CN/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "'display'", 
-      url: "https://developer.mozilla.org/zh-CN/docs/Web/Manifest/display"
+      url: "https://developer.mozilla.org/docs/Web/Manifest/display"
     }
   ],
   
@@ -57,15 +57,15 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     },
     { 
       term: "Web App Manifest", 
-      url: "https://developer.mozilla.org/zh-TW/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "網頁應用程式資訊清單", 
-      url: "https://developer.mozilla.org/zh-TW/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "'display'", 
-      url: "https://developer.mozilla.org/zh-TW/docs/Web/Manifest/display"
+      url: "https://developer.mozilla.org/docs/Web/Manifest/display"
     }
   ],
   
@@ -77,15 +77,15 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     },
     { 
       term: "Web App Manifest", 
-      url: "https://developer.mozilla.org/ja/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "ウェブアプリマニフェスト", 
-      url: "https://developer.mozilla.org/ja/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "'display'", 
-      url: "https://developer.mozilla.org/ja/docs/Web/Manifest/display"
+      url: "https://developer.mozilla.org/docs/Web/Manifest/display"
     }
   ],
   
@@ -97,11 +97,11 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     },
     { 
       term: "Web App Manifest", 
-      url: "https://developer.mozilla.org/de/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "'display'", 
-      url: "https://developer.mozilla.org/de/docs/Web/Manifest/display"
+      url: "https://developer.mozilla.org/docs/Web/Manifest/display"
     }
   ],
   
@@ -113,15 +113,15 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     },
     { 
       term: "Web App Manifest", 
-      url: "https://developer.mozilla.org/fr/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "manifeste d'application web", 
-      url: "https://developer.mozilla.org/fr/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "'display'", 
-      url: "https://developer.mozilla.org/fr/docs/Web/Manifest/display"
+      url: "https://developer.mozilla.org/docs/Web/Manifest/display"
     }
   ],
   
@@ -133,15 +133,15 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     },
     { 
       term: "Web App Manifest", 
-      url: "https://developer.mozilla.org/es/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "manifiesto de aplicación web", 
-      url: "https://developer.mozilla.org/es/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "'display'", 
-      url: "https://developer.mozilla.org/es/docs/Web/Manifest/display"
+      url: "https://developer.mozilla.org/docs/Web/Manifest/display"
     }
   ],
   
@@ -153,15 +153,15 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     },
     { 
       term: "Web App Manifest", 
-      url: "https://developer.mozilla.org/pt-BR/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "manifesto de aplicativo web", 
-      url: "https://developer.mozilla.org/pt-BR/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "'display'", 
-      url: "https://developer.mozilla.org/pt-BR/docs/Web/Manifest/display"
+      url: "https://developer.mozilla.org/docs/Web/Manifest/display"
     }
   ],
   
@@ -173,15 +173,15 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     },
     { 
       term: "Web App Manifest", 
-      url: "https://developer.mozilla.org/ko/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "웹 앱 매니페스트", 
-      url: "https://developer.mozilla.org/ko/docs/Web/Manifest" 
+      url: "https://developer.mozilla.org/docs/Web/Manifest" 
     },
     { 
       term: "'display'", 
-      url: "https://developer.mozilla.org/ko/docs/Web/Manifest/display"
+      url: "https://developer.mozilla.org/docs/Web/Manifest/display"
     }
   ]
 };
