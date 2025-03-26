@@ -66,9 +66,27 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     setError(null);
     
     // ======== 修复manifest加载问题 ========
-    // 为了完全解决manifest冲突，我们需要禁用默认的manifest.json
+    // 为了彻底解决manifest冲突问题，我们需要多种技术结合
     
-    // 1. 添加禁用默认manifest的meta标签
+    // 1. 禁用索引数据库缓存（可能存储了manifest）
+    try {
+      // 清除indexedDB缓存，其中可能存储了manifest
+      indexedDB.deleteDatabase('manifest-store');
+      if ('caches' in window) {
+        // 清除服务工作者缓存，可能包含manifest
+        caches.keys().then(cacheNames => {
+          cacheNames.forEach(cacheName => {
+            if (cacheName.includes('manifest')) {
+              caches.delete(cacheName);
+            }
+          });
+        });
+      }
+    } catch (e) {
+      console.log('[ManifestHandler] Error clearing caches:', e);
+    }
+    
+    // 2. 添加禁用默认manifest的meta标签
     let disableDefaultMeta = document.querySelector('meta[name="disabled-manifest"]');
     if (!disableDefaultMeta) {
       disableDefaultMeta = document.createElement('meta');
@@ -77,15 +95,23 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     }
     disableDefaultMeta.setAttribute('content', 'true');
     
-    // 2. 在添加新manifest前彻底清除所有旧的manifest链接，无论它们来自哪里
+    // 3. 添加特殊非标准meta标签，某些浏览器会识别这个
+    let disablePwaStorageMeta = document.querySelector('meta[name="pwa-storage-disabled"]');
+    if (!disablePwaStorageMeta) {
+      disablePwaStorageMeta = document.createElement('meta');
+      disablePwaStorageMeta.setAttribute('name', 'pwa-storage-disabled');
+      disablePwaStorageMeta.setAttribute('content', 'true');
+      document.head.appendChild(disablePwaStorageMeta);
+    }
+    
+    // 4. 在添加新manifest前彻底清除所有旧的manifest链接，无论它们来自哪里
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
     existingLinks.forEach(link => {
       console.log(`[ManifestHandler] Removing existing manifest link: ${link.getAttribute('href')}`);
       link.parentNode?.removeChild(link);
     });
     
-    // 3. 创建一个拦截器，阻止浏览器自动加载默认manifest
-    // 这里我们用一个空函数替换原始的document.createElement以防止其他库自动加载manifest
+    // 5. 创建一个元素拦截器，全面阻止浏览器自动加载默认manifest
     const originalCreateElement = document.createElement;
     const hookedCreateElement = function(tagName: string, ...args: any[]): HTMLElement {
       const element = originalCreateElement.call(document, tagName, ...args);
@@ -93,14 +119,41 @@ function ManifestHandler({ children }: { children: ReactNode }) {
         // 监听元素属性变化
         const originalSetAttribute = element.setAttribute;
         element.setAttribute = function(name: string, value: string) {
-          if (name === 'rel' && value === 'manifest' && 
-              element.getAttribute('href') === '/manifest.json') {
-            console.log('[ManifestHandler] Prevented loading of default manifest.json');
-            // 不设置rel="manifest"属性，使其失效
-            return;
+          if (name === 'rel' && value === 'manifest') {
+            const href = element.getAttribute('href');
+            const currentPath = window.location.pathname;
+            // 检查是否匹配当前路径的manifest
+            const isPathMatch = 
+              (href?.includes('standalone') && currentPath.includes('standalone')) ||
+              (href?.includes('minimal-ui') && currentPath.includes('minimal-ui')) || 
+              (href?.includes('fullscreen') && currentPath.includes('fullscreen')) ||
+              (href?.includes('browser') && currentPath.includes('browser'));
+            
+            // 只允许与当前路径匹配的manifest
+            if (!isPathMatch && href === '/manifest.json') {
+              console.log('[ManifestHandler] Prevented loading of incorrect manifest:', href);
+              // 不设置rel="manifest"属性，使其失效
+              return;
+            }
           }
           return originalSetAttribute.call(element, name, value);
         };
+        
+        // 拦截href属性设置
+        const originalHrefDescriptor = Object.getOwnPropertyDescriptor(element, 'href');
+        if (originalHrefDescriptor && originalHrefDescriptor.set) {
+          Object.defineProperty(element, 'href', {
+            set(value) {
+              // 如果尝试设置默认manifest且当前不是对应路径，则阻止
+              if (value === '/manifest.json' && element.getAttribute('rel') === 'manifest') {
+                console.log('[ManifestHandler] Blocked setting href to default manifest');
+                return;
+              }
+              originalHrefDescriptor.set.call(this, value);
+            },
+            get: originalHrefDescriptor.get
+          });
+        }
       }
       return element;
     };
@@ -111,7 +164,7 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     setTimeout(() => {
       document.createElement = originalCreateElement;
       console.log('[ManifestHandler] Restored original createElement');
-    }, 1000);
+    }, 2000); // 延长时间确保所有初始化完成
     
     // 重置title元素，避免它被PWA缓存
     document.title = location.startsWith('/browser') 
@@ -177,23 +230,82 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       document.head.appendChild(newLink);
       console.log(`[ManifestHandler] Setting manifest to: ${url} with ID: ${manifestId}`);
       
-      // Fetch the manifest content
-      fetch(url)
-        .then(response => {
+      // 解决manifest加载问题，多次重试且增加超时处理
+      const maxRetries = 3;  // 最大重试次数
+      const retryDelay = 500; // 每次重试间隔（毫秒）
+      
+      // 创建重试获取函数
+      const fetchWithRetry = async (url: string, attempt = 1): Promise<any> => {
+        try {
+          // 添加随机参数确保不使用缓存
+          const cacheBustUrl = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+          console.log(`[ManifestHandler] Fetching manifest (attempt ${attempt}): ${cacheBustUrl}`);
+          
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 3000); // 3秒超时
+          
+          const response = await fetch(cacheBustUrl, { 
+            signal: controller.signal,
+            headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
+          });
+          
+          clearTimeout(timeoutId);
+          
           if (!response.ok) {
             throw new Error(`Failed to fetch manifest: ${response.status}`);
           }
-          return response.json();
-        })
+          
+          const data = await response.json();
+          return data;
+        } catch (err: any) {
+          // 如果还有重试次数，则进行重试
+          if (attempt < maxRetries) {
+            console.log(`[ManifestHandler] Retry ${attempt}/${maxRetries} after error: ${err.message}`);
+            return new Promise(resolve => {
+              setTimeout(() => resolve(fetchWithRetry(url, attempt + 1)), retryDelay);
+            });
+          }
+          
+          // 用完重试次数，抛出最终错误
+          throw err;
+        }
+      };
+      
+      // 开始获取manifest
+      fetchWithRetry(url)
         .then(data => {
           console.log('[ManifestHandler] Manifest data loaded', data);
           setManifestInfo(data);
           setIsLoading(false);
+          
+          // 确保manifest已成功加载后，主动验证是否所有标签页都正确设置了manifest信息
+          // 这样ManifestViewer组件可以立即显示内容
+          setTimeout(() => {
+            if (data && !manifestInfo) {
+              console.log('[ManifestHandler] Ensuring manifest info is updated...');
+              setManifestInfo(data);
+            }
+          }, 500);
         })
         .catch(err => {
           console.error('[ManifestHandler] Error loading manifest:', err);
           setError(err.message || 'Unknown error loading manifest');
           setIsLoading(false);
+          
+          // 如果出错，一秒后尝试最后一次获取
+          setTimeout(() => {
+            console.log('[ManifestHandler] Final attempt to load manifest...');
+            fetch(url)
+              .then(response => response.json())
+              .then(data => {
+                console.log('[ManifestHandler] Final manifest load succeeded');
+                setManifestInfo(data);
+                setError(null);
+              })
+              .catch(finalErr => {
+                console.error('[ManifestHandler] Final manifest load failed', finalErr);
+              });
+          }, 1000);
         });
     }
     
