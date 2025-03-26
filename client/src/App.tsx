@@ -12,41 +12,56 @@ function ManifestHandler() {
   const [location] = useLocation();
   
   useEffect(() => {
-    // 获取或创建 manifest 链接元素
-    let manifestLink = document.querySelector('link[rel="manifest"]') as HTMLLinkElement;
-    if (!manifestLink) {
+    // 先移除所有现有的 manifest 链接，确保没有多余的 manifest
+    const existingLinks = document.querySelectorAll('link[rel="manifest"]');
+    existingLinks.forEach(link => link.remove());
+    
+    // 为 PWA 页面创建新的 manifest 链接
+    if (location.startsWith('/standalone')) {
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
+      newLink.href = '/manifests/standalone.json';
       document.head.appendChild(newLink);
-      manifestLink = newLink;
-    }
-    
-    // 根据路径设置不同的manifest
-    if (location.startsWith('/standalone')) {
-      manifestLink.setAttribute('href', '/manifests/standalone.json');
       console.log('设置 manifest 为: /manifests/standalone.json');
     } 
     else if (location.startsWith('/minimal-ui')) {
-      manifestLink.setAttribute('href', '/manifests/minimal-ui.json');
+      const newLink = document.createElement('link');
+      newLink.rel = 'manifest';
+      newLink.href = '/manifests/minimal-ui.json';
+      document.head.appendChild(newLink);
       console.log('设置 manifest 为: /manifests/minimal-ui.json');
     }
     else if (location.startsWith('/fullscreen')) {
-      manifestLink.setAttribute('href', '/manifests/fullscreen.json');
+      const newLink = document.createElement('link');
+      newLink.rel = 'manifest';
+      newLink.href = '/manifests/fullscreen.json';
+      document.head.appendChild(newLink);
       console.log('设置 manifest 为: /manifests/fullscreen.json');
     }
     else if (location.startsWith('/browser')) {
-      manifestLink.setAttribute('href', '/manifests/browser.json');
+      const newLink = document.createElement('link');
+      newLink.rel = 'manifest';
+      newLink.href = '/manifests/browser.json';
+      document.head.appendChild(newLink);
       console.log('设置 manifest 为: /manifests/browser.json');
     }
     else if (location.startsWith('/pwa/')) {
       // 兼容旧的PWA路径，设置默认 manifest
-      manifestLink.setAttribute('href', '/manifest.json');
+      const newLink = document.createElement('link');
+      newLink.rel = 'manifest';
+      newLink.href = '/manifest.json';
+      document.head.appendChild(newLink);
       console.log('设置默认 manifest: /manifest.json');
     } else {
-      // 如果是入口页面或其他非PWA页面，移除manifest链接
-      manifestLink.remove();
-      console.log('移除 manifest 链接（非PWA页面）');
+      // 如果是入口页面或其他非PWA页面，不添加任何 manifest
+      console.log('没有添加 manifest 链接（非PWA页面）');
     }
+    
+    // 组件卸载时也清理所有 manifest 链接
+    return () => {
+      const links = document.querySelectorAll('link[rel="manifest"]');
+      links.forEach(link => link.remove());
+    };
   }, [location]);
   
   return null;
