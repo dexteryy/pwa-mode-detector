@@ -40,64 +40,81 @@ const ManifestViewer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Only fetch the manifest when the collapsible is opened
+  // Only fetch or use the cached manifest when collapsible is opened
   useEffect(() => {
-    // Skip fetching if not open to save resources
+    // Skip everything if not open to save resources
     if (!isOpen) return;
     
-    const fetchManifest = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        // Find all manifest links on the page
-        const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
-        
-        if (manifestLinks.length === 0) {
-          setError('No manifest link found in document');
-          setIsLoading(false);
-          return;
-        }
-        
-        // Use the first manifest link
-        const manifestUrl = manifestLinks[0].getAttribute('href');
-        
-        if (!manifestUrl) {
-          setError('Manifest link has no href attribute');
-          setIsLoading(false);
-          return;
-        }
-        
-        // Check if manifest is already in cache
-        if (manifestCache.has(manifestUrl)) {
-          console.log('[ManifestViewer] Using cached manifest data');
-          setManifest(manifestCache.get(manifestUrl) || null);
-          setIsLoading(false);
-          return;
-        }
-        
-        // Request manifest content
-        const response = await fetch(manifestUrl);
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch manifest: ${response.status} ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        
-        // Cache the manifest data
-        manifestCache.set(manifestUrl, data);
-        
-        // Update state
-        setManifest(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error fetching manifest');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // On open, check if we already have a manifest cached from usePwaDetection
+    let cachedManifestFound = false;
     
-    fetchManifest();
+    // First, check the cache for any existing manifest - don't even need to know the URL
+    if (manifestCache.size > 0) {
+      // We've already loaded a manifest somewhere, use the first one available
+      const cachedManifest = manifestCache.values().next().value;
+      console.log('[ManifestViewer] Found existing manifest in cache, using it directly');
+      setManifest(cachedManifest);
+      setIsLoading(false);
+      cachedManifestFound = true;
+    }
+    
+    // Only proceed with fetching if nothing was found in cache
+    if (!cachedManifestFound) {
+      const fetchManifest = async () => {
+        try {
+          setIsLoading(true);
+          setError(null);
+          
+          // Find all manifest links on the page
+          const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
+          
+          if (manifestLinks.length === 0) {
+            setError('No manifest link found in document');
+            setIsLoading(false);
+            return;
+          }
+          
+          // Use the first manifest link
+          const manifestUrl = manifestLinks[0].getAttribute('href');
+          
+          if (!manifestUrl) {
+            setError('Manifest link has no href attribute');
+            setIsLoading(false);
+            return;
+          }
+          
+          // One last check if manifest is already in cache (should be redundant)
+          if (manifestCache.has(manifestUrl)) {
+            console.log('[ManifestViewer] Using cached manifest data for URL: ' + manifestUrl);
+            setManifest(manifestCache.get(manifestUrl) || null);
+            setIsLoading(false);
+            return;
+          }
+          
+          // Request manifest content
+          console.log('[ManifestViewer] Fetching manifest from URL: ' + manifestUrl);
+          const response = await fetch(manifestUrl);
+          
+          if (!response.ok) {
+            throw new Error(`Failed to fetch manifest: ${response.status} ${response.statusText}`);
+          }
+          
+          const data = await response.json();
+          
+          // Cache the manifest data
+          manifestCache.set(manifestUrl, data);
+          
+          // Update state
+          setManifest(data);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'Unknown error fetching manifest');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      fetchManifest();
+    }
   }, [isOpen]);
 
   // Format JSON for display

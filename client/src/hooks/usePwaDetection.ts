@@ -118,23 +118,33 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     return (window as any).__manifestCache;
   })();
   
-  // Fetch manifest information - with caching to avoid multiple requests
+  // Fetch manifest information - with global caching to avoid any requests when possible
   useEffect(() => {
     const fetchManifest = async () => {
       try {
-        // Try to fetch the manifest
+        // First check if there's already anything in the cache (from other components)
+        if (manifestCache.size > 0) {
+          // Use the first manifest in the cache
+          const cachedManifestUrl = manifestCache.keys().next().value;
+          const cachedManifest = manifestCache.get(cachedManifestUrl);
+          console.log(`[usePwaDetection] Using existing manifest from global cache`);
+          setManifestInfo(cachedManifest);
+          return;
+        }
+        
+        // If we reach here, nothing is in cache, so fetch fresh
         const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
         if (manifestLinks.length > 0) {
           const manifestUrl = manifestLinks[0].getAttribute('href');
           if (manifestUrl) {
-            // Check if we've already loaded this manifest URL in this session
+            // Double-check cache to avoid race conditions
             if (manifestCache.has(manifestUrl)) {
               console.log(`[usePwaDetection] Using cached manifest data for ${manifestUrl}`);
               setManifestInfo(manifestCache.get(manifestUrl));
               return;
             }
             
-            // Load manifest once per URL
+            // Load manifest and cache it
             console.log(`[usePwaDetection] Fetching manifest from ${manifestUrl}`);
             const response = await fetch(manifestUrl);
             const data = await response.json();
