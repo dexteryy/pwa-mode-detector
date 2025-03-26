@@ -7,7 +7,9 @@ const InfoCard = () => {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h2 className="text-lg font-semibold text-dark mb-4 flex items-center">
-        <span className="material-icons mr-2">help_outline</span>
+        <div className="w-6 h-6 mr-2 flex items-center justify-center">
+          <IconWithFallback name="help_outline" size="md" />
+        </div>
         {t('about_pwa_modes')}
       </h2>
       <div className="prose text-gray-700">
