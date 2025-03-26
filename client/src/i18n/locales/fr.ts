@@ -57,7 +57,11 @@ export default {
   install_disabled_manifest_browser:
     "Le mode d'affichage du manifeste est 'browser', ce mode ne prend pas en charge l'installation",
   install_disabled_browser_unsupported:
-    "Votre navigateur ne prend pas en charge l'installation de PWA",
+    "Votre navigateur ne prend pas en charge l'installation de PWA, ou vous avez déjà installé cette application",
+  install_disabled_already_pwa:
+    "Déjà en cours d'exécution dans une fenêtre PWA, impossible de réinstaller",
+  install_disabled_already_installed:
+    "L'application est déjà installée sur cet appareil, impossible de réinstaller",
   install_button_disabled: "Installation non disponible",
 
   // Détecteur PWA

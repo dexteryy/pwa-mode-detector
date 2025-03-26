@@ -57,7 +57,11 @@ export default {
   install_disabled_manifest_browser:
     "El modo de visualización del manifest es 'browser', este modo no admite la instalación",
   install_disabled_browser_unsupported:
-    "Tu navegador no admite la instalación de PWA",
+    "Tu navegador no admite la instalación de PWA, o ya has instalado esta aplicación",
+  install_disabled_already_pwa:
+    "Ya está ejecutándose en una ventana PWA, no se puede instalar de nuevo",
+  install_disabled_already_installed:
+    "La aplicación ya está instalada en este dispositivo, no se puede instalar de nuevo",
   install_button_disabled: "Instalación no disponible",
 
   // Detector PWA

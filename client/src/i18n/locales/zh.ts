@@ -49,7 +49,7 @@ export default {
   install_capability_title: "安装状态",
   install_disabled_manifest_browser:
     "manifest中的display属性设置为'browser'，此模式不支持安装",
-  install_disabled_browser_unsupported: "您的浏览器不支持PWA安装",
+  install_disabled_browser_unsupported: "您的浏览器不支持PWA安装，或者您已经安装过这个应用",
   install_disabled_already_pwa:
     "已经在PWA窗口中运行，无法再次安装",
   install_disabled_already_installed:

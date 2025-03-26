@@ -52,7 +52,11 @@ export default {
   install_disabled_manifest_browser:
     "manifestの表示モードが「browser」に設定されているため、インストールをサポートしていません",
   install_disabled_browser_unsupported:
-    "お使いのブラウザはPWAのインストールをサポートしていません",
+    "お使いのブラウザはPWAのインストールをサポートしていないか、すでにこのアプリケーションをインストールしています",
+  install_disabled_already_pwa:
+    "すでにPWAウィンドウで実行中のため、再インストールできません",
+  install_disabled_already_installed:
+    "このデバイスにすでにアプリがインストールされているため、再インストールできません",
   install_button_disabled: "インストールは利用できません",
 
   // PWA検出器

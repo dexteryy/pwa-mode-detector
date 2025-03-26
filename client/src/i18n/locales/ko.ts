@@ -52,7 +52,11 @@ export default {
   install_disabled_manifest_browser:
     "Web App Manifest의 'display' 모드가 'browser'로 설정되어 있어 이 모드는 설치를 지원하지 않습니다",
   install_disabled_browser_unsupported:
-    "브라우저가 PWA 설치를 지원하지 않습니다",
+    "브라우저가 PWA 설치를 지원하지 않거나 이미 이 애플리케이션을 설치했습니다",
+  install_disabled_already_pwa:
+    "이미 PWA 창에서 실행 중이므로 다시 설치할 수 없습니다",
+  install_disabled_already_installed:
+    "앱이 이미 이 장치에 설치되어 있어 다시 설치할 수 없습니다",
   install_button_disabled: "설치를 사용할 수 없음",
 
   // PWA 감지기

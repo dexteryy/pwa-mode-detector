@@ -50,7 +50,9 @@ export default {
   install_capability_title: "安裝狀態",
   install_disabled_manifest_browser:
     "manifest中的display屬性設置為'browser'，此模式不支持安裝",
-  install_disabled_browser_unsupported: "您的瀏覽器不支持PWA安裝",
+  install_disabled_browser_unsupported: "您的瀏覽器不支持PWA安裝，或者您已經安裝過這個應用",
+  install_disabled_already_pwa: "已經在PWA窗口中運行，無法再次安裝",
+  install_disabled_already_installed: "應用已經安裝在此設備上，無法再次安裝",
   install_button_disabled: "安裝功能不可用",
 
   // PWA 檢測器
