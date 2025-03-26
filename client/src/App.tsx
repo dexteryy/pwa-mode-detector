@@ -38,10 +38,14 @@ function ManifestHandler() {
       manifestLink.setAttribute('href', '/manifests/browser.json');
       console.log('设置 manifest 为: /manifests/browser.json');
     }
-    else {
-      // 如果是其他路径，设置默认 manifest
+    else if (location.startsWith('/pwa/')) {
+      // 兼容旧的PWA路径，设置默认 manifest
       manifestLink.setAttribute('href', '/manifest.json');
       console.log('设置默认 manifest: /manifest.json');
+    } else {
+      // 如果是入口页面或其他非PWA页面，移除manifest链接
+      manifestLink.remove();
+      console.log('移除 manifest 链接（非PWA页面）');
     }
   }, [location]);
   

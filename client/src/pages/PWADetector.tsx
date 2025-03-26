@@ -45,24 +45,8 @@ const PWADetector = () => {
   
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // 动态添加针对当前模式的 manifest 链接
-  useEffect(() => {
-    // 确保之前的 manifest 链接被移除
-    const existingManifestLinks = document.querySelectorAll('link[rel="manifest"]');
-    existingManifestLinks.forEach(link => link.remove());
-    
-    // 添加当前模式对应的 manifest 链接
-    const manifestLink = document.createElement('link');
-    manifestLink.rel = 'manifest';
-    manifestLink.href = `/manifests/${expectedMode}.json`;
-    document.head.appendChild(manifestLink);
-    
-    // 在组件卸载时清理
-    return () => {
-      const links = document.querySelectorAll('link[rel="manifest"]');
-      links.forEach(link => link.remove());
-    };
-  }, [expectedMode]);
+  // PWADetector 中不再需要动态管理 manifest，这部分功能已由 App.tsx 中的 ManifestHandler 处理
+  // 保留注释作为提醒，这里曾经有动态添加 manifest 的逻辑，现在已经集中到 ManifestHandler 组件中
 
   // Handle manual refresh
   const handleRefresh = () => {
