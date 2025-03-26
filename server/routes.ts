@@ -2,8 +2,12 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import path from "path";
 import fs from "fs";
+import express from "express";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // 提供静态文件 - 确保能够访问客户端公共资源
+  app.use(express.static(path.join(process.cwd(), 'client/public')));
+  
   // 记录所有请求
   app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.path.includes('manifest')) {
@@ -15,7 +19,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // 添加路由处理所有的 manifest 文件
   app.get('/manifests/:name.json', (req: Request, res: Response) => {
     const manifestName = req.params.name;
-    const manifestPath = path.join(__dirname, '../client/public/manifests', `${manifestName}.json`);
+    // 注意：Replit的工作目录是项目根目录，所以路径需要从根目录开始
+    const manifestPath = path.join(process.cwd(), 'client/public/manifests', `${manifestName}.json`);
     
     console.log(`[Server] Serving manifest: ${manifestPath}`);
     
@@ -35,8 +40,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.status(404).send('Manifest not found');
       }
     } catch (error) {
-      console.error(`[Server] Error serving manifest: ${error}`);
-      res.status(500).send('Internal server error');
+      console.error(`[Server] Error serving manifest: ${error}`, error);
+      res.status(500).send(`Internal server error: ${error instanceof Error ? error.message : String(error)}`);
     }
   });
 
