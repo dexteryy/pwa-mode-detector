@@ -1,8 +1,8 @@
 export default {
   // Common
-  "language": "Language",
+  "language": "Choose Language",
   "language_english": "English",
-  "language_chinese": "Chinese",
+  "language_chinese": "中文 (Chinese)",
 
   // Entry page
   "entry_title": "PWA Display Mode Demo",

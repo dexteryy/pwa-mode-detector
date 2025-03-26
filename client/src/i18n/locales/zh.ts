@@ -1,7 +1,7 @@
 export default {
   // 通用
-  "language": "语言",
-  "language_english": "英文",
+  "language": "选择语言",
+  "language_english": "English (英文)",
   "language_chinese": "中文",
 
   // 入口页面
