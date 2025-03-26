@@ -123,8 +123,15 @@ function ManifestHandler({ children }: { children: ReactNode }) {
         exactPathMatch = true;
       }
       else if (pathWithoutParams.startsWith('/pwa/')) {
-        baseUrl = '/manifest.json';
+        // 对于/pwa/路径，使用对应显示模式的manifest
+        const displayParam = pathWithoutParams.replace('/pwa/', '');
+        if (['standalone', 'minimal-ui', 'fullscreen', 'browser'].includes(displayParam)) {
+          baseUrl = `/manifests/${displayParam}.json`;
+        } else {
+          baseUrl = '/manifests/standalone.json'; // 默认
+        }
         exactPathMatch = true;
+        console.log(`[ManifestHandler] Dynamic PWA path detected: ${pathWithoutParams}, using ${baseUrl}`);
       }
     }
     // Handle browser path separately
