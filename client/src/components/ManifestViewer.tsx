@@ -113,7 +113,7 @@ const ManifestViewer: React.FC = () => {
           {error && (
             <div className="bg-red-50 text-red-800 p-4 rounded">
               <p className="flex items-center">
-                <span className="material-icons mr-2">error</span>
+                <AlertCircle className="h-5 w-5 mr-2 text-red-600" />
                 {t('manifest_error', 'Error loading manifest')}
               </p>
               <pre className="mt-2 text-xs bg-red-100 p-2 rounded overflow-auto">{error}</pre>

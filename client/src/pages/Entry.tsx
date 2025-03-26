@@ -2,13 +2,14 @@ import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
 import { useEffect } from "react";
+import { Globe, Layout, Smartphone, Maximize, ArrowRight, Code } from "lucide-react";
 
 // 定义 PWA 的 display 模式选项
 interface DisplayMode {
   name: string;
   displayName: string;
   description: string;
-  icon: string;
+  Icon: React.ElementType; // 使用React组件类型代替图标名称字符串
 }
 
 const getDisplayModes = (t: any): DisplayMode[] => [
@@ -16,25 +17,25 @@ const getDisplayModes = (t: any): DisplayMode[] => [
     name: "browser",
     displayName: t("browser_name"),
     description: t("browser_description"),
-    icon: "public"
+    Icon: Globe
   },
   {
     name: "minimal-ui",
     displayName: t("minimal_ui_name"), 
     description: t("minimal_ui_description"),
-    icon: "tab"
+    Icon: Layout
   },
   {
     name: "standalone",
     displayName: t("standalone_name"),
     description: t("standalone_description"),
-    icon: "tablet_mac"
+    Icon: Smartphone
   },
   {
     name: "fullscreen",
     displayName: t("fullscreen_name"),
     description: t("fullscreen_description"),
-    icon: "fullscreen"
+    Icon: Maximize
   }
 ];
 
@@ -114,14 +115,14 @@ const Entry = () => {
               <Link key={mode.name} href={`/${mode.name}`} className="h-full">
                 <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-500 cursor-pointer h-full flex flex-col">
                   <div className="flex items-center mb-4">
-                    <span className="material-icons text-4xl text-blue-500 mr-3">{mode.icon}</span>
+                    <mode.Icon className="h-8 w-8 text-blue-500 mr-3" />
                     <h3 className="text-lg font-semibold text-gray-800">{mode.displayName}</h3>
                   </div>
                   <p className="text-gray-600 flex-grow">{mode.description}</p>
                   <div className="mt-4 flex justify-end">
                     <span className="text-blue-500 font-medium flex items-center">
                       {t('view_demo')}
-                      <span className="material-icons ml-1">arrow_forward</span>
+                      <ArrowRight className="h-4 w-4 ml-1" />
                     </span>
                   </div>
                 </div>
@@ -132,7 +133,7 @@ const Entry = () => {
           {/* Technical Details */}
           <div className="bg-white rounded-lg shadow-md p-6 mt-8">
             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-              <span className="material-icons mr-2">code</span>
+              <Code className="h-5 w-5 mr-2" />
               {t('technical_details')}
             </h2>
             <p className="text-gray-600 mb-4">
