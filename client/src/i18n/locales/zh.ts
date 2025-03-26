@@ -2,7 +2,9 @@ export default {
   // 通用
   language: "选择语言",
   language_english: "English (英文)",
-  language_chinese: "中文",
+  language_chinese: "简体中文",
+  language_chinese_traditional: "繁體中文",
+  language_japanese: "日本語 (日文)",
 
   // 入口页面
   entry_title: "PWA 展示模式演示",

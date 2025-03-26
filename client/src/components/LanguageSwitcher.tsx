@@ -7,6 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { cn } from "@/lib/utils";
 
@@ -37,7 +38,16 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
   
   // 显示当前语言的简写或图标
   const getCurrentLanguageDisplay = () => {
-    return currentLanguage === 'zh' ? '中' : 'EN';
+    switch (currentLanguage) {
+      case 'zh':
+        return '简';
+      case 'zh-TW':
+        return '繁';
+      case 'ja':
+        return 'JP';
+      default:
+        return 'EN';
+    }
   };
 
   return (
@@ -62,12 +72,37 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
             <Check className="h-4 w-4 ml-2" />
           )}
         </DropdownMenuItem>
+        
+        <DropdownMenuSeparator />
+        
         <DropdownMenuItem 
           onClick={() => handleLanguageChange('zh')}
           className={currentLanguage === 'zh' ? 'bg-muted' : ''}
         >
           {t('language_chinese')}
           {currentLanguage === 'zh' && (
+            <Check className="h-4 w-4 ml-2" />
+          )}
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem 
+          onClick={() => handleLanguageChange('zh-TW')}
+          className={currentLanguage === 'zh-TW' ? 'bg-muted' : ''}
+        >
+          {t('language_chinese_traditional')}
+          {currentLanguage === 'zh-TW' && (
+            <Check className="h-4 w-4 ml-2" />
+          )}
+        </DropdownMenuItem>
+        
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuItem 
+          onClick={() => handleLanguageChange('ja')}
+          className={currentLanguage === 'ja' ? 'bg-muted' : ''}
+        >
+          {t('language_japanese')}
+          {currentLanguage === 'ja' && (
             <Check className="h-4 w-4 ml-2" />
           )}
         </DropdownMenuItem>
