@@ -26,11 +26,6 @@ export function usePwaDetection(): PwaDetection {
       description: t('standalone_description')
     },
     {
-      name: "browser",
-      displayName: t('browser_name'),
-      description: t('browser_description')
-    },
-    {
       name: "minimal-ui",
       displayName: t('minimal_ui_name'), 
       description: t('minimal_ui_description')
@@ -39,6 +34,11 @@ export function usePwaDetection(): PwaDetection {
       name: "fullscreen",
       displayName: t('fullscreen_name'),
       description: t('fullscreen_description')
+    },
+    {
+      name: "browser",
+      displayName: t('browser_name'),
+      description: t('browser_description')
     }
   ];
 
