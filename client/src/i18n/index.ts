@@ -85,6 +85,7 @@ const KEYS_WITH_LINKS = [
 ];
 
 // 为所有语言资源添加链接
+console.log("准备为以下键添加链接:", KEYS_WITH_LINKS);
 const resources = addLinksToI18nResources(
   {
     en: {
@@ -117,6 +118,7 @@ const resources = addLinksToI18nResources(
   },
   KEYS_WITH_LINKS
 );
+console.log("链接处理完成");
 
 // 初始化i18next
 i18n

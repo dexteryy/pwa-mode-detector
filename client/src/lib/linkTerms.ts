@@ -173,6 +173,9 @@ const TERM_DEFINITIONS: Record<string, TermDefinition[]> = {
 export function addLinksToTerms(text: string, lang: string): string {
   if (!text) return text;
 
+  // 调试日志
+  console.log(`Adding links to: "${text.substring(0, 30)}..." for language: ${lang}`);
+
   // 如果没有该语言的定义，使用英文
   const definitions = TERM_DEFINITIONS[lang] || TERM_DEFINITIONS['en'];
   
@@ -181,8 +184,16 @@ export function addLinksToTerms(text: string, lang: string): string {
   for (const definition of definitions) {
     result = result.replace(definition.term, (match) => {
       const prefix = definition.prefix || '';
+      console.log(`Match found: "${match}" - adding link to: ${definition.url}`);
       return `${prefix}<a href='${definition.url}' target='_blank' rel='noopener'>${match.replace(prefix, '')}</a>`;
     });
+  }
+  
+  // 如果有变更，记录日志
+  if (result !== text) {
+    console.log(`Text changed. Original length: ${text.length}, New length: ${result.length}`);
+  } else {
+    console.log(`No matches found in text`);
   }
   
   return result;
@@ -199,12 +210,12 @@ export function addLinksToI18nResources(resources: Record<string, any>, keys: st
   
   // 遍历所有语言
   for (const lang in result) {
-    if (!result[lang]) continue;
+    if (!result[lang] || !result[lang].translation) continue;
     
     // 为每个指定的key添加链接
     for (const key of keys) {
-      if (result[lang][key]) {
-        result[lang][key] = addLinksToTerms(result[lang][key], lang);
+      if (result[lang].translation[key]) {
+        result[lang].translation[key] = addLinksToTerms(result[lang].translation[key], lang);
       }
     }
   }
