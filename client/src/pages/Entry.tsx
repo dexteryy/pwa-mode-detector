@@ -43,15 +43,21 @@ const Entry = () => {
   
   return (
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col">
-      {/* Header */}
+      {/* Navigation Bar */}
+      <div className="bg-blue-700 text-white">
+        <div className="container mx-auto px-4 py-2">
+          <div className="flex items-center justify-end gap-2">
+            <LanguageSwitcher />
+          </div>
+        </div>
+      </div>
+      
+      {/* Main Header */}
       <header className="bg-blue-500 text-white shadow-md">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col items-center">
-            <div className="w-full flex justify-end mb-2">
-              <LanguageSwitcher />
-            </div>
-            <h1 className="text-2xl font-bold text-center">{t('entry_title')}</h1>
-            <p className="text-center mt-2 text-blue-100">{t('entry_subtitle')}</p>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold">{t('entry_title')}</h1>
+            <p className="mt-2 text-blue-100">{t('entry_subtitle')}</p>
           </div>
         </div>
       </header>
