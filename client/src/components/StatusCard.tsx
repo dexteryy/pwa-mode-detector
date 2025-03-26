@@ -43,6 +43,9 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
       : t('status_browser_not_installable');
   }
 
+  // 添加 browser 模式的额外信息
+  const showBrowserModeInfo = mode === 'browser';
+
   return (
     <div className={cardClassName}>
       <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4">
@@ -50,6 +53,9 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
         <div>
           <h2 className="text-xl font-semibold text-dark">{statusText}</h2>
           <p className="text-gray-500">{promptText}</p>
+          {showBrowserModeInfo && (
+            <p className="text-amber-600 mt-2 text-sm border-t border-amber-200 pt-2">{t('browser_mode_info')}</p>
+          )}
         </div>
       </div>
     </div>

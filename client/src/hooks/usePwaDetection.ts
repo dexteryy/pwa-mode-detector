@@ -11,6 +11,7 @@ interface PwaDetection {
   displayModes: DisplayMode[];
   currentMode: string;
   isInstallable: boolean;
+  isChecking: boolean;
   promptInstall: () => void;
   userAgent: string;
 }
@@ -46,6 +47,7 @@ export function usePwaDetection(): PwaDetection {
   const [currentMode, setCurrentMode] = useState<string>("browser");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [userAgent, setUserAgent] = useState<string>("");
+  const [isChecking, setIsChecking] = useState<boolean>(true);
 
   // Detect the current display mode
   const checkDisplayMode = () => {
@@ -97,12 +99,18 @@ export function usePwaDetection(): PwaDetection {
       mediaQuery.addEventListener("change", handleChange);
     });
     
+    // Set checking state to false after a short delay to simulate checking
+    const checkingTimer = setTimeout(() => {
+      setIsChecking(false);
+    }, 1000);
+    
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent Chrome 67+ from automatically showing the prompt
       e.preventDefault();
       // Stash the event so it can be triggered later
       setDeferredPrompt(e);
+      setIsChecking(false); // End checking when we know the result
     };
     
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -125,6 +133,7 @@ export function usePwaDetection(): PwaDetection {
     
     // Cleanup
     return () => {
+      clearTimeout(checkingTimer);
       mediaQueries.forEach((mediaQuery, index) => {
         mediaQuery.removeEventListener("change", handlers[index]);
       });
@@ -157,6 +166,7 @@ export function usePwaDetection(): PwaDetection {
     displayModes,
     currentMode,
     isInstallable: !!deferredPrompt,
+    isChecking,
     promptInstall,
     userAgent
   };
