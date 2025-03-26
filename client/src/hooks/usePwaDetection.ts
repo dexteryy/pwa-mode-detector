@@ -83,6 +83,11 @@ export function usePwaDetection(): PwaDetection {
     // Initial check
     checkDisplayMode();
     
+    // 重置检测状态
+    setIsChecking(true);
+    setInstallabilityDetermined(false);
+    setDeferredPrompt(null); // 确保重置 deferredPrompt，重新检查安装能力
+    
     // Listen for changes in each display mode
     const mediaQueries: MediaQueryList[] = [];
     const handlers: ((e: MediaQueryListEvent) => void)[] = [];
@@ -102,19 +107,23 @@ export function usePwaDetection(): PwaDetection {
       mediaQuery.addEventListener("change", handleChange);
     });
     
+    console.log("初始化 PWA 检测 - 开始监听 beforeinstallprompt 事件");
+    
     // 添加一个定时器以确保installability状态最终会被确定
-    // 如果在超时期间beforeinstallprompt没有触发，则app不可安装
+    // 当 manifest 使用 Blob URL 时，我们需要给更长的时间让浏览器处理
     const installabilityTimer = setTimeout(() => {
       if (!installabilityDetermined) {
+        console.log("检测超时 - 尚未触发 beforeinstallprompt 事件");
         setInstallabilityDetermined(true);
         setIsChecking(false);
       }
-    }, 2000); // 给beforeinstallprompt事件更多时间触发
+    }, 3000); // 增加到3秒，给Blob URL更多处理时间
     
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent Chrome 67+ from automatically showing the prompt
       e.preventDefault();
+      console.log("捕获到 beforeinstallprompt 事件 - 应用可安装");
       // Stash the event so it can be triggered later
       setDeferredPrompt(e);
       setInstallabilityDetermined(true);
@@ -123,8 +132,22 @@ export function usePwaDetection(): PwaDetection {
     
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     
+    // 检测 manifest 链接的变化
+    const checkManifestLink = () => {
+      const manifestLink = document.querySelector('link[rel="manifest"]');
+      if (manifestLink) {
+        console.log("检测到 manifest 链接:", (manifestLink as HTMLLinkElement).href);
+      } else {
+        console.log("未找到 manifest 链接元素");
+      }
+    };
+    
+    // 延迟一点执行 manifest 检查
+    setTimeout(checkManifestLink, 500);
+    
     // Hide install button after app is installed
     const handleAppInstalled = () => {
+      console.log("应用安装成功 - appinstalled 事件触发");
       setDeferredPrompt(null);
     };
     
@@ -134,6 +157,8 @@ export function usePwaDetection(): PwaDetection {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         checkDisplayMode();
+        // 当页面重新变为可见时，重新检查 manifest
+        checkManifestLink();
       }
     };
     
@@ -149,7 +174,7 @@ export function usePwaDetection(): PwaDetection {
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [displayModes, installabilityDetermined]); // Add displayModes and installabilityDetermined as dependencies
+  }, [displayModes]); // 移除 installabilityDetermined 依赖，避免相互影响
 
   // Function to prompt installation
   const promptInstall = () => {
@@ -172,16 +197,30 @@ export function usePwaDetection(): PwaDetection {
   
   // Function to manually reset the checking state (for use with refresh button)
   const resetChecking = () => {
+    console.log("手动重置 PWA 检测状态...");
     setIsChecking(true);
     setInstallabilityDetermined(false); // 重置installability状态
+    setDeferredPrompt(null); // 重置 deferredPrompt，彻底重新检测
     
     // 重新给一些时间让beforeinstallprompt事件可能触发
+    // 使用更长的超时时间，与初始化一致
     setTimeout(() => {
       if (!installabilityDetermined) {
+        console.log("重置检测超时 - 尚未触发 beforeinstallprompt 事件");
         setInstallabilityDetermined(true);
         setIsChecking(false);
       }
-    }, 2000);
+    }, 3000);
+    
+    // 检测 manifest 链接
+    setTimeout(() => {
+      const manifestLink = document.querySelector('link[rel="manifest"]');
+      if (manifestLink) {
+        console.log("重置后检测到 manifest 链接:", (manifestLink as HTMLLinkElement).href);
+      } else {
+        console.log("重置后未找到 manifest 链接元素");
+      }
+    }, 500);
   };
 
   // 只有在确定了安装状态后，才返回实际的installable值

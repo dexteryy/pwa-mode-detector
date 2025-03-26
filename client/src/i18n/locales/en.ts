@@ -60,6 +60,7 @@ export default {
   "status_browser_installable": "You can install this app to experience the PWA standalone window mode",
   "status_browser_not_installable": "Your browser does not support installing PWA applications",
   "status_browser_checking": "Checking if this page can be installed...",
+  "status_detecting": "Detecting installation capability...",
   "browser_mode_info": "This page has a Web App Manifest but its display mode is set to 'browser', making it uninstallable and not a proper PWA",
   "mode_active": "Active",
   "mode_inactive": "Inactive",
