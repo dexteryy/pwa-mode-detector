@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface DisplayMode {
   name: string;
@@ -15,27 +16,29 @@ interface PwaDetection {
 }
 
 export function usePwaDetection(): PwaDetection {
-  // Define available display modes
+  const { t } = useTranslation();
+  
+  // Define available display modes with i18n
   const displayModes: DisplayMode[] = [
     {
       name: "standalone",
-      displayName: "独立窗口模式",
-      description: "应用在没有浏览器界面的独立窗口中运行"
+      displayName: t('standalone_name'),
+      description: t('standalone_description')
     },
     {
       name: "browser",
-      displayName: "浏览器模式",
-      description: "应用在常规浏览器标签页中运行"
+      displayName: t('browser_name'),
+      description: t('browser_description')
     },
     {
       name: "minimal-ui",
-      displayName: "最小界面模式", 
-      description: "应用在带有最小浏览器控件的窗口中运行"
+      displayName: t('minimal_ui_name'), 
+      description: t('minimal_ui_description')
     },
     {
       name: "fullscreen",
-      displayName: "全屏模式",
-      description: "应用占据整个屏幕，没有任何浏览器界面"
+      displayName: t('fullscreen_name'),
+      description: t('fullscreen_description')
     }
   ];
 
@@ -76,8 +79,12 @@ export function usePwaDetection(): PwaDetection {
     checkDisplayMode();
     
     // Listen for changes in each display mode
-    displayModes.forEach(mode => {
+    const mediaQueries: MediaQueryList[] = [];
+    const handlers: ((e: MediaQueryListEvent) => void)[] = [];
+    
+    displayModes.forEach((mode, index) => {
       const mediaQuery = window.matchMedia(`(display-mode: ${mode.name})`);
+      mediaQueries.push(mediaQuery);
       
       // Modern browsers use addEventListener
       const handleChange = (e: MediaQueryListEvent) => {
@@ -86,34 +93,46 @@ export function usePwaDetection(): PwaDetection {
         }
       };
       
+      handlers.push(handleChange);
       mediaQuery.addEventListener("change", handleChange);
-      
-      // Cleanup
-      return () => {
-        mediaQuery.removeEventListener("change", handleChange);
-      };
     });
     
     // Listen for beforeinstallprompt event
-    window.addEventListener("beforeinstallprompt", (e) => {
+    const handleBeforeInstallPrompt = (e: Event) => {
       // Prevent Chrome 67+ from automatically showing the prompt
       e.preventDefault();
       // Stash the event so it can be triggered later
       setDeferredPrompt(e);
-    });
+    };
+    
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     
     // Hide install button after app is installed
-    window.addEventListener("appinstalled", () => {
+    const handleAppInstalled = () => {
       setDeferredPrompt(null);
-    });
+    };
+    
+    window.addEventListener("appinstalled", handleAppInstalled);
     
     // Also check when visibility changes
-    document.addEventListener("visibilitychange", () => {
+    const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         checkDisplayMode();
       }
-    });
-  }, []);
+    };
+    
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    
+    // Cleanup
+    return () => {
+      mediaQueries.forEach((mediaQuery, index) => {
+        mediaQuery.removeEventListener("change", handlers[index]);
+      });
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [displayModes]); // Add displayModes as a dependency
 
   // Function to prompt installation
   const promptInstall = () => {
