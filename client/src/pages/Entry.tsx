@@ -43,7 +43,7 @@ const Entry = () => {
   const { t } = useTranslation();
   const displayModes = getDisplayModes(t);
 
-  // Make sure no manifest is present on entry page
+  // Make sure no manifest is present on entry page and clean up localStorage
   useEffect(() => {
     // Entry page should not have any manifest, check if ManifestHandler left anything
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
@@ -57,6 +57,29 @@ const Entry = () => {
       console.log('[Entry] Removed manifest links to prevent PWA installation on entry page');
     } else {
       console.log('[Entry] No manifest links found, entry page is correctly configured');
+    }
+    
+    // 清除入口页的localStorage安装状态
+    try {
+      // 删除不应该存在的根路径安装状态
+      localStorage.removeItem('pwa-installed-state-/');
+      localStorage.removeItem('pwa-installed-state-default');
+      console.log('[Entry] Cleared incorrect installation state for entry page');
+      
+      // 记录所有PWA相关的localStorage键以便调试
+      const pwaKeys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('pwa-installed-state-')) {
+          pwaKeys.push(key);
+        }
+      }
+      
+      if (pwaKeys.length > 0) {
+        console.log('[Entry] Current PWA state keys in localStorage:', pwaKeys);
+      }
+    } catch (e) {
+      console.error('[Entry] Error cleaning localStorage:', e);
     }
     
     // No longer adding empty manifest - this was causing unintended behavior

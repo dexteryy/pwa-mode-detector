@@ -62,14 +62,25 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   const [isChecking, setIsChecking] = useState<boolean>(true);
   const [manifestInfo, setManifestInfo] = useState<{display?: string} | null>(null);
   
-  // Each path should have its own installation state
-  // forcedPathKey represents the display mode path being used
-  const localStorageKey = `pwa-installed-state-${forcedPathKey || 'default'}`;
+  // 确定当前路径是否为入口页面（'/'）
+  const isEntryPage = !forcedPathKey || forcedPathKey === '/';
   
-  // Load installation state from localStorage to persist between refreshes
+  // 为每个路径设置不同的安装状态存储键
+  // 但是如果是入口页面，则不应该有安装状态
+  const localStorageKey = isEntryPage 
+    ? 'pwa-no-install-entry-page' // 使用一个明确的键名表示这不是安装状态键
+    : `pwa-installed-state-${forcedPathKey || 'default'}`;
+  
+  // 从localStorage加载安装状态，确保在刷新后保持
   const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(() => {
+    // 入口页永远不应该被标记为已安装
+    if (isEntryPage) {
+      console.log('[usePwaDetection] Entry page detected, ignoring installation state');
+      return false;
+    }
+    
     try {
-      // Check if we have a stored installation state for this specific path
+      // 检查当前路径的存储状态
       const storedState = localStorage.getItem(localStorageKey);
       const isInstalled = storedState === 'true';
       console.log(`[usePwaDetection] Loaded installation state for path "${forcedPathKey}" from localStorage: ${isInstalled}`);
@@ -82,13 +93,27 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
 
   // Update localStorage whenever hasBeenInstalled changes
   useEffect(() => {
+    // 入口页面不应该存储任何安装状态
+    if (isEntryPage) {
+      // 尝试清除可能存在的入口页安装状态
+      try {
+        localStorage.removeItem('pwa-installed-state-/');
+        localStorage.removeItem('pwa-installed-state-default');
+        console.log('[usePwaDetection] Prevented setting installation state for entry page');
+      } catch (e) {
+        console.error('[usePwaDetection] Error cleaning entry page localStorage:', e);
+      }
+      return;
+    }
+    
+    // 对于其他页面，正常存储安装状态
     try {
       localStorage.setItem(localStorageKey, hasBeenInstalled ? 'true' : 'false');
       console.log(`[usePwaDetection] Updated installation state for path "${forcedPathKey}" in localStorage: ${hasBeenInstalled}`);
     } catch (e) {
       console.error('[usePwaDetection] Error saving installation state to localStorage:', e);
     }
-  }, [hasBeenInstalled, localStorageKey, forcedPathKey]);
+  }, [hasBeenInstalled, localStorageKey, forcedPathKey, isEntryPage]);
   
   // Force checking state every time the path changes
   useEffect(() => {
