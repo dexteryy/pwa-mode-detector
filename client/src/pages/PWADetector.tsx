@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatusCard from "@/components/StatusCard";
 import DetectionCard from "@/components/DetectionCard";
 import InfoCard from "@/components/InfoCard";
@@ -12,6 +12,8 @@ const PWADetector = () => {
   
   // 从URL路径中获取预期的display模式
   const [path] = useLocation();
+  const [manifestInfo, setManifestInfo] = useState<string>("");
+  const [showManifestInfo, setShowManifestInfo] = useState<boolean>(false);
   
   // 判断当前路径对应的显示模式
   let expectedMode = "standalone";
@@ -33,6 +35,50 @@ const PWADetector = () => {
   
   console.log("当前路径:", path, "预期模式:", expectedMode);
   
+  // 获取当前 manifest 信息
+  useEffect(() => {
+    // 需要在组件挂载后延迟一点时间执行，确保 manifest 链接已经被设置
+    const timer = setTimeout(() => {
+      refreshManifestInfo();
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  // 刷新 manifest 信息
+  const refreshManifestInfo = () => {
+    // 检查当前 manifest 链接元素
+    const manifestLink = document.querySelector('link[rel="manifest"]') as HTMLLinkElement;
+    let manifestUrl = manifestLink ? manifestLink.href : '未找到 manifest 链接';
+    let manifestSrc = "";
+    
+    // 根据当前路径确定预期的 manifest 文件
+    if (path === "/standalone") {
+      manifestSrc = '/manifests/standalone.json';
+    } else if (path === "/minimal-ui") {
+      manifestSrc = '/manifests/minimal-ui.json';
+    } else if (path === "/fullscreen") {
+      manifestSrc = '/manifests/fullscreen.json';
+    } else if (path === "/browser") {
+      manifestSrc = '/manifests/browser.json';
+    } else {
+      manifestSrc = '/manifest.json';
+    }
+    
+    // 设置初始信息
+    setManifestInfo(`正在加载 manifest 信息...\n当前链接: ${manifestUrl}\n预期文件: ${manifestSrc}`);
+    
+    // 尝试获取 manifest 内容
+    fetch(manifestSrc)
+      .then(response => response.json())
+      .then(data => {
+        setManifestInfo(prev => prev + `\n\n文件内容:\n${JSON.stringify(data, null, 2)}`);
+      })
+      .catch(error => {
+        setManifestInfo(prev => prev + `\n\n无法加载 manifest 内容: ${error.message}`);
+      });
+  };
+  
   const { 
     displayModes, 
     currentMode, 
@@ -50,6 +96,8 @@ const PWADetector = () => {
     setIsRefreshing(true);
     // 重置检查状态
     resetChecking();
+    // 刷新 manifest 信息
+    refreshManifestInfo();
     // 动画效果
     setTimeout(() => {
       setIsRefreshing(false);
@@ -132,6 +180,42 @@ const PWADetector = () => {
           </div>
         </div>
 
+        {/* Manifest Information Card */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold text-dark flex items-center">
+              <span className="material-icons mr-2">description</span>
+              Manifest 信息
+            </h2>
+            <button 
+              onClick={() => setShowManifestInfo(!showManifestInfo)}
+              className="text-blue-500 hover:text-blue-700 text-sm flex items-center"
+            >
+              <span className="material-icons text-sm mr-1">
+                {showManifestInfo ? 'visibility_off' : 'visibility'}
+              </span>
+              {showManifestInfo ? '隐藏详情' : '显示详情'}
+            </button>
+          </div>
+          
+          {showManifestInfo && (
+            <>
+              <div className="flex justify-end mb-2">
+                <button 
+                  onClick={refreshManifestInfo}
+                  className="text-sm text-gray-600 hover:text-blue-600 flex items-center"
+                >
+                  <span className="material-icons text-sm mr-1">refresh</span>
+                  刷新信息
+                </button>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-md overflow-auto whitespace-pre text-xs font-mono max-h-60">
+                {manifestInfo}
+              </div>
+            </>
+          )}
+        </div>
+        
         {/* Information card */}
         <InfoCard />
         
