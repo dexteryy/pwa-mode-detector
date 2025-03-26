@@ -1,3 +1,4 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { usePwaDetection } from "../hooks/usePwaDetection";
 import { CheckCircle, Minimize, Maximize, Globe, Hourglass, Download, Ban, PackageOpen, X } from "lucide-react";
@@ -89,7 +90,51 @@ const StatusCard = ({ mode, isInstallable, expectedMode }: StatusCardProps) => {
                   </p>
                 </div>
                 {!isInstallable && installDisabledReason && (
-                  <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm">{installDisabledReason}</p>
+                  <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm">
+                    {installDisabledReason.split('Web App Manifest').map((part, i) => (
+                      i === 0 ? (
+                        <React.Fragment key={i}>
+                          {part}
+                          <a 
+                            href="https://developer.mozilla.org/en-US/docs/Web/Manifest" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline dark:text-blue-400"
+                          >
+                            Web App Manifest
+                          </a>
+                        </React.Fragment>
+                      ) : part.split('\'browser\'').map((subpart, j) => (
+                        j === 0 ? (
+                          <React.Fragment key={`${i}-${j}`}>
+                            {subpart}
+                            <a 
+                              href="https://developer.mozilla.org/en-US/docs/Web/Manifest/display#browser" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline dark:text-blue-400"
+                            >
+                              'browser'
+                            </a>
+                          </React.Fragment>
+                        ) : subpart.split('PWA').map((pwapart, k) => (
+                          k === 0 ? (
+                            <React.Fragment key={`${i}-${j}-${k}`}>
+                              {pwapart}
+                              <a 
+                                href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline dark:text-blue-400"
+                              >
+                                PWA
+                              </a>
+                            </React.Fragment>
+                          ) : pwapart
+                        ))
+                      ))
+                    ))}
+                  </p>
                 )}
               </>
             )}
