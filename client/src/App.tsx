@@ -5,9 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import PWADetector from "@/pages/PWADetector";
 import Entry from "@/pages/Entry";
-import { useEffect, useState, ReactNode } from "react";
-import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n";
+import { useEffect } from "react";
 
 // 根据路径参数动态设置 manifest
 function ManifestHandler() {
@@ -50,35 +48,6 @@ function ManifestHandler() {
   return null;
 }
 
-// I18n初始化包装组件
-function I18nProvider({ children }: { children: ReactNode }) {
-  const [isI18nInitialized, setIsI18nInitialized] = useState(false);
-  
-  useEffect(() => {
-    // 确保i18n已初始化完成
-    if (i18n.isInitialized) {
-      setIsI18nInitialized(true);
-    } else {
-      const handleInitialized = () => {
-        setIsI18nInitialized(true);
-      };
-      
-      i18n.on('initialized', handleInitialized);
-      
-      return () => {
-        i18n.off('initialized', handleInitialized);
-      };
-    }
-  }, []);
-  
-  if (!isI18nInitialized) {
-    // 显示加载状态或返回null，等待i18n初始化
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
-  }
-  
-  return <I18nextProvider i18n={i18n}>{children}</I18nextProvider>;
-}
-
 function Router() {
   return (
     <Switch>
@@ -97,11 +66,9 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <I18nProvider>
-        <ManifestHandler />
-        <Router />
-        <Toaster />
-      </I18nProvider>
+      <ManifestHandler />
+      <Router />
+      <Toaster />
     </QueryClientProvider>
   );
 }

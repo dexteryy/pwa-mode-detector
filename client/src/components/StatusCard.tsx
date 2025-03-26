@@ -6,22 +6,7 @@ interface StatusCardProps {
 }
 
 const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
-  const { t, ready } = useTranslation();
-  
-  // 如果 i18n 还没准备好，显示加载状态
-  if (!ready) {
-    return (
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8 border-l-4 border-gray-300 animate-pulse">
-        <div className="flex items-center mb-4">
-          <div className="w-10 h-10 rounded-full bg-gray-200 mr-3"></div>
-          <div>
-            <div className="h-5 bg-gray-200 rounded w-40 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-64"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const { t } = useTranslation();
   
   // Determine status card styling based on mode
   let cardClassName = "bg-white rounded-lg shadow-md p-6 mb-8 border-l-4 ";

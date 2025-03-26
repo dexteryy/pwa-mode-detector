@@ -1,24 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 const InfoCard = () => {
-  const { t, ready } = useTranslation();
-  
-  // 如果 i18n 还没准备好，显示加载状态
-  if (!ready) {
-    return (
-      <div className="bg-white rounded-lg shadow-md p-6 animate-pulse">
-        <div className="flex items-center mb-4">
-          <div className="w-6 h-6 bg-gray-200 rounded-full mr-2"></div>
-          <div className="h-5 bg-gray-200 rounded w-32"></div>
-        </div>
-        <div className="space-y-3">
-          <div className="h-4 bg-gray-200 rounded w-full"></div>
-          <div className="h-4 bg-gray-200 rounded w-full"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-        </div>
-      </div>
-    );
-  }
+  const { t } = useTranslation();
   
   return (
     <div className="bg-white rounded-lg shadow-md p-6">

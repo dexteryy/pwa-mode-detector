@@ -12,20 +12,7 @@ interface DetectionCardProps {
 }
 
 const DetectionCard = ({ mode, isActive }: DetectionCardProps) => {
-  const { t, ready } = useTranslation();
-  
-  // 如果 i18n 还没准备好，显示加载状态
-  if (!ready) {
-    return (
-      <div className="border rounded-lg p-4 bg-gray-50 animate-pulse">
-        <div className="flex justify-between items-center mb-2">
-          <div className="h-5 bg-gray-200 rounded w-32"></div>
-          <div className="w-3 h-3 rounded-full bg-gray-200"></div>
-        </div>
-        <div className="h-4 bg-gray-200 rounded w-20"></div>
-      </div>
-    );
-  }
+  const { t } = useTranslation();
   
   // Card styling based on active state
   const cardClassName = isActive

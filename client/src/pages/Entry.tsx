@@ -38,20 +38,7 @@ const getDisplayModes = (t: any): DisplayMode[] => [
 ];
 
 const Entry = () => {
-  const { t, ready } = useTranslation();
-  
-  // 如果 i18n 还没准备好，显示加载状态
-  if (!ready) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4"></div>
-          <p>Loading translations...</p>
-        </div>
-      </div>
-    );
-  }
-  
+  const { t } = useTranslation();
   const displayModes = getDisplayModes(t);
   
   return (
