@@ -49,7 +49,7 @@ export default {
   status_browser_running: "應用正在標準瀏覽器模式下運行",
   install_capability_title: "安裝狀態",
   install_disabled_manifest_browser:
-    "清單文件中的顯示模式設置為'browser'，此模式不支持安裝",
+    "manifest中的display屬性設置為'browser'，此模式不支持安裝",
   install_disabled_browser_unsupported: "您的瀏覽器不支持PWA安裝",
   install_button_disabled: "安裝功能不可用",
 

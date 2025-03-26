@@ -43,7 +43,7 @@ export default {
   status_browser_running: "应用正在标准浏览器模式下运行",
   install_capability_title: "安装状态",
   install_disabled_manifest_browser:
-    "清单文件中的显示模式设置为'browser'，此模式不支持安装",
+    "manifest中的display属性设置为'browser'，此模式不支持安装",
   install_disabled_browser_unsupported: "您的浏览器不支持PWA安装",
   install_button_disabled: "安装功能不可用",
 
@@ -69,7 +69,7 @@ export default {
   status_browser_checking: "正在检查此页面是否可安装...",
   checking: "检查中...",
   browser_mode_info:
-    "此页面虽然具有 Web App Manifest，但由于 display 属性设置为 'browser'，因此无法安装，不是完整的 PWA",
+    "此页面虽然具有 Web App Manifest，但由于 display 属性设置为 'browser'，因此无法安装为 PWA",
   mode_active: "已启用",
   mode_inactive: "未启用",
   about_pwa_modes: "关于 PWA 模式",
@@ -77,13 +77,13 @@ export default {
 
   // 刷新提示
   refreshing: "正在刷新...",
-  refresh_process: "正在检查显示模式、安装状态及更新应用清单信息",
+  refresh_process: "正在检查 display mode、安装状态及更新 Web App Manifest 信息",
 
   // Manifest 查看器
   manifest_viewer_title: "Web App Manifest",
-  view_manifest: "查看清单内容",
+  view_manifest: "查看 Manifest 内容",
   loading: "加载中...",
-  manifest_error: "加载清单出错",
+  manifest_error: "加载 Manifest 出错",
   manifest_name: "名称",
   manifest_short_name: "短名称",
   manifest_start_url: "起始URL",
