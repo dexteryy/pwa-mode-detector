@@ -16,7 +16,7 @@ export default {
   entry_subtitle: "Select a display mode to see different PWA behaviors",
   what_is_pwa_display_mode: "What are PWA Display Modes?",
   pwa_display_mode_description:
-    "Progressive Web Apps (PWAs) can run and display in different ways on user devices. The 'display' property in the Web App Manifest defines the presentation mode, affecting browser UI elements visibility and the overall appearance of the application.",
+    "<a href='https://web.dev/progressive-web-apps/' target='_blank' rel='noopener'>Progressive Web Apps (PWAs)</a> can run and display in different ways on user devices. The '<a href='https://developer.mozilla.org/en-US/docs/Web/Manifest/display' target='_blank' rel='noopener'>display</a>' property in the <a href='https://developer.mozilla.org/en-US/docs/Web/Manifest' target='_blank' rel='noopener'>Web App Manifest</a> defines the presentation mode, affecting browser UI elements visibility and the overall appearance of the application.",
   click_card_instruction:
     "Click on any card below to navigate to the corresponding PWA app, each configured with a different display mode. After installing the app, you'll be able to observe the user experience differences across display modes.",
   view_demo: "View Demo",
