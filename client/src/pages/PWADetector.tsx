@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatusCard from "@/components/StatusCard";
 import DetectionCard from "@/components/DetectionCard";
 import InfoCard from "@/components/InfoCard";
@@ -44,6 +44,25 @@ const PWADetector = () => {
   } = usePwaDetection();
   
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // 动态添加针对当前模式的 manifest 链接
+  useEffect(() => {
+    // 确保之前的 manifest 链接被移除
+    const existingManifestLinks = document.querySelectorAll('link[rel="manifest"]');
+    existingManifestLinks.forEach(link => link.remove());
+    
+    // 添加当前模式对应的 manifest 链接
+    const manifestLink = document.createElement('link');
+    manifestLink.rel = 'manifest';
+    manifestLink.href = `/manifests/${expectedMode}.json`;
+    document.head.appendChild(manifestLink);
+    
+    // 在组件卸载时清理
+    return () => {
+      const links = document.querySelectorAll('link[rel="manifest"]');
+      links.forEach(link => link.remove());
+    };
+  }, [expectedMode]);
 
   // Handle manual refresh
   const handleRefresh = () => {
