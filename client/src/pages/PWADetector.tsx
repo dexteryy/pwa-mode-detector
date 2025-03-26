@@ -61,7 +61,6 @@ const PWADetector = () => {
             <h1 className="text-xl font-semibold">{t('detector_title')}</h1>
           </div>
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
             <Link href="/">
               <div className="bg-white text-blue-500 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors flex items-center cursor-pointer">
                 <span className="material-icons text-sm mr-1">home</span>
@@ -75,6 +74,7 @@ const PWADetector = () => {
             >
               <span className="material-icons">refresh</span>
             </button>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>
