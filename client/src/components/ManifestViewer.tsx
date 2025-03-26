@@ -137,7 +137,7 @@ const ManifestViewer: React.FC = () => {
                 )}
                 {manifest.display && (
                   <span className="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-1 rounded text-xs">
-                    display: {manifest.display}
+                    {processTerms("display")}: {processTerms(manifest.display)}
                   </span>
                 )}
                 {manifest.id && (
