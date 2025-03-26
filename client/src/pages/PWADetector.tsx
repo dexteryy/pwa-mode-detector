@@ -99,7 +99,9 @@ const PWADetector = () => {
         {/* Manifest mode banner */}
         <div className={`mb-4 p-4 rounded-lg ${expectedMode === currentMode ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
           <div className="flex items-center">
-            <span className="material-icons mr-2">{expectedMode === currentMode ? 'check_circle' : 'info'}</span>
+            <div className="w-5 h-5 mr-2 flex items-center justify-center">
+              <IconWithFallback name={expectedMode === currentMode ? 'check_circle' : 'info'} size="sm" />
+            </div>
             <h2 className="font-semibold">
               {t('expected_mode')}: <span className="font-bold">{expectedMode}</span>
             </h2>
@@ -117,7 +119,9 @@ const PWADetector = () => {
         {/* Detection details card */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-lg font-semibold text-dark mb-4 flex items-center">
-            <span className="material-icons mr-2">info</span>
+            <div className="w-6 h-6 mr-2 flex items-center justify-center">
+              <IconWithFallback name="info" size="md" />
+            </div>
             {t('detector_subtitle')}
           </h2>
           
@@ -153,7 +157,9 @@ const PWADetector = () => {
             onClick={promptInstall}
             className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 flex items-center"
           >
-            <span className="material-icons mr-1">get_app</span>
+            <div className="w-5 h-5 mr-1 flex items-center justify-center">
+              <IconWithFallback name="get_app" size="sm" />
+            </div>
             {t('install_pwa')}
           </button>
         </div>

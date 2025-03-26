@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import IconWithFallback from "./IconWithFallback";
 
 const InfoCard = () => {
   const { t } = useTranslation();
