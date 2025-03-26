@@ -16,13 +16,13 @@ export default {
   entry_subtitle: "Choisissez un mode d'affichage pour voir comment les PWA fonctionnent différemment",
   what_is_pwa_display_mode: "Qu'est-ce qu'un mode d'affichage PWA ?",
   pwa_display_mode_description:
-    "Les applications web progressives (PWA) peuvent s'afficher de différentes manières sur l'appareil de l'utilisateur. La propriété d'affichage dans le Manifeste d'application web définit le mode d'affichage et influence quels éléments de l'interface utilisateur du navigateur sont visibles et l'apparence générale de l'application.",
+    "Les Progressive Web Apps (PWA) peuvent s'afficher de différentes manières sur l'appareil de l'utilisateur. La propriété 'display' dans le Web App Manifest définit le mode d'affichage et influence quels éléments de l'interface utilisateur du navigateur sont visibles et l'apparence générale de l'application.",
   click_card_instruction:
     "Cliquez sur l'une des cartes ci-dessous pour naviguer vers une PWA avec ce mode d'affichage spécifique. Après l'installation, vous pourrez observer comment l'expérience utilisateur diffère selon le mode.",
   view_demo: "Voir la démo",
   technical_details: "Détails techniques",
   technical_description:
-    "Chaque PWA utilise la même base de code, mais avec différentes configurations de Manifeste d'application web. L'application détectera le mode d'exécution réel et le comparera au mode attendu déclaré dans le manifeste.",
+    "Chaque PWA utilise la même base de code, mais avec différentes configurations de Web App Manifest. L'application détectera le mode d'exécution réel et le comparera au mode attendu déclaré dans le manifest.",
   browser_support_note:
     "Pour une expérience PWA complète, veuillez utiliser un navigateur compatible PWA (comme Chrome, Edge, Safari) et installer l'application.",
   footer_text: "Démo des modes d'affichage PWA | Choisissez un mode pour commencer",
@@ -74,7 +74,7 @@ export default {
   status_browser_checking: "Vérification si cette page est installable...",
   checking: "Vérification...",
   browser_mode_info:
-    "Cette page a un Manifeste d'application web, mais ne peut pas être installée en raison de la propriété d'affichage 'browser', ce n'est pas une PWA complète",
+    "Cette page a un Web App Manifest, mais ne peut pas être installée en raison de la propriété 'display' réglée sur 'browser', ce n'est pas une PWA complète",
   mode_active: "Actif",
   mode_inactive: "Inactif",
   about_pwa_modes: "À propos des modes PWA",
@@ -85,8 +85,8 @@ export default {
   refresh_process: "Vérification du mode d'affichage, du statut d'installation et mise à jour des informations du manifeste",
 
   // Visionneuse de manifeste
-  manifest_viewer_title: "Manifeste d'application web",
-  view_manifest: "Voir le manifeste",
+  manifest_viewer_title: "Web App Manifest",
+  view_manifest: "Voir le manifest",
   loading: "Chargement...",
   manifest_error: "Erreur lors du chargement du manifeste",
   manifest_name: "Nom",

@@ -16,7 +16,7 @@ export default {
   entry_subtitle: "Wählen Sie einen Display-Modus um zu sehen, wie PWAs unterschiedlich ausgeführt werden",
   what_is_pwa_display_mode: "Was ist ein PWA Display-Modus?",
   pwa_display_mode_description:
-    "Progressive Web Apps (PWAs) können in verschiedener Weise auf dem Gerät des Benutzers angezeigt werden. Die Display-Eigenschaft im Web App Manifest definiert den Anzeigemodus und beeinflusst, welche Browser-UI-Elemente sichtbar sind und wie die App allgemein erscheint.",
+    "Progressive Web Apps (PWAs) können in verschiedener Weise auf dem Gerät des Benutzers angezeigt werden. Die 'display'-Eigenschaft im Web App Manifest definiert den Anzeigemodus und beeinflusst, welche Browser-UI-Elemente sichtbar sind und wie die App allgemein erscheint.",
   click_card_instruction:
     "Klicken Sie auf eine der Karten unten, um zu einer PWA mit diesem spezifischen Display-Modus zu navigieren. Nach der Installation können Sie beobachten, wie sich die Benutzererfahrung je nach Modus unterscheidet.",
   view_demo: "Demo ansehen",
@@ -48,7 +48,7 @@ export default {
   status_browser_running: "Die App läuft im Standard-Browser-Modus",
   install_capability_title: "Installationsstatus",
   install_disabled_manifest_browser:
-    "Manifest-Display-Modus ist 'browser', dieser Modus unterstützt keine Installation",
+    "Der 'display'-Modus im Web App Manifest ist 'browser', dieser Modus unterstützt keine Installation",
   install_disabled_browser_unsupported: "Ihr Browser unterstützt keine PWA-Installation",
   install_button_disabled: "Installation nicht verfügbar",
 
