@@ -66,11 +66,23 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
   // forcedPathKey represents the display mode path being used
   const localStorageKey = `pwa-installed-state-${forcedPathKey || 'default'}`;
   
-  // Load installation state from localStorage to persist between refreshes
-  // but add additional safeguard to check session-specific state first
+  // Check if this is the entry page (not a valid PWA path)
+  const isEntryPath = !forcedPathKey || 
+                      forcedPathKey === 'default' || 
+                      window.location.pathname === '/';
+  
+  // Generate storage keys with path-specific names
   const sessionKey = `session-${forcedPathKey || 'default'}`;
   
+  // Load installation state from localStorage to persist between refreshes
+  // but add additional safeguard to check session-specific state first
   const [hasBeenInstalled, setHasBeenInstalled] = useState<boolean>(() => {
+    // Entry page should never show as installed
+    if (isEntryPath) {
+      console.log('[usePwaDetection] Entry page detected, always showing as uninstalled');
+      return false;
+    }
+    
     try {
       // First check sessionStorage (tab-specific) for most recent installation state
       // This takes precedence over localStorage to prevent cross-tab contamination
@@ -99,6 +111,25 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
 
   // Update both storage types whenever hasBeenInstalled changes
   useEffect(() => {
+    // Skip storage updates for entry page
+    if (isEntryPath) {
+      console.log('[usePwaDetection] Entry page, skipping installation state storage');
+      return;
+    }
+    
+    // Only store state for specific PWA paths
+    const currentPath = window.location.pathname;
+    const isPwaPath = 
+      currentPath === '/standalone' || 
+      currentPath === '/minimal-ui' || 
+      currentPath === '/fullscreen' ||
+      currentPath.startsWith('/pwa/');
+      
+    if (!isPwaPath) {
+      console.log(`[usePwaDetection] Not a valid PWA path (${currentPath}), skipping state storage`);
+      return;
+    }
+    
     try {
       // Always update sessionStorage (tab-specific)
       sessionStorage.setItem(sessionKey, hasBeenInstalled ? 'true' : 'false');
@@ -111,7 +142,7 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     } catch (e) {
       console.error('[usePwaDetection] Error saving installation state:', e);
     }
-  }, [hasBeenInstalled, localStorageKey, sessionKey, forcedPathKey]);
+  }, [hasBeenInstalled, localStorageKey, sessionKey, forcedPathKey, isEntryPath]);
   
   // Force checking state every time the path changes
   useEffect(() => {
@@ -392,6 +423,18 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // Reset installable state
     setDeferredPrompt(null);
     
+    // Skip storage-related operations for the entry page
+    if (isEntryPath) {
+      console.log('[usePwaDetection] Entry page detected, skipping storage operations in refresh');
+      
+      // Complete check after delay
+      setTimeout(() => {
+        setIsChecking(false);
+        console.log(`[usePwaDetection] Entry page refresh: detection complete`);
+      }, 1000); // Shorter delay for entry page as we don't need to wait for installation events
+      return;
+    }
+    
     // Detect if we need to clear installation state
     // This is important to handle browser address bar installations
     // If we're running in browser mode but still have hasBeenInstalled=true,
@@ -401,11 +444,14 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // Get current path-based mode for more accurate checking
     const currentPath = window.location.pathname;
     const pathBasedMode = 
-      currentPath.startsWith('/standalone') ? 'standalone' :
-      currentPath.startsWith('/minimal-ui') ? 'minimal-ui' :
-      currentPath.startsWith('/fullscreen') ? 'fullscreen' :
-      currentPath.startsWith('/browser') ? 'browser' : 
+      currentPath === '/standalone' ? 'standalone' :
+      currentPath === '/minimal-ui' ? 'minimal-ui' :
+      currentPath === '/fullscreen' ? 'fullscreen' :
+      currentPath === '/browser' ? 'browser' : 
       'unknown';
+    
+    // Only continue processing for exact PWA paths that support installation
+    const isSupportedPwaPath = ['standalone', 'minimal-ui', 'fullscreen'].includes(pathBasedMode);
     
     // Check if the manifest display mode matches the path
     const manifestDisplay = manifestInfo?.display || contextManifestInfo?.display;
@@ -414,8 +460,12 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     // Clear state if:
     // 1. We're in browser mode but hasBeenInstalled is true (likely false state)
     // 2. There's a mismatch between manifest display and current path
-    // 3. User explicitly wants a fresh installation check
-    if ((currentDisplayMode === 'browser' && hasBeenInstalled) || hasPathMismatch) {
+    // 3. User explicitly wants a fresh installation check for supported path
+    // 4. Any non-PWA path that shouldn't have installation state
+    if ((currentDisplayMode === 'browser' && hasBeenInstalled) || 
+        hasPathMismatch || 
+        !isSupportedPwaPath || 
+        pathBasedMode === 'browser') {
       try {
         // Clear both storage types for this path
         localStorage.removeItem(localStorageKey);
@@ -427,7 +477,8 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
           hasBeenInstalled, 
           pathBasedMode,
           manifestDisplay,
-          hasPathMismatch
+          hasPathMismatch,
+          isSupportedPwaPath
         });
       } catch (e) {
         console.error('[usePwaDetection] Error clearing installation state:', e);
@@ -445,13 +496,13 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
 
   // Determine the proper installation status
   const getInstallStatus = (): InstallStatus => {
-    // Get current path-based mode
+    // Get current path-based mode using exact path matching
     const currentPath = window.location.pathname;
     const pathBasedMode = 
-      currentPath.startsWith('/standalone') ? 'standalone' :
-      currentPath.startsWith('/minimal-ui') ? 'minimal-ui' :
-      currentPath.startsWith('/fullscreen') ? 'fullscreen' :
-      currentPath.startsWith('/browser') ? 'browser' : 
+      currentPath === '/standalone' ? 'standalone' :
+      currentPath === '/minimal-ui' ? 'minimal-ui' :
+      currentPath === '/fullscreen' ? 'fullscreen' :
+      currentPath === '/browser' ? 'browser' : 
       'unknown';
       
     // Log all states for debugging

@@ -75,15 +75,22 @@ function ManifestHandler({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Construct the base URL without timestamp
     let baseUrl: string | null = null;
+    let exactPathMatch = false;
+    
+    // Get exact path for precise matching
+    const pathWithoutParams = location.split('?')[0];
+    
+    // Log for debugging
+    console.log(`[ManifestHandler] Processing path: ${pathWithoutParams}`);
     
     // For entry page ('/') or any unspecified pages, don't add any manifest and exit early
+    // Also explicitly exit for the '/browser' path, as it's a special mode
     if (location === '/' || 
-        (!location.startsWith('/standalone') && 
-         !location.startsWith('/minimal-ui') && 
-         !location.startsWith('/fullscreen') && 
-         !location.startsWith('/browser') && 
-         !location.startsWith('/pwa/'))) {
-      console.log('[ManifestHandler] Root or unknown path detected, no manifest added');
+        (pathWithoutParams !== '/standalone' && 
+         pathWithoutParams !== '/minimal-ui' && 
+         pathWithoutParams !== '/fullscreen' && 
+         !pathWithoutParams.startsWith('/pwa/'))) {
+      console.log('[ManifestHandler] Entry page or non-PWA path detected, no manifest needed');
       
       // If we previously had a manifest, clean it up
       if (currentManifestPath) {
@@ -96,22 +103,34 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       return;
     }
     
-    // Determine correct manifest URL based on path
-    if (location.startsWith('/standalone')) {
+    // Determine correct manifest URL based on exact path
+    if (pathWithoutParams === '/standalone') {
       baseUrl = '/manifests/standalone.json';
+      exactPathMatch = true;
     } 
-    else if (location.startsWith('/minimal-ui')) {
+    else if (pathWithoutParams === '/minimal-ui') {
       baseUrl = '/manifests/minimal-ui.json';
+      exactPathMatch = true;
     }
-    else if (location.startsWith('/fullscreen')) {
+    else if (pathWithoutParams === '/fullscreen') {
       baseUrl = '/manifests/fullscreen.json';
+      exactPathMatch = true;
     }
-    else if (location.startsWith('/browser')) {
+    else if (pathWithoutParams === '/browser') {
+      // Special mode for browser display - should NOT be installed
       baseUrl = '/manifests/browser.json';
-      console.log("[ManifestHandler] Browser mode manifest path detected");
+      exactPathMatch = true;
+      console.log("[ManifestHandler] Browser mode manifest path detected (display:browser)");
     }
-    else if (location.startsWith('/pwa/')) {
+    else if (pathWithoutParams.startsWith('/pwa/')) {
       baseUrl = '/manifest.json';
+      exactPathMatch = true;
+    }
+    
+    // Skip loading if path is ambiguous and doesn't exactly match a manifest
+    if (!exactPathMatch) {
+      console.log(`[ManifestHandler] Path ${pathWithoutParams} is not recognized as a valid PWA path, skipping manifest`);
+      return;
     }
     
     // Skip if this is the same manifest we're already using
