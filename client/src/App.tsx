@@ -124,7 +124,13 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       return;
     }
     
-    // Clean up existing manifest
+    // Skip if this is the same manifest we're already using
+    if (baseUrl === currentManifestPath) {
+      console.log(`[ManifestHandler] Manifest already set to ${baseUrl}, skipping reload`);
+      return;
+    }
+    
+    // Clean up existing manifest if we're changing to a new one
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
     if (existingLinks.length > 0) {
       console.log(`[ManifestHandler] Removing ${existingLinks.length} existing manifest links`);
