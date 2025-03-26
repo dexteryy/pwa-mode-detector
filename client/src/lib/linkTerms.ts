@@ -1,15 +1,15 @@
 /**
- * 用于处理翻译文本中的关键技术术语，自动添加MDN或web.dev的参考链接
+ * Used to process key technical terms in translated text, automatically adding reference links to MDN or web.dev
  */
 
 interface TermInfo {
-  term: string;   // 需要匹配的术语文本
-  url: string;    // 链接URL
+  term: string;   // Term text to be matched
+  url: string;    // Link URL
 }
 
-// 为每种语言定义关键术语列表
+// Define key terms for each language
 const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
-  // 英文
+  // English
   en: [
     { 
       term: "PWA", 
@@ -29,7 +29,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     }
   ],
   
-  // 简体中文
+  // Simplified Chinese
   zh: [
     { 
       term: "PWA", 
@@ -49,7 +49,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     }
   ],
   
-  // 繁体中文
+  // Traditional Chinese
   'zh-TW': [
     { 
       term: "PWA", 
@@ -69,7 +69,7 @@ const TERMS_BY_LANGUAGE: Record<string, TermInfo[]> = {
     }
   ],
   
-  // 日语
+  // Japanese
   ja: [
     { 
       term: "PWA", 
