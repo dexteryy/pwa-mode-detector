@@ -22,7 +22,7 @@ export default {
   view_demo: "デモを見る",
   technical_details: "技術詳細",
   technical_description:
-    "各PWAアプリは同じコードベースを使用していますが、Web App Manifestの設定が異なります。アプリは現在の実際の実行モードを検出し、マニフェストで宣言された予想モードと比較します。",
+    "各PWAアプリは同じコードベースを使用していますが、Web App Manifestの設定が異なります。アプリは現在の実際の実行モードを検出し、manifestで宣言された予想モードと比較します。",
   browser_support_note:
     "完全なPWA体験を得るには、PWAをサポートするブラウザ（Chrome、Edge、Safariなど）を使用してアプリケーションをインストールしてください。",
   footer_text: "PWA 表示モードデモ | モードを選択して体験を始める",
@@ -50,7 +50,7 @@ export default {
   status_browser_running: "アプリケーションは標準ブラウザモードで実行中です",
   install_capability_title: "インストール状態",
   install_disabled_manifest_browser:
-    "マニフェストの表示モードが「browser」に設定されているため、インストールをサポートしていません",
+    "manifestの表示モードが「browser」に設定されているため、インストールをサポートしていません",
   install_disabled_browser_unsupported:
     "お使いのブラウザはPWAのインストールをサポートしていません",
   install_button_disabled: "インストールは利用できません",
@@ -68,7 +68,7 @@ export default {
   device_info: "デバイス情報",
   user_agent: "ユーザーエージェント",
   detector_mode_mismatch:
-    "検出された実行モードがマニフェストで設定されているものと異なります。これはブラウザがこのモードをサポートしていないか、アプリがインストールされていないためかもしれません。",
+    "検出された実行モードがmanifestで設定されているものと異なります。これはブラウザがこのモードをサポートしていないか、アプリがインストールされていないためかもしれません。",
   status_standalone_running:
     "アプリケーションはスタンドアロンウィンドウモードで実行中です",
   status_minimal_ui_prompt:
@@ -82,7 +82,7 @@ export default {
   status_browser_checking: "このページがインストール可能かどうか確認中です...",
   checking: "確認中...",
   browser_mode_info:
-    "このページはWeb App Manifestを持っていますが、表示モードが「browser」に設定されているため、インストールできず、適切なPWAではありません",
+    "このページはWeb App Manifestを持っていますが、'display'プロパティが「browser」に設定されているため、インストールできず、適切なPWAではありません",
   mode_active: "アクティブ",
   mode_inactive: "非アクティブ",
   about_pwa_modes: "PWAモードについて",
@@ -92,13 +92,13 @@ export default {
   // 更新通知
   refreshing: "更新中...",
   refresh_process:
-    "表示モード、インストール状態を確認し、マニフェスト情報を更新しています",
+    "表示モード、インストール状態を確認し、manifest情報を更新しています",
 
-  // マニフェストビューア
-  manifest_viewer_title: "Webアプリマニフェスト",
-  view_manifest: "マニフェスト内容を表示",
+  // manifestビューア
+  manifest_viewer_title: "Web App Manifest",
+  view_manifest: "manifest内容を表示",
   loading: "読み込み中...",
-  manifest_error: "マニフェストの読み込みエラー",
+  manifest_error: "manifestの読み込みエラー",
   manifest_name: "名前",
   manifest_short_name: "短縮名",
   manifest_start_url: "開始URL",
