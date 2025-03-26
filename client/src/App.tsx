@@ -158,150 +158,38 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       document.head.appendChild(newLink);
       console.log(`[ManifestHandler] Setting manifest to: ${url}`);
       
-      // 直接使用硬编码的 manifest 数据
-      console.log(`[ManifestHandler] Using hardcoded manifest data for: ${baseUrl}`);
+      // 从服务器获取 manifest 数据
+      console.log(`[ManifestHandler] Fetching manifest from: ${url}`);
       
-      // 根据不同的 URL 类型，设置不同的硬编码 manifest 数据
-      let manifestData: WebAppManifest | null = null;
-      
-      if (baseUrl.includes('standalone')) {
-        manifestData = {
-          "id": "pwa-mode-detector-standalone",
-          "name": "PWA Mode Detector - Standalone",
-          "short_name": "PWA Standalone",
-          "start_url": "/standalone",
-          "scope": "/standalone",
-          "display": "standalone",
-          "background_color": "#ffffff",
-          "theme_color": "#3B82F6",
-          "description": "PWA 运行在独立窗口模式",
-          "icons": [
-            {
-              "src": "/icons/icon-192x192.png",
-              "sizes": "192x192",
-              "type": "image/png",
-              "purpose": "any"
-            },
-            {
-              "src": "/icons/icon-512x512.png",
-              "sizes": "512x512",
-              "type": "image/png",
-              "purpose": "any"
-            },
-            {
-              "src": "/icons/maskable-icon.png",
-              "sizes": "512x512",
-              "type": "image/png",
-              "purpose": "maskable"
-            }
-          ]
-        };
-      } else if (baseUrl.includes('minimal-ui')) {
-        manifestData = {
-          "id": "pwa-mode-detector-minimal-ui",
-          "name": "PWA Mode Detector - Minimal UI",
-          "short_name": "PWA Minimal UI",
-          "start_url": "/minimal-ui",
-          "scope": "/minimal-ui",
-          "display": "minimal-ui",
-          "background_color": "#ffffff",
-          "theme_color": "#3B82F6",
-          "description": "PWA 运行在最小界面模式",
-          "icons": [
-            {
-              "src": "/icons/icon-192x192.png",
-              "sizes": "192x192",
-              "type": "image/png",
-              "purpose": "any"
-            },
-            {
-              "src": "/icons/icon-512x512.png",
-              "sizes": "512x512",
-              "type": "image/png",
-              "purpose": "any"
-            },
-            {
-              "src": "/icons/maskable-icon.png",
-              "sizes": "512x512",
-              "type": "image/png",
-              "purpose": "maskable"
-            }
-          ]
-        };
-      } else if (baseUrl.includes('fullscreen')) {
-        manifestData = {
-          "id": "pwa-mode-detector-fullscreen",
-          "name": "PWA Mode Detector - Fullscreen",
-          "short_name": "PWA Fullscreen",
-          "start_url": "/fullscreen",
-          "scope": "/fullscreen",
-          "display": "fullscreen",
-          "background_color": "#ffffff",
-          "theme_color": "#3B82F6",
-          "description": "PWA 运行在全屏模式",
-          "icons": [
-            {
-              "src": "/icons/icon-192x192.png",
-              "sizes": "192x192",
-              "type": "image/png",
-              "purpose": "any"
-            },
-            {
-              "src": "/icons/icon-512x512.png",
-              "sizes": "512x512",
-              "type": "image/png",
-              "purpose": "any"
-            },
-            {
-              "src": "/icons/maskable-icon.png",
-              "sizes": "512x512",
-              "type": "image/png",
-              "purpose": "maskable"
-            }
-          ]
-        };
-      } else if (baseUrl.includes('browser')) {
-        manifestData = {
-          "id": "pwa-mode-detector-browser",
-          "name": "PWA Mode Detector - Browser",
-          "short_name": "PWA Browser",
-          "start_url": "/browser",
-          "scope": "/browser",
-          "display": "browser",
-          "background_color": "#ffffff",
-          "theme_color": "#3B82F6",
-          "description": "PWA 运行在浏览器模式",
-          "icons": [
-            {
-              "src": "/icons/icon-192x192.png",
-              "sizes": "192x192",
-              "type": "image/png",
-              "purpose": "any"
-            },
-            {
-              "src": "/icons/icon-512x512.png",
-              "sizes": "512x512",
-              "type": "image/png",
-              "purpose": "any"
-            },
-            {
-              "src": "/icons/maskable-icon.png",
-              "sizes": "512x512",
-              "type": "image/png",
-              "purpose": "maskable"
-            }
-          ]
-        };
-      }
-      
-      if (manifestData) {
-        setManifestInfo(manifestData);
-        setIsLoading(false);
-        console.log('[ManifestHandler] Using hardcoded manifest data:', manifestData);
-      } else {
-        setError('Unknown manifest type');
-        setIsLoading(false);
-      }
+      fetch(url, {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        },
+        cache: 'no-store'
+      })
+        .then(response => {
+          if (!response.ok) {
+            console.error(`[ManifestHandler] Server responded with status ${response.status}`);
+            throw new Error(`Failed to fetch manifest: ${response.status}`);
+          }
+          console.log(`[ManifestHandler] Manifest fetch successful, parsing JSON...`);
+          return response.json();
+        })
+        .then(data => {
+          console.log('[ManifestHandler] Manifest data loaded:', data);
+          if (!data || Object.keys(data).length === 0) {
+            throw new Error('Manifest data is empty');
+          }
+          setManifestInfo(data);
+          setIsLoading(false);
+        })
+        .catch(err => {
+          console.error('[ManifestHandler] Error loading manifest:', err);
+          setError(err.message || 'Unknown error loading manifest');
+          setIsLoading(false);
+        });
     }
   }, [location, currentManifestPath]);
   
