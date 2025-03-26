@@ -79,8 +79,8 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     return () => clearTimeout(timer);
   }, [forcedPathKey]); // Depends on forcedPathKey to ensure detection resets when path changes
 
-  // Detect the current display mode
-  const checkDisplayMode = () => {
+  // Helper function to get current mode without updating state
+  const getCurrentDisplayMode = () => {
     // Default to browser mode
     let detectedMode = "browser";
     
@@ -99,6 +99,12 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       }
     }
     
+    return detectedMode;
+  };
+  
+  // Detect the current display mode and update state
+  const checkDisplayMode = () => {
+    const detectedMode = getCurrentDisplayMode();
     setCurrentMode(detectedMode);
   };
 
@@ -207,33 +213,47 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       setDeferredPrompt(null);
       // Set installed flag
       setHasBeenInstalled(true);
-      // Force recheck of display mode - the PWA might open in a new window
-      checkDisplayMode();
       
-      console.log(`[usePwaDetection] App has been installed, updated status`);
+      console.log(`[usePwaDetection] App has been installed, updated installed status flag`);
       
-      // Sometimes the display mode doesn't change immediately, so set a timer to check again
+      // Instead of calling checkDisplayMode directly, just check if the mode has changed
+      // This avoids duplicate state updates that can cause flickering
       setTimeout(() => {
-        checkDisplayMode();
-        console.log(`[usePwaDetection] Delayed check after install`);
+        const newMode = getCurrentDisplayMode();
+        if (newMode !== currentMode) {
+          console.log(`[usePwaDetection] Display mode changed in appinstalled event from ${currentMode} to ${newMode}`);
+          checkDisplayMode();
+        }
       }, 1000);
     };
     
     window.addEventListener("appinstalled", handleAppInstalled);
     
-    // Also add a timer to periodically check display mode while the app is running
+    // Also add a timer to periodically check display mode while the app is running, but at a slower rate
+    // to avoid causing UI flickering
     const intervalId = setInterval(() => {
       // Only check if the app is visible
       if (document.visibilityState === "visible") {
-        checkDisplayMode();
-        console.log(`[usePwaDetection] Periodic display mode check`);
+        // Check the current mode before updating state to avoid unnecessary renders
+        const currentDisplayMode = getCurrentDisplayMode();
+        if (currentDisplayMode !== currentMode) {
+          console.log(`[usePwaDetection] Display mode changed from ${currentMode} to ${currentDisplayMode}, updating`);
+          checkDisplayMode();
+        }
       }
-    }, 5000); // Check every 5 seconds
+    }, 10000); // Reduced frequency - check every 10 seconds
     
-    // Also check when visibility changes
+    // Note: We're using the getCurrentDisplayMode function defined outside this useEffect
+    
+    // Also check when visibility changes, but avoid unnecessary state updates
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        checkDisplayMode();
+        // Check if the mode has actually changed before updating state
+        const newMode = getCurrentDisplayMode();
+        if (newMode !== currentMode) {
+          console.log(`[usePwaDetection] Display mode changed after visibility change: ${currentMode} -> ${newMode}`);
+          checkDisplayMode();
+        }
       }
     };
     
@@ -270,17 +290,20 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
           setHasBeenInstalled(true);
           
           // Even without the appinstalled event, we should manually 
-          // update our state after successful installation
+          // update our state after successful installation - but we only need a single delayed check
+          // Instead of multiple checks that might cause UI flickering
           setTimeout(() => {
-            checkDisplayMode();
-            console.log("[usePwaDetection] Post-install display mode check");
-          }, 500);
-          
-          // Add a backup check in case the display mode doesn't change immediately
-          setTimeout(() => {
-            checkDisplayMode();
-            console.log("[usePwaDetection] Final post-install display mode check");
-          }, 3000);
+            // Check the current mode before updating state
+            const newMode = getCurrentDisplayMode();
+            if (newMode !== currentMode) {
+              console.log(`[usePwaDetection] Display mode changed after install from ${currentMode} to ${newMode}`);
+              checkDisplayMode();
+            } else {
+              console.log("[usePwaDetection] Post-install mode unchanged, setting installed flag");
+              // Even if the mode hasn't changed, update the hasBeenInstalled flag
+              setHasBeenInstalled(true);
+            }
+          }, 1500); // Single check with a moderate delay
         } else {
           console.log("[usePwaDetection] User dismissed installation prompt");
         }
