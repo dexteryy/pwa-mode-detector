@@ -35,6 +35,11 @@ export default {
   "already_installed": "Already installed",
   "install_pwa": "Install PWA",
   "refresh_detection": "Refresh",
+  "status_browser_running": "Application is running in standard browser mode",
+  "install_capability_title": "Installation Status",
+  "install_disabled_manifest_browser": "Can't install: Display mode in manifest is set to 'browser', which doesn't support installation",
+  "install_disabled_browser_unsupported": "Can't install: Your browser doesn't support PWA installation or the app is missing required features",
+  "install_button_disabled": "Installation not available",
 
   // PWA Detector
   "detector_title": "PWA Display Mode Detector",
