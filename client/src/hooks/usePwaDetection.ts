@@ -21,9 +21,9 @@ export function usePwaDetection(): PwaDetection {
   // Define available display modes with i18n
   const displayModes: DisplayMode[] = [
     {
-      name: "standalone",
-      displayName: t('standalone_name'),
-      description: t('standalone_description')
+      name: "browser",
+      displayName: t('browser_name'),
+      description: t('browser_description')
     },
     {
       name: "minimal-ui",
@@ -31,14 +31,14 @@ export function usePwaDetection(): PwaDetection {
       description: t('minimal_ui_description')
     },
     {
+      name: "standalone",
+      displayName: t('standalone_name'),
+      description: t('standalone_description')
+    },
+    {
       name: "fullscreen",
       displayName: t('fullscreen_name'),
       description: t('fullscreen_description')
-    },
-    {
-      name: "browser",
-      displayName: t('browser_name'),
-      description: t('browser_description')
     }
   ];
 

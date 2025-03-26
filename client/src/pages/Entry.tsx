@@ -12,10 +12,10 @@ interface DisplayMode {
 
 const getDisplayModes = (t: any): DisplayMode[] => [
   {
-    name: "standalone",
-    displayName: t("standalone_name"),
-    description: t("standalone_description"),
-    icon: "tablet_mac"
+    name: "browser",
+    displayName: t("browser_name"),
+    description: t("browser_description"),
+    icon: "public"
   },
   {
     name: "minimal-ui",
@@ -24,16 +24,16 @@ const getDisplayModes = (t: any): DisplayMode[] => [
     icon: "tab"
   },
   {
+    name: "standalone",
+    displayName: t("standalone_name"),
+    description: t("standalone_description"),
+    icon: "tablet_mac"
+  },
+  {
     name: "fullscreen",
     displayName: t("fullscreen_name"),
     description: t("fullscreen_description"),
     icon: "fullscreen"
-  },
-  {
-    name: "browser",
-    displayName: t("browser_name"),
-    description: t("browser_description"),
-    icon: "public"
   }
 ];
 
