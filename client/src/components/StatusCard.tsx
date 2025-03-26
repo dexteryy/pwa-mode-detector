@@ -45,8 +45,8 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
 
   return (
     <div className={cardClassName}>
-      <div className="flex items-center mb-4">
-        <span className={iconClassName}>{iconName}</span>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4">
+        <span className={iconClassName + "mb-2 sm:mb-0"}>{iconName}</span>
         <div>
           <h2 className="text-xl font-semibold text-dark">{statusText}</h2>
           <p className="text-gray-500">{promptText}</p>

@@ -46,11 +46,13 @@ const Entry = () => {
       {/* Header */}
       <header className="bg-blue-500 text-white shadow-md">
         <div className="container mx-auto px-4 py-6 relative">
-          <div className="absolute right-4 top-4">
+          <div className="absolute right-4 top-4 z-10">
             <LanguageSwitcher />
           </div>
-          <h1 className="text-2xl font-bold text-center">{t('entry_title')}</h1>
-          <p className="text-center mt-2 text-blue-100">{t('entry_subtitle')}</p>
+          <div className="pt-8 sm:pt-0">
+            <h1 className="text-2xl font-bold text-center">{t('entry_title')}</h1>
+            <p className="text-center mt-2 text-blue-100">{t('entry_subtitle')}</p>
+          </div>
         </div>
       </header>
 
