@@ -21,10 +21,10 @@ const LanguageSwitcher: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="rounded-full flex items-center justify-center">
-          <Globe className="h-[1.2rem] w-[1.2rem] opacity-100" />
+        <div className="bg-white text-blue-500 w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-50 transition-colors cursor-pointer">
+          <Globe className="h-[1.2rem] w-[1.2rem]" />
           <span className="sr-only">{t('language')}</span>
-        </Button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem 
