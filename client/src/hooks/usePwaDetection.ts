@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { ManifestContext } from "../App";
 
 interface DisplayMode {
   name: string;
@@ -135,17 +136,16 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     setCurrentMode(detectedMode);
   };
 
-  // Use context for manifest (context will be added in step 3)
+  // Use ManifestContext to access manifest data
+  const { manifestInfo: contextManifestInfo } = useContext(ManifestContext);
+  
+  // Update our local state when context changes
   useEffect(() => {
-    // Instead of fetching manifest directly, we will use the context in the next step
-    console.log(`[usePwaDetection] Will use ManifestContext in next update`);
-    
-    // For now, check if links exist to detect manifest presence
-    const manifestLinks = document.querySelectorAll('link[rel="manifest"]');
-    if (manifestLinks.length > 0) {
-      console.log(`[usePwaDetection] Found manifest link, will use context data when implemented`);
+    if (contextManifestInfo) {
+      console.log(`[usePwaDetection] Updated manifest info from context:`, contextManifestInfo);
+      setManifestInfo(contextManifestInfo);
     }
-  }, [forcedPathKey]); // Reload when path changes
+  }, [contextManifestInfo]);
 
   // Set up event listeners for display mode changes
   useEffect(() => {
@@ -320,7 +320,7 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
         clearInterval(quickCheckIntervalId);
       }
     };
-  }, [displayModes, currentMode, hasBeenInstalled, localStorageKey, forcedPathKey]); // Depends on displayModes, current mode, installed state and path
+  }, [displayModes, currentMode, hasBeenInstalled, localStorageKey, forcedPathKey, manifestInfo]); // Depends on displayModes, current mode, installed state, manifest and path
 
   // Function to prompt installation
   const promptInstall = () => {
