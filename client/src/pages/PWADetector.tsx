@@ -31,7 +31,7 @@ const PWADetector = () => {
   return (
     <div className="bg-gray-100 font-sans min-h-screen">
       {/* Header */}
-      <header className="bg-blue-500 text-white shadow-md">
+      <header className="bg-blue-600 text-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center">
             <span className="material-icons mr-2">devices</span>
@@ -39,14 +39,14 @@ const PWADetector = () => {
           </div>
           <div className="flex items-center gap-2">
             <Link href="/">
-              <div className="bg-white text-blue-500 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors flex items-center cursor-pointer">
+              <div className="bg-white text-blue-600 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors flex items-center cursor-pointer">
                 <span className="material-icons text-sm mr-1">home</span>
                 返回首页
               </div>
             </Link>
             <button 
               onClick={handleRefresh}
-              className={`bg-white text-blue-500 w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-50 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
+              className={`bg-white text-blue-600 w-10 h-10 flex items-center justify-center rounded-full hover:bg-blue-50 transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 
               aria-label="Refresh detection"
             >
               <span className="material-icons">refresh</span>
@@ -109,7 +109,7 @@ const PWADetector = () => {
         <div className="fixed bottom-4 right-4">
           <button 
             onClick={promptInstall}
-            className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 flex items-center"
+            className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 flex items-center"
           >
             <span className="material-icons mr-1">get_app</span>
             安装应用

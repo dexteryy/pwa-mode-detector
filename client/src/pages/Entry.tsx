@@ -32,7 +32,7 @@ const Entry = () => {
   return (
     <div className="bg-gray-100 font-sans min-h-screen">
       {/* Header */}
-      <header className="bg-blue-500 text-white shadow-md">
+      <header className="bg-blue-600 text-white shadow-md">
         <div className="container mx-auto px-4 py-6">
           <h1 className="text-2xl font-bold text-center">PWA 展示模式演示</h1>
           <p className="text-center mt-2 text-blue-100">选择一种展示模式来查看 PWA 的不同运行方式</p>
@@ -60,14 +60,14 @@ const Entry = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {displayModes.map(mode => (
               <Link key={mode.name} href={`/pwa/${mode.name}`}>
-                <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-500 cursor-pointer">
+                <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow border-2 border-transparent hover:border-blue-600 cursor-pointer">
                   <div className="flex items-center mb-4">
-                    <span className="material-icons text-4xl text-blue-500 mr-3">{mode.icon}</span>
+                    <span className="material-icons text-4xl text-blue-600 mr-3">{mode.icon}</span>
                     <h3 className="text-lg font-semibold text-gray-800">{mode.displayName}</h3>
                   </div>
                   <p className="text-gray-600">{mode.description}</p>
                   <div className="mt-4 flex justify-end">
-                    <span className="text-blue-500 font-medium flex items-center">
+                    <span className="text-blue-600 font-medium flex items-center">
                       查看演示
                       <span className="material-icons ml-1">arrow_forward</span>
                     </span>
