@@ -43,30 +43,23 @@ const Entry = () => {
   const { t } = useTranslation();
   const displayModes = getDisplayModes(t);
 
-  // Actively remove all manifest links when entry page loads
+  // Make sure no manifest is present on entry page
   useEffect(() => {
-    // Remove all existing manifest links
+    // Entry page should not have any manifest, check if ManifestHandler left anything
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
-    existingLinks.forEach(link => {
-      if (link.parentNode) {
-        link.parentNode.removeChild(link);
-      }
-    });
-    console.log('[Entry] Actively removed all manifest links to prevent install button from showing');
-
-    // Add special empty manifest to further prevent install button display
-    const emptyManifest = document.createElement('link');
-    emptyManifest.rel = 'manifest';
-    emptyManifest.href = 'data:application/json,{}';
-    document.head.appendChild(emptyManifest);
-
-    // Cleanup on exit
-    return () => {
-      const emptyLink = document.querySelector('link[href="data:application/json,{}"]');
-      if (emptyLink && emptyLink.parentNode) {
-        emptyLink.parentNode.removeChild(emptyLink);
-      }
-    };
+    if (existingLinks.length > 0) {
+      // Remove all existing manifest links to ensure no PWA installation is possible
+      existingLinks.forEach(link => {
+        if (link.parentNode) {
+          link.parentNode.removeChild(link);
+        }
+      });
+      console.log('[Entry] Removed manifest links to prevent PWA installation on entry page');
+    } else {
+      console.log('[Entry] No manifest links found, entry page is correctly configured');
+    }
+    
+    // No longer adding empty manifest - this was causing unintended behavior
   }, []);
   
   return (

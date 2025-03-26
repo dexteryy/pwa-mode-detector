@@ -25,37 +25,48 @@ function ManifestHandler() {
     const existingLinks = document.querySelectorAll('link[rel="manifest"]');
     existingLinks.forEach(link => link.parentNode?.removeChild(link));
     
+    // For entry page ('/') or any unspecified pages, don't add any manifest and exit early
+    if (location === '/' || 
+        (!location.startsWith('/standalone') && 
+         !location.startsWith('/minimal-ui') && 
+         !location.startsWith('/fullscreen') && 
+         !location.startsWith('/browser') && 
+         !location.startsWith('/pwa/'))) {
+      console.log('[ManifestHandler] Root or unknown path detected, no manifest added');
+      return;
+    }
+    
     // Add timestamp to prevent caching issues
     const timestamp = new Date().getTime();
     
-    // Create new manifest links for PWA pages
+    // Create new manifest links only for PWA pages
     if (location.startsWith('/standalone')) {
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
       newLink.href = `/manifests/standalone.json?v=${timestamp}`;
       document.head.appendChild(newLink);
-      console.log('Setting manifest to: /manifests/standalone.json');
+      console.log('[ManifestHandler] Setting manifest to: /manifests/standalone.json');
     } 
     else if (location.startsWith('/minimal-ui')) {
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
       newLink.href = `/manifests/minimal-ui.json?v=${timestamp}`;
       document.head.appendChild(newLink);
-      console.log('Setting manifest to: /manifests/minimal-ui.json');
+      console.log('[ManifestHandler] Setting manifest to: /manifests/minimal-ui.json');
     }
     else if (location.startsWith('/fullscreen')) {
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
       newLink.href = `/manifests/fullscreen.json?v=${timestamp}`;
       document.head.appendChild(newLink);
-      console.log('Setting manifest to: /manifests/fullscreen.json');
+      console.log('[ManifestHandler] Setting manifest to: /manifests/fullscreen.json');
     }
     else if (location.startsWith('/browser')) {
       const newLink = document.createElement('link');
       newLink.rel = 'manifest';
       newLink.href = `/manifests/browser.json?v=${timestamp}`;
       document.head.appendChild(newLink);
-      console.log('Setting manifest to: /manifests/browser.json');
+      console.log('[ManifestHandler] Setting manifest to: /manifests/browser.json');
     }
     else if (location.startsWith('/pwa/')) {
       // For compatibility with old PWA paths, set default manifest
@@ -63,10 +74,7 @@ function ManifestHandler() {
       newLink.rel = 'manifest';
       newLink.href = `/manifest.json?v=${timestamp}`;
       document.head.appendChild(newLink);
-      console.log('Setting default manifest: /manifest.json');
-    } else {
-      // For entry page or other non-PWA pages, don't add any manifest
-      console.log('No manifest link added (non-PWA page)');
+      console.log('[ManifestHandler] Setting default manifest: /manifest.json');
     }
     
     // Also clean up all manifest links when component unmounts
