@@ -75,7 +75,7 @@ export default {
   status_browser_checking: "正在檢查此頁面是否可安裝...",
   checking: "檢查中...",
   browser_mode_info:
-    "此頁面雖然具有 Web App Manifest，但由於 display 屬性設置為 'browser'，因此無法安裝，不是完整的 PWA",
+    "此頁面雖然具有 Web App Manifest，但由於 display 屬性設置為 'browser'，因此無法安裝為 PWA",
   mode_active: "已啟用",
   mode_inactive: "未啟用",
   about_pwa_modes: "關於 PWA 模式",
@@ -83,13 +83,13 @@ export default {
 
   // 刷新提示
   refreshing: "正在刷新...",
-  refresh_process: "正在檢查顯示模式、安裝狀態及更新應用清單信息",
+  refresh_process: "正在檢查 display mode、安裝狀態及更新 Web App Manifest 信息",
 
   // Manifest 查看器
   manifest_viewer_title: "Web App Manifest",
-  view_manifest: "查看清單內容",
+  view_manifest: "查看 Manifest 內容",
   loading: "加載中...",
-  manifest_error: "加載清單出錯",
+  manifest_error: "加載 Manifest 出錯",
   manifest_name: "名稱",
   manifest_short_name: "短名稱",
   manifest_start_url: "起始URL",
