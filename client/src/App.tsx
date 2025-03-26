@@ -69,44 +69,39 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     };
   }, []); // Empty dependency array means this runs only on mount and unmount
   
-  // 处理路径变化时的manifest加载
+  // Handle manifest loading when path changes
   useEffect(() => {
     
-    // 构建基础URL
+    // Build base URL
     let baseUrl: string | null = null;
     let exactPathMatch = false;
     
-    // 获取精确路径匹配
+    // Get exact path match
     const pathWithoutParams = location.split('?')[0];
     
-    console.log(`[ManifestHandler] 处理路径: ${pathWithoutParams}`);
-    
-    // 对于入口页面，不需要manifest
+    // For entry page, no manifest is needed
     if (location === '/') {
-      console.log('[ManifestHandler] 检测到入口页面，无需manifest');
       
-      // 如果之前有manifest链接，移除它
+      // If there's a previous manifest link, remove it
       const existingManifestLink = document.querySelector('link[rel="manifest"]');
       if (existingManifestLink) {
         existingManifestLink.parentNode?.removeChild(existingManifestLink);
-        console.log('[ManifestHandler] 从文档中移除了manifest链接');
       }
       
-      // 只有在状态需要更改时才更新状态，避免不必要的渲染
+      // Only update state if changes are needed, avoid unnecessary rendering
       if (currentManifestPath || manifestInfo || manifestUrl) {
         setCurrentManifestPath(null);
         setManifestInfo(null);
         setManifestUrl(null);
-        console.log('[ManifestHandler] 重置了入口页面的manifest状态');
       }
       
-      // 重置请求跟踪状态
+      // Reset request tracking state
       manifestRequested.current = {};
       
       return;
     }
     
-    // 根据精确路径确定正确的manifest URL
+    // Determine the correct manifest URL based on exact path
     if (pathWithoutParams === '/standalone') {
       baseUrl = '/manifests/standalone.json';
       exactPathMatch = true;
@@ -120,102 +115,90 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       exactPathMatch = true;
     }
     else if (pathWithoutParams === '/browser') {
-      // 特殊模式 - 显示为浏览器，不应被安装
+      // Special mode - displayed as browser, should not be installed
       baseUrl = '/manifests/browser.json';
       exactPathMatch = true;
-      console.log("[ManifestHandler] 检测到浏览器模式manifest路径 (display:browser)");
     }
     
-    // 如果路径不明确且不精确匹配manifest，则跳过加载
+    // If path is unclear and doesn't exactly match a manifest, skip loading
     if (!exactPathMatch) {
-      console.log(`[ManifestHandler] 路径 ${pathWithoutParams} 未被识别为有效的PWA路径，跳过manifest`);
       return;
     }
     
-    // 优化：如果是同一个manifest并且已经加载过数据，直接使用缓存
+    // Optimization: If it's the same manifest and data is already loaded, use cache
     if (baseUrl === currentManifestPath && manifestInfo) {
-      console.log(`[ManifestHandler] manifest已经为 ${baseUrl} 加载，使用缓存数据`);
       return;
     }
     
-    // 如果这个manifest已经被请求过，等待其响应而不是再次请求
+    // If this manifest has already been requested, wait for its response instead of requesting again
     if (baseUrl && manifestRequested.current[baseUrl]) {
-      console.log(`[ManifestHandler] 已经请求过manifest: ${baseUrl}，等待响应中`);
       return;
     }
     
-    // 重置错误状态
+    // Reset error state
     setError(null);
     
-    // 如果有有效的URL，创建link标签并获取manifest数据
+    // If there's a valid URL, create a link tag and fetch manifest data
     if (baseUrl) {
-      // 标记该manifest为已请求
+      // Mark this manifest as requested
       manifestRequested.current[baseUrl] = true;
       
-      // URL不添加时间戳
+      // URL without adding timestamp
       const url = baseUrl;
       
       setIsLoading(true);
       setManifestUrl(url);
       setCurrentManifestPath(baseUrl);
       
-      // 检查现有的manifest链接
+      // Check existing manifest link
       const existingManifestLink = document.querySelector('link[rel="manifest"]');
       
-      // 如果已经有相同的链接，则不做任何改变
+      // If there's already the same link, don't make any changes
       if (existingManifestLink && existingManifestLink.getAttribute('href') === url) {
-        console.log(`[ManifestHandler] Manifest链接已经设置为${url}，无需更改`);
+        // Link is already set
       } else {
-        // 创建新的manifest链接
+        // Create new manifest link
         const newLink = document.createElement('link');
         newLink.rel = 'manifest';
         newLink.href = url;
         
-        // 如果有旧的链接，替换它；否则直接添加新链接
+        // If there's an old link, replace it; otherwise add the new link directly
         if (existingManifestLink) {
           document.head.replaceChild(newLink, existingManifestLink);
         } else {
           document.head.appendChild(newLink);
         }
-        console.log(`[ManifestHandler] 设置manifest链接为: ${url}`);
       }
       
-      // 添加请求超时保护
+      // Add request timeout protection
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
       
-      // 从服务器获取 manifest 数据（允许浏览器缓存）
-      console.log(`[ManifestHandler] 正在获取manifest: ${url}`);
-      
+      // Fetch manifest data from server (allow browser caching)
       fetch(url, { signal: controller.signal })
         .then(response => {
           clearTimeout(timeoutId);
           if (!response.ok) {
-            console.error(`[ManifestHandler] 服务器返回状态码 ${response.status}`);
-            throw new Error(`获取manifest失败: ${response.status}`);
+            throw new Error(`Failed to fetch manifest: ${response.status}`);
           }
-          console.log(`[ManifestHandler] Manifest获取成功，正在解析JSON...`);
           return response.json();
         })
         .then(data => {
-          console.log('[ManifestHandler] Manifest数据已加载:', data);
           if (!data || Object.keys(data).length === 0) {
-            throw new Error('Manifest数据为空');
+            throw new Error('Manifest data is empty');
           }
           setManifestInfo(data);
           setIsLoading(false);
         })
         .catch(err => {
           if (err.name === 'AbortError') {
-            console.error('[ManifestHandler] 获取请求超时');
-            setError('请求超时');
+            setError('Request timeout');
           } else {
-            console.error('[ManifestHandler] 加载manifest时出错:', err);
-            setError(err.message || '加载manifest时出现未知错误');
+            setError(err.message || 'Unknown error loading manifest');
           }
           setIsLoading(false);
           
-          // 如果获取失败，重置请求标记以便可以再次尝试
+          // If fetch fails, reset request flag so we can try again
           delete manifestRequested.current[baseUrl];
         });
     }
