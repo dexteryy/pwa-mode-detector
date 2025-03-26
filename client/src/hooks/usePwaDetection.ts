@@ -201,13 +201,34 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
     
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     
-    // Hide install button after app is installed
+    // Hide install button and update state after app is installed
     const handleAppInstalled = () => {
+      // Clear the installation prompt
       setDeferredPrompt(null);
-      console.log(`[usePwaDetection] App has been installed`);
+      // Set installed flag
+      setHasBeenInstalled(true);
+      // Force recheck of display mode - the PWA might open in a new window
+      checkDisplayMode();
+      
+      console.log(`[usePwaDetection] App has been installed, updated status`);
+      
+      // Sometimes the display mode doesn't change immediately, so set a timer to check again
+      setTimeout(() => {
+        checkDisplayMode();
+        console.log(`[usePwaDetection] Delayed check after install`);
+      }, 1000);
     };
     
     window.addEventListener("appinstalled", handleAppInstalled);
+    
+    // Also add a timer to periodically check display mode while the app is running
+    const intervalId = setInterval(() => {
+      // Only check if the app is visible
+      if (document.visibilityState === "visible") {
+        checkDisplayMode();
+        console.log(`[usePwaDetection] Periodic display mode check`);
+      }
+    }, 5000); // Check every 5 seconds
     
     // Also check when visibility changes
     const handleVisibilityChange = () => {
@@ -226,6 +247,11 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
       window.removeEventListener("appinstalled", handleAppInstalled);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      
+      // Clear the periodic check interval
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
     };
   }, [displayModes]); // Only depends on displayModes
 
@@ -239,6 +265,22 @@ export function usePwaDetection(forcedPathKey?: string): PwaDetection {
       deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
         if (choiceResult.outcome === "accepted") {
           console.log("[usePwaDetection] User accepted installation prompt");
+          
+          // Update app state immediately after user accepts
+          setHasBeenInstalled(true);
+          
+          // Even without the appinstalled event, we should manually 
+          // update our state after successful installation
+          setTimeout(() => {
+            checkDisplayMode();
+            console.log("[usePwaDetection] Post-install display mode check");
+          }, 500);
+          
+          // Add a backup check in case the display mode doesn't change immediately
+          setTimeout(() => {
+            checkDisplayMode();
+            console.log("[usePwaDetection] Final post-install display mode check");
+          }, 3000);
         } else {
           console.log("[usePwaDetection] User dismissed installation prompt");
         }
