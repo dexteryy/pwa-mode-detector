@@ -43,9 +43,6 @@ const PWADetector = () => {
     userAgent 
   } = usePwaDetection();
   
-  // 路径变化时的重置逻辑已转移到 ManifestHandler 组件
-  // 不在此处重置检查状态，避免重复重置
-  
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // PWADetector 中不再需要动态管理 manifest，这部分功能已由 App.tsx 中的 ManifestHandler 处理

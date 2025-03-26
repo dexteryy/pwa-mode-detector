@@ -34,8 +34,8 @@ function registerStateChangeListener(listener: Function) {
   };
 }
 
-// 更新全局状态 - 导出以便 ManifestHandler 能使用
-export function updateGlobalState(updates: Partial<typeof globalCheckState>) {
+// 更新全局状态
+function updateGlobalState(updates: Partial<typeof globalCheckState>) {
   Object.assign(globalCheckState, updates);
   // 通知所有监听器
   globalCheckState.listeners.forEach(listener => listener());
@@ -112,9 +112,6 @@ export function usePwaDetection(): PwaDetection {
     setCurrentMode(detectedMode);
   };
 
-  // 路径变化监听逻辑已经转移到 ManifestHandler 组件
-  // 移除这里的重复逻辑，避免重复重置检查状态
-
   // Set up event listeners for display mode changes
   useEffect(() => {
     // Set user agent
@@ -142,14 +139,18 @@ export function usePwaDetection(): PwaDetection {
       mediaQuery.addEventListener("change", handleChange);
     });
     
-    // 总是启动一个检查定时器，确保每个新页面都有正确的检查状态
-    const checkingTimer = setTimeout(() => {
-      // 初始检查完成后，更新全局状态
-      updateGlobalState({
-        hasCompletedInitialCheck: true,
-        isChecking: false
-      });
-    }, 2000); // 增加时间确保安装状态可以被正确确定
+    // 只在全局状态未完成检查时才执行初始检查
+    let checkingTimer: any = null;
+    if (!globalCheckState.hasCompletedInitialCheck) {
+      // 设置为检查状态，并等待延迟完成初始检查
+      checkingTimer = setTimeout(() => {
+        // 初始检查完成后，更新全局状态
+        updateGlobalState({
+          hasCompletedInitialCheck: true,
+          isChecking: false
+        });
+      }, 2000); // 增加时间确保安装状态可以被正确确定
+    }
     
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
