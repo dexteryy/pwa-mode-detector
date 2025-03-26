@@ -83,18 +83,14 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     // Log for debugging
     console.log(`[ManifestHandler] Processing path: ${pathWithoutParams}`);
     
-    // Only load manifests for specific PWA paths
-    // All other paths like entry page ('/') or custom paths shouldn't have manifests
-    const validPwaModes = ['/standalone', '/minimal-ui', '/fullscreen'];
-    const isPwaPath = validPwaModes.includes(pathWithoutParams) || 
-                     pathWithoutParams.startsWith('/pwa/');
-                     
-    // Special case: browser mode should use specific browser manifest
-    const isBrowserPath = pathWithoutParams === '/browser';
-    
-    // Skip manifest loading for non-PWA paths
-    if (!isPwaPath && !isBrowserPath) {
-      console.log('[ManifestHandler] Non-PWA path detected, no manifest needed:', pathWithoutParams);
+    // For entry page ('/') or any unspecified pages, don't add any manifest and exit early
+    // Also explicitly exit for the '/browser' path, as it's a special mode
+    if (location === '/' || 
+        (pathWithoutParams !== '/standalone' && 
+         pathWithoutParams !== '/minimal-ui' && 
+         pathWithoutParams !== '/fullscreen' && 
+         !pathWithoutParams.startsWith('/pwa/'))) {
+      console.log('[ManifestHandler] Entry page or non-PWA path detected, no manifest needed');
       
       // If we previously had a manifest, clean it up
       if (currentManifestPath) {
@@ -107,41 +103,28 @@ function ManifestHandler({ children }: { children: ReactNode }) {
       return;
     }
     
-    // Use the list of valid PWA modes to determine manifest URL
-    if (isPwaPath) {
-      // Map path to specific manifest file
-      if (pathWithoutParams === '/standalone') {
-        baseUrl = '/manifests/standalone.json';
-        exactPathMatch = true;
-      } 
-      else if (pathWithoutParams === '/minimal-ui') {
-        baseUrl = '/manifests/minimal-ui.json';
-        exactPathMatch = true;
-      }
-      else if (pathWithoutParams === '/fullscreen') {
-        baseUrl = '/manifests/fullscreen.json';
-        exactPathMatch = true;
-      }
-      else if (pathWithoutParams.startsWith('/pwa/')) {
-        // 为动态路径提供对应的manifest（不再使用根目录的manifest.json）
-        // 从URL中提取显示模式
-        const displayMode = pathWithoutParams.replace('/pwa/', '');
-        if (['standalone', 'minimal-ui', 'fullscreen', 'browser'].includes(displayMode)) {
-          baseUrl = `/manifests/${displayMode}.json`;
-        } else {
-          // 如果没有指定有效的显示模式，默认使用standalone
-          baseUrl = '/manifests/standalone.json';
-        }
-        exactPathMatch = true;
-        console.log(`[ManifestHandler] Dynamic PWA path, using manifest: ${baseUrl}`);
-      }
+    // Determine correct manifest URL based on exact path
+    if (pathWithoutParams === '/standalone') {
+      baseUrl = '/manifests/standalone.json';
+      exactPathMatch = true;
+    } 
+    else if (pathWithoutParams === '/minimal-ui') {
+      baseUrl = '/manifests/minimal-ui.json';
+      exactPathMatch = true;
     }
-    // Handle browser path separately
-    else if (isBrowserPath) {
+    else if (pathWithoutParams === '/fullscreen') {
+      baseUrl = '/manifests/fullscreen.json';
+      exactPathMatch = true;
+    }
+    else if (pathWithoutParams === '/browser') {
       // Special mode for browser display - should NOT be installed
       baseUrl = '/manifests/browser.json';
       exactPathMatch = true;
       console.log("[ManifestHandler] Browser mode manifest path detected (display:browser)");
+    }
+    else if (pathWithoutParams.startsWith('/pwa/')) {
+      baseUrl = '/manifest.json';
+      exactPathMatch = true;
     }
     
     // Skip loading if path is ambiguous and doesn't exactly match a manifest
@@ -167,43 +150,8 @@ function ManifestHandler({ children }: { children: ReactNode }) {
     setManifestInfo(null);
     setError(null);
     
-    // For browser path, use browser manifest but DON'T add a manifest link
-    // This prevents the browser from thinking it's a PWA and offering installation
-    if (isBrowserPath) {
-      // Just fetch the manifest for display purposes
-      const timestamp = new Date().getTime();
-      const url = `/manifests/browser.json?v=${timestamp}`;
-      
-      setIsLoading(true);
-      setManifestUrl(url);
-      setCurrentManifestPath('/manifests/browser.json');
-      
-      console.log(`[ManifestHandler] Browser mode - fetching manifest data without adding link: ${url}`);
-      
-      // Fetch the manifest content for display purposes only
-      fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Failed to fetch manifest: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('[ManifestHandler] Browser manifest data loaded (display only)', data);
-          setManifestInfo(data);
-          setIsLoading(false);
-        })
-        .catch(err => {
-          console.error('[ManifestHandler] Error loading manifest:', err);
-          setError(err.message || 'Unknown error loading manifest');
-          setIsLoading(false);
-        });
-      
-      return; // Exit early, don't add manifest link for browser mode
-    }
-    
-    // If we have a valid URL for PWA paths, create the link tag and fetch manifest data
-    if (baseUrl && isPwaPath) {
+    // If we have a valid URL, create the link tag and fetch manifest data
+    if (baseUrl) {
       // Add timestamp to prevent caching issues
       const timestamp = new Date().getTime();
       const url = `${baseUrl}?v=${timestamp}`;
