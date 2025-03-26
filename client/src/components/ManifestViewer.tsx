@@ -49,148 +49,17 @@ const ManifestViewer: React.FC = () => {
     
     setLocalLoading(true);
     
-    // 使用硬编码数据
-    const manifestData = {
-      'standalone': {
-        "id": "pwa-mode-detector-standalone",
-        "name": "PWA Mode Detector - Standalone",
-        "short_name": "PWA Standalone",
-        "start_url": "/standalone",
-        "scope": "/standalone",
-        "display": "standalone",
-        "background_color": "#ffffff",
-        "theme_color": "#3B82F6",
-        "description": "PWA 运行在独立窗口模式",
-        "icons": [
-          {
-            "src": "/icons/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "/icons/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "/icons/maskable-icon.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
-          }
-        ]
-      },
-      'minimal-ui': {
-        "id": "pwa-mode-detector-minimal-ui",
-        "name": "PWA Mode Detector - Minimal UI",
-        "short_name": "PWA Minimal UI",
-        "start_url": "/minimal-ui",
-        "scope": "/minimal-ui",
-        "display": "minimal-ui",
-        "background_color": "#ffffff",
-        "theme_color": "#3B82F6",
-        "description": "PWA 运行在最小界面模式",
-        "icons": [
-          {
-            "src": "/icons/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "/icons/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "/icons/maskable-icon.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
-          }
-        ]
-      },
-      'fullscreen': {
-        "id": "pwa-mode-detector-fullscreen",
-        "name": "PWA Mode Detector - Fullscreen",
-        "short_name": "PWA Fullscreen",
-        "start_url": "/fullscreen",
-        "scope": "/fullscreen",
-        "display": "fullscreen",
-        "background_color": "#ffffff",
-        "theme_color": "#3B82F6",
-        "description": "PWA 运行在全屏模式",
-        "icons": [
-          {
-            "src": "/icons/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "/icons/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "/icons/maskable-icon.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
-          }
-        ]
-      },
-      'browser': {
-        "id": "pwa-mode-detector-browser",
-        "name": "PWA Mode Detector - Browser",
-        "short_name": "PWA Browser",
-        "start_url": "/browser",
-        "scope": "/browser",
-        "display": "browser",
-        "background_color": "#ffffff",
-        "theme_color": "#3B82F6",
-        "description": "PWA 运行在浏览器模式",
-        "icons": [
-          {
-            "src": "/icons/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "/icons/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any"
-          },
-          {
-            "src": "/icons/maskable-icon.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
-          }
-        ]
-      }
-    };
+    // 从静态文件加载 manifest 数据
+    console.log(`[ManifestViewer] Loading manifest data for: ${manifestType}`);
     
-    // 如果是我们已知的manifest类型，直接使用硬编码数据
-    if (manifestData[manifestType as keyof typeof manifestData]) {
-      setLocalManifest(manifestData[manifestType as keyof typeof manifestData]);
-      setLocalLoading(false);
-      console.log(`[ManifestViewer] Using hardcoded manifest data for ${manifestType}`);
-    } else {
-      // 未知类型，尝试从网络加载
-      console.log(`[ManifestViewer] Unknown manifest type: ${manifestType}, trying to load from network`);
-      fetch(`/client/public/manifests/${manifestType}.json?v=${new Date().getTime()}`, {
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache'
-        }
-      })
+    fetch(`/manifests/${manifestType}.json?v=${new Date().getTime()}`, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    })
         .then(response => response.json())
         .then(data => {
           console.log(`[ManifestViewer] Directly loaded ${manifestType} manifest:`, data);
@@ -202,7 +71,6 @@ const ManifestViewer: React.FC = () => {
           setLocalError(`Failed to load manifest: ${err.message}`);
           setLocalLoading(false);
         });
-    }
   };
 
   // Format JSON for display
