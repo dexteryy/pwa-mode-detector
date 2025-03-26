@@ -1,9 +1,13 @@
+import { useTranslation } from "react-i18next";
+
 interface StatusCardProps {
   mode: string;
   isInstallable: boolean;
 }
 
 const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
+  const { t } = useTranslation();
+  
   // Determine status card styling based on mode
   let cardClassName = "bg-white rounded-lg shadow-md p-6 mb-8 border-l-4 ";
   let iconClassName = "material-icons text-3xl mr-3 ";
@@ -15,28 +19,28 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
     cardClassName += "border-green-500";
     iconClassName += "text-green-500";
     iconName = "check_circle";
-    statusText = "当前运行模式：PWA独立窗口（standalone）";
-    promptText = "应用已在独立窗口模式下运行";
+    statusText = `${t('current_mode')}: ${t('standalone_name')}`;
+    promptText = t('status_standalone_running');
   } else if (mode === "minimal-ui") {
     cardClassName += "border-blue-500";
     iconClassName += "text-blue-500";
     iconName = "view_compact";
-    statusText = "当前运行模式：最小界面（minimal-ui）";
-    promptText = "您可以安装此应用以体验完整的独立窗口模式";
+    statusText = `${t('current_mode')}: ${t('minimal_ui_name')}`;
+    promptText = t('status_minimal_ui_prompt');
   } else if (mode === "fullscreen") {
     cardClassName += "border-blue-500";
     iconClassName += "text-blue-500";
     iconName = "fullscreen";
-    statusText = "当前运行模式：全屏（fullscreen）";
-    promptText = "应用已在全屏模式下运行";
+    statusText = `${t('current_mode')}: ${t('fullscreen_name')}`;
+    promptText = t('status_fullscreen_running');
   } else {
     cardClassName += "border-amber-500";
     iconClassName += "text-amber-500";
     iconName = "public";
-    statusText = "当前运行模式：浏览器标签页（browser）";
+    statusText = `${t('current_mode')}: ${t('browser_name')}`;
     promptText = isInstallable 
-      ? "您可以安装此应用以体验 PWA 独立窗口模式"
-      : "您的浏览器不支持安装 PWA 应用";
+      ? t('status_browser_installable') 
+      : t('status_browser_not_installable');
   }
 
   return (

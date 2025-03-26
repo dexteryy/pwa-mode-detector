@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface ModeInfo {
   name: string;
   displayName: string;
@@ -10,6 +12,8 @@ interface DetectionCardProps {
 }
 
 const DetectionCard = ({ mode, isActive }: DetectionCardProps) => {
+  const { t } = useTranslation();
+  
   // Card styling based on active state
   const cardClassName = isActive
     ? "border rounded-lg p-4 bg-green-50 border-green-500"
@@ -23,7 +27,7 @@ const DetectionCard = ({ mode, isActive }: DetectionCardProps) => {
     ? "text-sm text-green-600 font-medium"
     : "text-sm text-gray-600";
     
-  const statusText = isActive ? "已启用" : "未启用";
+  const statusText = isActive ? t('mode_active') : t('mode_inactive');
 
   return (
     <div className={cardClassName}>

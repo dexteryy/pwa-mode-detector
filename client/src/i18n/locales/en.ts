@@ -40,5 +40,13 @@ export default {
   "install_pwa": "Install PWA",
   "back_to_home": "Back to Home",
   "device_info": "Device Information",
-  "user_agent": "User Agent"
+  "user_agent": "User Agent",
+  "detector_mode_mismatch": "The detected runtime mode differs from what is configured in the manifest. This may be because the browser does not support this mode or the app has not been installed.",
+  "status_standalone_running": "Application is running in standalone window mode",
+  "status_minimal_ui_prompt": "You can install this app to experience the full standalone window mode",
+  "status_fullscreen_running": "Application is running in fullscreen mode",
+  "status_browser_installable": "You can install this app to experience the PWA standalone window mode",
+  "status_browser_not_installable": "Your browser does not support installing PWA applications",
+  "mode_active": "Active",
+  "mode_inactive": "Inactive"
 }

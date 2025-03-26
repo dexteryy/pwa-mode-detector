@@ -40,5 +40,11 @@ export default {
   "install_pwa": "安装PWA",
   "back_to_home": "返回首页",
   "device_info": "设备信息",
-  "user_agent": "用户代理"
+  "user_agent": "用户代理",
+  "detector_mode_mismatch": "检测到的实际运行模式与 manifest 中配置的不同。这可能是因为浏览器不支持该模式或者应用尚未安装。",
+  "status_standalone_running": "应用已在独立窗口模式下运行",
+  "status_minimal_ui_prompt": "您可以安装此应用以体验完整的独立窗口模式",
+  "status_fullscreen_running": "应用已在全屏模式下运行",
+  "status_browser_installable": "您可以安装此应用以体验 PWA 独立窗口模式",
+  "status_browser_not_installable": "您的浏览器不支持安装 PWA 应用"
 }

@@ -86,12 +86,12 @@ const PWADetector = () => {
           <div className="flex items-center">
             <span className="material-icons mr-2">{expectedMode === currentMode ? 'check_circle' : 'info'}</span>
             <h2 className="font-semibold">
-              当前 PWA 预期运行模式: <span className="font-bold">{expectedMode}</span>
+              {t('expected_mode')}: <span className="font-bold">{expectedMode}</span>
             </h2>
           </div>
           {expectedMode !== currentMode && (
             <p className="mt-2 text-sm">
-              检测到的实际运行模式与 manifest 中配置的不同。这可能是因为浏览器不支持该模式或者应用尚未安装。
+              {t('detector_mode_mismatch')}
             </p>
           )}
         </div>
@@ -103,7 +103,7 @@ const PWADetector = () => {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-lg font-semibold text-dark mb-4 flex items-center">
             <span className="material-icons mr-2">info</span>
-            检测详情
+            {t('detector_subtitle')}
           </h2>
           
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -127,7 +127,7 @@ const PWADetector = () => {
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-4 mt-auto">
         <div className="container mx-auto px-4 text-center text-sm">
-          <p>PWA Mode Detector | 检测环境：<span className="text-gray-400 text-xs">{userAgent}</span></p>
+          <p>{t('detector_title')} | {t('device_info')}: <span className="text-gray-400 text-xs">{userAgent}</span></p>
         </div>
       </footer>
 
@@ -139,7 +139,7 @@ const PWADetector = () => {
             className="bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-600 flex items-center"
           >
             <span className="material-icons mr-1">get_app</span>
-            安装应用
+            {t('install_pwa')}
           </button>
         </div>
       )}
