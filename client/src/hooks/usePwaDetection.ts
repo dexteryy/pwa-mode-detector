@@ -13,6 +13,7 @@ interface PwaDetection {
   isInstallable: boolean;
   isChecking: boolean;
   promptInstall: () => void;
+  resetChecking: () => void;
   userAgent: string;
 }
 
@@ -160,6 +161,14 @@ export function usePwaDetection(): PwaDetection {
         setDeferredPrompt(null);
       });
     }
+  };
+  
+  // Function to manually reset the checking state (for use with refresh button)
+  const resetChecking = () => {
+    setIsChecking(true);
+    setTimeout(() => {
+      setIsChecking(false);
+    }, 1000);
   };
 
   return {

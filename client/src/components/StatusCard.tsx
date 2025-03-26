@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { usePwaDetection } from "../hooks/usePwaDetection";
 
 interface StatusCardProps {
   mode: string;
@@ -7,6 +8,7 @@ interface StatusCardProps {
 
 const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
   const { t } = useTranslation();
+  const { isChecking } = usePwaDetection();
   
   // Determine status card styling based on mode
   let cardClassName = "bg-white rounded-lg shadow-md p-6 mb-8 border-l-4 ";
@@ -36,15 +38,20 @@ const StatusCard = ({ mode, isInstallable }: StatusCardProps) => {
   } else {
     cardClassName += "border-amber-500";
     iconClassName += "text-amber-500";
-    iconName = "public";
+    iconName = isChecking ? "hourglass_empty" : "public";
     statusText = `${t('current_mode')}: ${t('browser_name')}`;
-    promptText = isInstallable 
-      ? t('status_browser_installable') 
-      : t('status_browser_not_installable');
+    
+    if (isChecking) {
+      promptText = t('status_browser_checking');
+    } else {
+      promptText = isInstallable 
+        ? t('status_browser_installable') 
+        : t('status_browser_not_installable');
+    }
   }
 
-  // 添加 browser 模式的额外信息
-  const showBrowserModeInfo = mode === 'browser';
+  // 添加 browser 模式的额外信息，但在检查中不显示
+  const showBrowserModeInfo = mode === 'browser' && !isChecking;
 
   return (
     <div className={cardClassName}>

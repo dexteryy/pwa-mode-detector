@@ -37,6 +37,7 @@ const PWADetector = () => {
     displayModes, 
     currentMode, 
     isInstallable,
+    isChecking,
     promptInstall,
     userAgent 
   } = usePwaDetection();
@@ -141,8 +142,8 @@ const PWADetector = () => {
         </div>
       </footer>
 
-      {/* Install button for PWA installation */}
-      {isInstallable && (
+      {/* Install button for PWA installation - Hidden during checking */}
+      {isInstallable && !isChecking && (
         <div className="fixed bottom-4 right-4">
           <button 
             onClick={promptInstall}
