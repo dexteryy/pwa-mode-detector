@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Thank you for considering contributing to the PWA Display Mode Detector project! This document will guide you through the contribution process and provide instructions for setting up your development environment.
+Thank you for considering contributing to the PWA Mode Detector project! This document will guide you through the contribution process and provide instructions for setting up your development environment.
 
 ## Table of Contents
 
@@ -156,4 +156,4 @@ Before submitting your code, ensure that it:
 
 ---
 
-Thank you again for contributing to the PWA Display Mode Detector! If you have any questions, feel free to ask in the issue tracker or contact the maintainers.
+Thank you again for contributing to the PWA Mode Detector! If you have any questions, feel free to ask in the issue tracker or contact the maintainers.
