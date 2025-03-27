@@ -1,5 +1,4 @@
 {pkgs}: {
   deps = [
-    pkgs.imagemagick
   ];
 }
