@@ -1,4 +1,4 @@
-# PWA 展示模式检测器
+# PWA 模式检测器
 
 <div align="center">
   <img src="client/public/icons/icon-512x512.png" alt="PWA Mode Detector logo" width="120">
@@ -15,7 +15,7 @@
 
 ## 简介
 
-PWA 展示模式检测器是一款为开发者设计的高级工具，用于分析、展示和测试渐进式Web应用（PWA）在不同显示模式下的行为。该应用提供了关于PWA如何在各种环境中运行的上下文感知分析，让你能够体验和比较四种主要的PWA显示模式：`standalone`（独立窗口）、`minimal-ui`（最小界面）、`fullscreen`（全屏）和 `browser`（浏览器）。
+PWA 模式检测器是一款为开发者设计的高级工具，用于分析、展示和测试渐进式Web应用（PWA）在不同显示模式下的行为。该应用提供了关于PWA如何在各种环境中运行的上下文感知分析，让你能够体验和比较四种主要的PWA显示模式：`standalone`（独立窗口）、`minimal-ui`（最小界面）、`fullscreen`（全屏）和 `browser`（浏览器）。
 
 <div align="center">
   <img src="screenshots/preview.png" alt="应用预览" width="80%">

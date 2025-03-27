@@ -12,7 +12,7 @@ export default {
   language_korean: "한국어 (Korean)",
 
   // Entry page
-  entry_title: "PWA Display Mode Demo",
+  entry_title: "PWA Mode Detector",
   entry_subtitle: "Select a display mode to see different PWA behaviors",
   what_is_pwa_display_mode: "What are PWA Display Modes?",
   pwa_display_mode_description:
@@ -25,7 +25,7 @@ export default {
     "Each PWA app uses the same codebase but has different Web App Manifest configurations. The application will detect the current actual runtime mode and compare it with the expected mode declared in the manifest.",
   browser_support_note:
     "For the full PWA experience, use a PWA-supporting browser (like Chrome, Edge, Safari) and install the application.",
-  footer_text: "PWA Display Mode Demo | Select a mode to start the experience",
+  footer_text: "PWA Mode Detector | Select a mode to start the experience",
 
   // Display modes
   standalone_name: "Standalone Mode",
@@ -60,7 +60,7 @@ export default {
   install_button_disabled: "Installation not available",
 
   // PWA Detector
-  detector_title: "PWA Display Mode Detector",
+  detector_title: "PWA Mode Detector",
   detector_subtitle: "This tool detects how your PWA is currently running",
   current_mode: "Current Mode",
   expected_mode: "Expected Mode",

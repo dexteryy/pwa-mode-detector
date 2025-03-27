@@ -7,7 +7,7 @@
   "display": "fullscreen",
   "background_color": "#ffffff",
   "theme_color": "#3B82F6",
-  "description": "PWA 运行在全屏模式",
+  "description": "PWA running in fullscreen mode",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

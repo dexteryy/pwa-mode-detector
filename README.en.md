@@ -1,4 +1,4 @@
-# PWA Display Mode Detector
+# PWA Mode Detector
 
 <div align="center">
   <img src="client/public/icons/icon-512x512.png" alt="PWA Mode Detector logo" width="120">
@@ -14,7 +14,7 @@ English | [简体中文](./README.md)
 
 ## Introduction
 
-PWA Display Mode Detector is a tool designed for developers to demonstrate and test Progressive Web App (PWA) behavior and appearance across different display modes. This tool allows you to experience and compare the four main PWA display modes: `standalone`, `minimal-ui`, `fullscreen`, and `browser`.
+PWA Mode Detector is a tool designed for developers to demonstrate and test Progressive Web App (PWA) behavior and appearance across different display modes. This tool allows you to experience and compare the four main PWA display modes: `standalone`, `minimal-ui`, `fullscreen`, and `browser`.
 
 <div align="center">
   <img src="screenshots/preview.png" alt="Application Preview" width="80%">

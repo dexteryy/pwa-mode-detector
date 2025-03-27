@@ -12,7 +12,7 @@ export default {
   language_korean: "한국어 (韓文)",
 
   // 入口页面
-  entry_title: "PWA 展示模式演示",
+  entry_title: "PWA 模式检测器",
   entry_subtitle: "选择一种展示模式来查看 PWA 的不同运行方式",
   what_is_pwa_display_mode: "什么是 PWA 展示模式？",
   pwa_display_mode_description:
@@ -25,7 +25,7 @@ export default {
     "每个 PWA 应用使用相同的代码库，但有不同的 Web App Manifest 配置。应用将检测当前的实际运行模式，并与 manifest 中声明的预期模式进行比较。",
   browser_support_note:
     "要获得完整的 PWA 体验，请使用支持 PWA 的浏览器（如 Chrome、Edge、Safari）并安装应用。",
-  footer_text: "PWA 展示模式演示 | 选择一种模式开始体验",
+  footer_text: "PWA 模式检测器 | 选择一种模式开始体验",
 
   // 展示模式
   standalone_name: "独立窗口模式",
@@ -57,7 +57,7 @@ export default {
   install_button_disabled: "安装功能不可用",
 
   // PWA 检测器
-  detector_title: "PWA 展示模式检测器",
+  detector_title: "PWA 模式检测器",
   detector_subtitle: "此工具检测您的 PWA 当前的运行方式",
   current_mode: "当前模式",
   expected_mode: "预期模式",
