@@ -110,6 +110,24 @@ npm run build
 
 6. **带术语链接的国际化**：使用i18next，并配备自定义系统，自动为关键技术术语添加参考链接，用于教育目的。
 
+### 使用的PWA API
+
+本应用利用了多种渐进式Web应用API和特性：
+
+| API/特性 | 描述 | 代码示例 |
+|-------------|-------------|--------------|
+| **Web应用清单** | 控制应用安装后外观的JSON文件 | [App.tsx L106-119](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L106-L119) |
+| **动态清单管理** | 根据用户上下文动态切换manifest.json | [App.tsx L160-170](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L160-L170) |
+| **显示模式媒体查询** | 检测当前显示模式 | [usePwaDetection.ts L103](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L103) |
+| **iOS独立模式检测** | 检测iOS PWA是否在独立模式下运行 | [usePwaDetection.ts L106-108](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L106-L108) |
+| **beforeinstallprompt事件** | 当PWA可安装时触发 | [usePwaDetection.ts L220-237](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L220-L237) |
+| **appinstalled事件** | 检测PWA何时已被安装 | [usePwaDetection.ts L241-258](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L241-L258) |
+| **安装提示** | 提示用户安装PWA | [usePwaDetection.ts L314-348](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L314-L348) |
+| **getInstalledRelatedApps()** | 检测应用是否已经安装 | [usePwaDetection.ts L183-190](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L183-L190) |
+| **显示模式检测** | 检测当前PWA模式的综合逻辑 | [usePwaDetection.ts L174-179](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L174-L179) |
+| **动态链接元素管理** | 在DOM中操作清单链接元素 | [App.tsx L85-89](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L85-L89) |
+| **可见性变化检测** | 监控应用可见性以更新PWA状态 | [usePwaDetection.ts L279-290](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L279-L290) |
+
 ## 多语言支持
 
 该应用支持8种语言，并自动检测浏览器语言：

@@ -110,6 +110,24 @@ The application implements several advanced techniques:
 
 6. **Internationalization with Term Linking**: Uses i18next with a custom system to automatically add reference links to key technical terms for educational purposes.
 
+### PWA APIs Used
+
+The app leverages multiple Progressive Web App APIs and features:
+
+| API/Feature | Description | Code Example |
+|-------------|-------------|--------------|
+| **Web App Manifest** | JSON file that controls how the app appears when installed | [App.tsx L106-119](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L106-L119) |
+| **Dynamic Manifest Management** | Dynamically swaps manifest.json based on user context | [App.tsx L160-170](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L160-L170) |
+| **Display Mode Media Queries** | Detects the current display mode | [usePwaDetection.ts L103](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L103) |
+| **iOS Standalone Detection** | Detects if an iOS PWA is running in standalone mode | [usePwaDetection.ts L106-108](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L106-L108) |
+| **beforeinstallprompt Event** | Triggers when a PWA is installable | [usePwaDetection.ts L220-237](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L220-L237) |
+| **appinstalled Event** | Detects when a PWA has been installed | [usePwaDetection.ts L241-258](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L241-L258) |
+| **Installation Prompt** | Prompts the user to install the PWA | [usePwaDetection.ts L314-348](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L314-L348) |
+| **getInstalledRelatedApps()** | Detects if the application is already installed | [usePwaDetection.ts L183-190](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L183-L190) |
+| **Display Mode Detection** | Comprehensive logic to detect current PWA mode | [usePwaDetection.ts L174-179](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L174-L179) |
+| **Dynamic Link Element Management** | Manipulates manifest link elements in the DOM | [App.tsx L85-89](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L85-L89) |
+| **Visibility Change Detection** | Monitors app visibility to update PWA state | [usePwaDetection.ts L279-290](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L279-L290) |
+
 ## Multi-language Support
 
 The application supports 8 languages with automatic browser language detection:
