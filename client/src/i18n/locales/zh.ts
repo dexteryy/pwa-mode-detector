@@ -16,6 +16,9 @@ export default {
   light_mode: "浅色",
   dark_mode: "深色",
   system_mode: "跟随系统",
+  
+  // 外部链接
+  github_repo: "在GitHub上查看源代码",
 
   // 入口页面
   entry_title: "PWA 模式检测器",

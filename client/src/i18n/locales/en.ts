@@ -16,6 +16,9 @@ export default {
   light_mode: "Light",
   dark_mode: "Dark",
   system_mode: "System",
+  
+  // External links
+  github_repo: "View source code on GitHub",
 
   // Entry page
   entry_title: "PWA Mode Detector",
