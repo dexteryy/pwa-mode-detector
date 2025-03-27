@@ -1,7 +1,7 @@
 # PWA 模式检测器
 
 <div align="center">
-  <img src="pwa-mode-detector-banner.png" alt="PWA 模式检测器" width="600">
+  <img src="pwa-mode-detector-banner.png" alt="PWA 模式检测器" width="480">
   <h3>一个用于分析和测试渐进式Web应用显示模式的高级工具</h3>
 </div>
 
