@@ -77,15 +77,22 @@ const PWADetector = () => {
         <div className="border-b border-blue-400/30 dark:border-blue-700/40">
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center space-x-1">
-              <Link href="/">
-                <div className="text-white h-10 px-2 flex items-center cursor-pointer whitespace-nowrap hover:bg-blue-400/20 dark:hover:bg-blue-700/30 rounded-md transition-colors">
-                  <ArrowLeft className="h-4 w-4 mr-1" />
-                  <span className="text-sm font-medium">{t('back_to_home')}</span>
-                </div>
-              </Link>
-              <GithubLink />
+              {/* 只在浏览器窗口中显示"返回主页"按钮，在PWA窗口中隐藏 */}
+              {(currentMode === 'browser' || !(
+                window.matchMedia('(display-mode: standalone)').matches ||
+                window.matchMedia('(display-mode: fullscreen)').matches ||
+                window.matchMedia('(display-mode: minimal-ui)').matches
+              )) && (
+                <Link href="/">
+                  <div className="text-white h-10 px-2 flex items-center cursor-pointer whitespace-nowrap hover:bg-blue-400/20 dark:hover:bg-blue-700/30 rounded-md transition-colors">
+                    <ArrowLeft className="h-4 w-4 mr-1" />
+                    <span className="text-sm font-medium">{t('back_to_home')}</span>
+                  </div>
+                </Link>
+              )}
             </div>
             <div className="flex items-center space-x-0.5">
+              <GithubLink />
               <button 
                 onClick={handleRefresh}
                 className={`text-white h-10 w-10 flex items-center justify-center hover:bg-blue-400/20 dark:hover:bg-blue-700/30 rounded-md transition-colors ${isRefreshing ? 'animate-spin' : ''}`} 

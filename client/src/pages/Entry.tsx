@@ -76,9 +76,10 @@ const Entry = () => {
         <div className="border-b border-blue-400/30 dark:border-blue-700/40">
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center">
-              <GithubLink />
+              {/* 左侧为空 */}
             </div>
             <div className="flex items-center space-x-0.5">
+              <GithubLink />
               <ThemeToggle />
               <LanguageSwitcher className="h-10" />
             </div>
