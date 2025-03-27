@@ -1,7 +1,7 @@
 # PWA Mode Detector
 
 <div align="center">
-  <img src="pwa-mode-detector-icon.png" alt="PWA Mode Detector logo" width="200">
+  <img src="client/public/icons/pwa-mode-detector.png" alt="PWA Mode Detector logo" width="200">
   <h3>A sophisticated tool for analyzing and testing Progressive Web App display modes</h3>
 </div>
 
