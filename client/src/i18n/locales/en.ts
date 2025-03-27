@@ -10,6 +10,12 @@ export default {
   language_spanish: "Español (Spanish)",
   language_portuguese: "Português (Portuguese)",
   language_korean: "한국어 (Korean)",
+  
+  // Theme
+  theme_toggle: "Toggle theme",
+  light_mode: "Light",
+  dark_mode: "Dark",
+  system_mode: "System",
 
   // Entry page
   entry_title: "PWA Mode Detector",

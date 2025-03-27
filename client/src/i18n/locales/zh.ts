@@ -10,6 +10,12 @@ export default {
   language_spanish: "Español (西班牙文)",
   language_portuguese: "Português (葡萄牙文)",
   language_korean: "한국어 (韓文)",
+  
+  // 主题
+  theme_toggle: "切换主题",
+  light_mode: "浅色",
+  dark_mode: "深色",
+  system_mode: "跟随系统",
 
   // 入口页面
   entry_title: "PWA 模式检测器",
