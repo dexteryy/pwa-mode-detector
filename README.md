@@ -33,15 +33,47 @@ PWA Display Mode Detector is an advanced tool designed for developers to analyze
 - ✅ **Multi-language Support**: Available in 8 languages with automatic detection
 - ✅ **Responsive UI**: Works seamlessly across mobile, tablet, and desktop devices
 
-## Display Modes Explained
+## PWA APIs Used
 
-1. **Standalone Mode** (`display: standalone`): PWA runs in a standalone window without browser UI, similar to native applications. Has its own window, appears in task switchers, and doesn't display browser controls.
+The app leverages multiple Progressive Web App APIs and features:
 
-2. **Minimal UI Mode** (`display: minimal-ui`): PWA runs in a window with minimal browser controls. Shows minimal browser UI elements like a back button and possibly a URL bar.
+| API/Feature | Description | Code Example |
+|-------------|-------------|--------------|
+| **Web App Manifest** | JSON file that controls how the app appears when installed | [App.tsx L106-119](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L106-L119) |
+| **Dynamic Manifest Management** | Dynamically swaps manifest.json based on user context | [App.tsx L160-170](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L160-L170) |
+| **Display Mode Media Queries** | Detects the current display mode | [usePwaDetection.ts L103](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L103) |
+| **iOS Standalone Detection** | Detects if an iOS PWA is running in standalone mode | [usePwaDetection.ts L106-108](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L106-L108) |
+| **beforeinstallprompt Event** | Triggers when a PWA is installable | [usePwaDetection.ts L220-237](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L220-L237) |
+| **appinstalled Event** | Detects when a PWA has been installed | [usePwaDetection.ts L241-258](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L241-L258) |
+| **Installation Prompt** | Prompts the user to install the PWA | [usePwaDetection.ts L314-348](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L314-L348) |
+| **getInstalledRelatedApps()** | Detects if the application is already installed | [usePwaDetection.ts L183-190](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L183-L190) |
+| **Display Mode Detection** | Comprehensive logic to detect current PWA mode | [usePwaDetection.ts L174-179](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L174-L179) |
+| **Dynamic Link Element Management** | Manipulates manifest link elements in the DOM | [App.tsx L85-89](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L85-L89) |
+| **Visibility Change Detection** | Monitors app visibility to update PWA state | [usePwaDetection.ts L279-290](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L279-L290) |
 
-3. **Fullscreen Mode** (`display: fullscreen`): PWA occupies the entire screen without any browser UI. Maximum screen real estate without any browser elements, ideal for immersive experiences.
+## How It Works
 
-4. **Browser Mode** (`display: browser`): PWA runs in a regular browser tab. Demonstrates how setting this explicit mode prevents the PWA from being installable.
+The application implements several advanced techniques:
+
+1. **Dynamic Manifest Interception**: The server intercepts requests to different paths and serves the appropriate manifest.json file based on the requested display mode.
+
+2. **Context-Aware PWA Detection**: The app uses multiple detection methods including:
+   - `window.matchMedia('(display-mode: standalone)')` to detect current display mode
+   - `navigator.getInstalledRelatedApps()` API where available
+   - `BeforeInstallPromptEvent` to detect installation capability
+   - iOS standalone mode detection via `navigator.standalone`
+
+3. **Intelligent Installation Status Analysis**: The application uses a sophisticated algorithm to determine the exact reason why a PWA might not be installable:
+   - Already running as a PWA
+   - Browser doesn't support PWA installation
+   - Manifest uses `display: browser` mode
+   - Already installed but running in browser mode
+
+4. **Manifest Scope Isolation**: Each display mode operates under its own scope (`/standalone`, `/minimal-ui`, etc.), allowing multiple installations of the same app with different display modes.
+
+5. **Advanced Event Monitoring**: The app monitors display mode changes, visibility changes, and installation events to provide real-time updates without page refreshes.
+
+6. **Internationalization with Term Linking**: Uses i18next with a custom system to automatically add reference links to key technical terms for educational purposes.
 
 ## Getting Started
 
@@ -85,48 +117,6 @@ The generated files will be in the `dist` directory.
 - **Internationalization**: i18next with language auto-detection
 - **PWA Features**: Web App Manifest, installability detection, display mode media queries
 - **Development Tools**: TypeScript, ESLint, Prettier
-
-## How It Works
-
-The application implements several advanced techniques:
-
-1. **Dynamic Manifest Interception**: The server intercepts requests to different paths and serves the appropriate manifest.json file based on the requested display mode.
-
-2. **Context-Aware PWA Detection**: The app uses multiple detection methods including:
-   - `window.matchMedia('(display-mode: standalone)')` to detect current display mode
-   - `navigator.getInstalledRelatedApps()` API where available
-   - `BeforeInstallPromptEvent` to detect installation capability
-   - iOS standalone mode detection via `navigator.standalone`
-
-3. **Intelligent Installation Status Analysis**: The application uses a sophisticated algorithm to determine the exact reason why a PWA might not be installable:
-   - Already running as a PWA
-   - Browser doesn't support PWA installation
-   - Manifest uses `display: browser` mode
-   - Already installed but running in browser mode
-
-4. **Manifest Scope Isolation**: Each display mode operates under its own scope (`/standalone`, `/minimal-ui`, etc.), allowing multiple installations of the same app with different display modes.
-
-5. **Advanced Event Monitoring**: The app monitors display mode changes, visibility changes, and installation events to provide real-time updates without page refreshes.
-
-6. **Internationalization with Term Linking**: Uses i18next with a custom system to automatically add reference links to key technical terms for educational purposes.
-
-### PWA APIs Used
-
-The app leverages multiple Progressive Web App APIs and features:
-
-| API/Feature | Description | Code Example |
-|-------------|-------------|--------------|
-| **Web App Manifest** | JSON file that controls how the app appears when installed | [App.tsx L106-119](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L106-L119) |
-| **Dynamic Manifest Management** | Dynamically swaps manifest.json based on user context | [App.tsx L160-170](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L160-L170) |
-| **Display Mode Media Queries** | Detects the current display mode | [usePwaDetection.ts L103](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L103) |
-| **iOS Standalone Detection** | Detects if an iOS PWA is running in standalone mode | [usePwaDetection.ts L106-108](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L106-L108) |
-| **beforeinstallprompt Event** | Triggers when a PWA is installable | [usePwaDetection.ts L220-237](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L220-L237) |
-| **appinstalled Event** | Detects when a PWA has been installed | [usePwaDetection.ts L241-258](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L241-L258) |
-| **Installation Prompt** | Prompts the user to install the PWA | [usePwaDetection.ts L314-348](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L314-L348) |
-| **getInstalledRelatedApps()** | Detects if the application is already installed | [usePwaDetection.ts L183-190](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L183-L190) |
-| **Display Mode Detection** | Comprehensive logic to detect current PWA mode | [usePwaDetection.ts L174-179](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L174-L179) |
-| **Dynamic Link Element Management** | Manipulates manifest link elements in the DOM | [App.tsx L85-89](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/App.tsx#L85-L89) |
-| **Visibility Change Detection** | Monitors app visibility to update PWA state | [usePwaDetection.ts L279-290](https://github.com/dexteryy/pwa-mode-detector/blob/main/client/src/hooks/usePwaDetection.ts#L279-L290) |
 
 ## Multi-language Support
 
