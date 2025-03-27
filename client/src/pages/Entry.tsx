@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import ThemeToggle from "../components/ThemeToggle";
 import { useEffect } from "react";
 import {
   Globe,
@@ -75,6 +76,7 @@ const Entry = () => {
           <div className="flex items-center justify-between px-2">
             <div></div>
             <div className="flex items-center">
+              <ThemeToggle />
               <LanguageSwitcher className="h-10" />
             </div>
           </div>

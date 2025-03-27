@@ -7,6 +7,7 @@ import { usePwaDetection } from "@/hooks/usePwaDetection";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import ThemeToggle from "../components/ThemeToggle";
 import { ArrowLeft, RefreshCw, Smartphone, CheckCircle, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -88,6 +89,7 @@ const PWADetector = () => {
               >
                 <RefreshCw className="h-4 w-4" />
               </button>
+              <ThemeToggle />
               <LanguageSwitcher className="h-10" />
             </div>
           </div>
