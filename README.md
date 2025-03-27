@@ -17,10 +17,6 @@ English | [简体中文](./README.zh.md)
 
 [PWA Mode Detector](https://pwa-mode-detector.replit.app/) is an advanced tool designed for developers to analyze, demonstrate, and test Progressive Web App (PWA) behavior across different display modes. This application provides context-aware insights into how PWAs run in various environments, allowing you to experience and compare the four main PWA display modes: `standalone`, `minimal-ui`, `fullscreen`, and `browser`.
 
-<div align="center">
-  <img src="screenshots/preview.png" alt="Application Preview" width="80%">
-</div>
-
 ## Key Features
 
 - ✅ **Real-time Mode Detection**: Instantly identifies and monitors the current PWA running mode
@@ -118,20 +114,6 @@ The generated files will be in the `dist` directory.
 - **PWA Features**: Web App Manifest, installability detection, display mode media queries
 - **Development Tools**: TypeScript, ESLint, Prettier
 
-## Multi-language Support
-
-The application supports 8 languages with automatic browser language detection:
-
-- English (en)
-- Simplified Chinese (zh)
-- Traditional Chinese (zh-TW)
-- Japanese (ja)
-- Korean (ko)
-- German (de)
-- French (fr)
-- Spanish (es)
-- Portuguese (pt)
-
 ## Contributing
 
 Contributions are welcome! Please read the [contributing guidelines](CONTRIBUTING.md) to get started.
@@ -145,7 +127,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For questions or suggestions, please contact us through:
 
 - Submit a [GitHub issue](https://github.com/yourusername/pwa-mode-detector/issues)
-- Send an email to [your-email@example.com](mailto:your-email@example.com)
 
 ---
 

@@ -17,10 +17,6 @@
 
 [PWA 模式检测器](https://pwa-mode-detector.replit.app/)是一款为开发者设计的高级工具，用于分析、展示和测试渐进式Web应用（PWA）在不同显示模式下的行为。该应用提供了关于PWA如何在各种环境中运行的上下文感知分析，让你能够体验和比较四种主要的PWA显示模式：`standalone`（独立窗口）、`minimal-ui`（最小界面）、`fullscreen`（全屏）和 `browser`（浏览器）。
 
-<div align="center">
-  <img src="screenshots/preview.png" alt="应用预览" width="80%">
-</div>
-
 ## 核心功能
 
 - ✅ **实时模式监测**：即时识别并持续监控当前PWA的运行模式
@@ -118,20 +114,6 @@ npm run build
 - **PWA功能**：Web App Manifest, 可安装性检测, 显示模式媒体查询
 - **开发工具**：TypeScript, ESLint, Prettier
 
-## 多语言支持
-
-该应用支持8种语言，并自动检测浏览器语言：
-
-- 英语 (en)
-- 简体中文 (zh)
-- 繁体中文 (zh-TW)
-- 日语 (ja)
-- 韩语 (ko)
-- 德语 (de)
-- 法语 (fr)
-- 西班牙语 (es)
-- 葡萄牙语 (pt)
-
 ## 贡献
 
 欢迎贡献！请阅读 [贡献指南](CONTRIBUTING.zh.md) 了解如何开始。
@@ -145,7 +127,6 @@ npm run build
 如有问题或建议，请通过以下方式联系我们：
 
 - 提交 [GitHub issue](https://github.com/yourusername/pwa-mode-detector/issues)
-- 发送邮件至 [your-email@example.com](mailto:your-email@example.com)
 
 ---
 
