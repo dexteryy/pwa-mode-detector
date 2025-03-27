@@ -74,7 +74,8 @@ export default {
   status_title: "状态",
   installable: "可安装",
   not_installable: "不可安装",
-  back_to_home: "选择模式",
+  back_to_home: "返回主页",
+  select_mode: "选择模式",
   device_info: "设备信息",
   user_agent: "用户代理",
   detector_mode_mismatch:

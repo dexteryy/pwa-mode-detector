@@ -77,12 +77,22 @@ const PWADetector = () => {
         <div className="border-b border-blue-400/30 dark:border-blue-700/40">
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center space-x-1">
-              {/* 只在浏览器窗口中显示"返回主页"按钮，在PWA窗口中隐藏 */}
-              {(currentMode === 'browser' || !(
-                window.matchMedia('(display-mode: standalone)').matches ||
+              {/* 判断是否在PWA窗口中运行 */}
+              {(window.matchMedia('(display-mode: standalone)').matches ||
                 window.matchMedia('(display-mode: fullscreen)').matches ||
-                window.matchMedia('(display-mode: minimal-ui)').matches
-              )) && (
+                window.matchMedia('(display-mode: minimal-ui)').matches) ? (
+                /* 在PWA窗口中运行时，使用新窗口打开入口页 */
+                <a 
+                  href="/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-white h-10 px-2 flex items-center cursor-pointer whitespace-nowrap hover:bg-blue-400/20 dark:hover:bg-blue-700/30 rounded-md transition-colors"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-1" />
+                  <span className="text-sm font-medium">{t('select_mode')}</span>
+                </a>
+              ) : (
+                /* 在浏览器中运行时，普通链接回到主页 */
                 <Link href="/">
                   <div className="text-white h-10 px-2 flex items-center cursor-pointer whitespace-nowrap hover:bg-blue-400/20 dark:hover:bg-blue-700/30 rounded-md transition-colors">
                     <ArrowLeft className="h-4 w-4 mr-1" />

@@ -77,7 +77,8 @@ export default {
   status_title: "Status",
   installable: "Installable",
   not_installable: "Not Installable",
-  back_to_home: "Choose Mode",
+  back_to_home: "Back to Home",
+  select_mode: "Select Mode",
   device_info: "Device Information",
   user_agent: "User Agent",
   detector_mode_mismatch:
