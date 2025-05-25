@@ -30,7 +30,7 @@
 - 清晰且描述性的标题
 - 重现问题的详细步骤
 - 预期行为与实际行为
-- 相关的截图或动画GIF
+- 相关的截图或动画 GIF
 - 操作系统和浏览器版本
 - 任何可能有助于排查问题的其他信息
 
@@ -64,11 +64,13 @@
 ### 设置本地开发环境
 
 1. 安装依赖：
+
    ```bash
    npm install
    ```
 
 2. 启动开发服务器：
+
    ```bash
    npm run dev
    ```
@@ -92,7 +94,6 @@ pwa-mode-detector/
 │   ├── routes.ts        # API 路由
 │   ├── storage.ts       # 数据存储层
 ├── shared/              # 前后端共享的代码
-│   ├── schema.ts        # 数据模型和验证
 ├── docs/                # 文档
 ├── CONTRIBUTING.md      # 贡献指南
 ├── LICENSE              # 许可证
@@ -114,6 +115,7 @@ pwa-mode-detector/
 ```
 
 类型包括：
+
 - `feat`：新功能
 - `fix`：错误修复
 - `docs`：文档更改
@@ -124,6 +126,7 @@ pwa-mode-detector/
 - `chore`：构建过程或辅助工具的变动
 
 例如：
+
 ```
 feat(detection): 添加对 Android 设备的特殊检测逻辑
 ```
@@ -141,6 +144,7 @@ feat(detection): 添加对 Android 设备的特殊检测逻辑
 - 避免直接操作 DOM，优先使用 React 的声明式方法
 
 在提交代码之前，请确保你的代码：
+
 - 没有编译错误
 - 在不同浏览器中都能正常工作
 - 符合项目的整体设计风格

@@ -64,11 +64,13 @@ If you'd like to contribute code directly, follow these steps:
 ### Setting Up Local Development
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
 
 2. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -92,7 +94,6 @@ pwa-mode-detector/
 │   ├── routes.ts        # API routes
 │   ├── storage.ts       # Data storage layer
 ├── shared/              # Code shared between frontend and backend
-│   ├── schema.ts        # Data models and validation
 ├── docs/                # Documentation
 ├── CONTRIBUTING.md      # Contributing guidelines
 ├── LICENSE              # License
@@ -114,6 +115,7 @@ Please follow the Conventional Commits specification:
 ```
 
 Types include:
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation changes
@@ -124,6 +126,7 @@ Types include:
 - `chore`: Build process or auxiliary tool changes
 
 Example:
+
 ```
 feat(detection): add special detection logic for Android devices
 ```
@@ -141,6 +144,7 @@ To maintain code quality and consistency, please follow these standards:
 - Avoid direct DOM manipulation, prefer React's declarative approach
 
 Before submitting your code, ensure that it:
+
 - Has no compilation errors
 - Works correctly across different browsers
 - Adheres to the project's overall design style

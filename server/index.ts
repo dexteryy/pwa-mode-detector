@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
-import { createServer } from "https";
-import fs from 'fs';
+import { createServer as createHTTPServer } from "http";
+import { createServer as createHTTPSServer } from "https";
+import fs from "fs";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -12,7 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  
+
   res.on("finish", () => {
     const duration = Date.now() - start;
     // Only log non-static resource requests to reduce log noise
@@ -27,6 +28,17 @@ app.use((req, res, next) => {
 (async () => {
   registerRoutes(app);
 
+  const server =
+    app.get("env") === "production"
+      ? createHTTPSServer(
+          {
+            cert: fs.readFileSync(`${process.env.CA_PATH}/origin.crt`, "utf8"),
+            key: fs.readFileSync(`${process.env.CA_PATH}/origin.key`, "utf8"),
+          },
+          app,
+        )
+      : createHTTPServer(app);
+
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
@@ -38,7 +50,7 @@ app.use((req, res, next) => {
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
+  if (app.get("env") !== "production") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
@@ -46,15 +58,15 @@ app.use((req, res, next) => {
 
   // Use environment variable for port, fallback to 3000
   const port = process.env.PORT || 3000;
-  const host = process.env.HOST || "0.0.0.0";
-  
-  const tlsOptions = app.get("env") === "production" ? ({
-    cert: fs.readFileSync(`${process.env.CA_PATH}/origin.crt`, 'utf8'),
-    key: fs.readFileSync(`${process.env.CA_PATH}/origin.key`,  'utf8'),
-  }) : undefined;
+  const host = process.env.HOST || "127.0.0.1";
 
-  createServer(tlsOptions, app).listen(port, host, () => {
-    log(`serving on http://${host}:${port}`);
-  });
-
+  server.listen(
+    {
+      port,
+      host,
+    },
+    () => {
+      log(`serving on http://${host}:${port}`);
+    },
+  );
 })();
