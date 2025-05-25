@@ -1,10 +1,9 @@
 import type { Express, Request, Response, NextFunction } from "express";
-import { createServer, type Server } from "http";
 import path from "path";
 import fs from "fs";
 import express from "express";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export function registerRoutes(app: Express): Express {
   // Provide static files - ensure client public resources are accessible
   app.use(express.static(path.join(process.cwd(), 'client/public')));
   
@@ -19,7 +18,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Add route to handle all manifest files
   app.get('/manifests/:name.json', (req: Request, res: Response) => {
     const manifestName = req.params.name;
-    // Note: Replit's working directory is the project root, so paths need to start from the root
+    // Working directory is the project root, so paths need to start from the root
     const manifestPath = path.join(process.cwd(), 'client/public/manifests', `${manifestName}.json`);
     
     console.log(`[Server] Serving manifest: ${manifestPath}`);
@@ -93,6 +92,5 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   });
 
-  const httpServer = createServer(app);
-  return httpServer;
+  return app;
 }

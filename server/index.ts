@@ -1,4 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
+import { createServer } from "https";
+import fs from 'fs';
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -23,7 +25,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
@@ -42,15 +44,17 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  // Use environment variable for port, fallback to 3000
+  const port = process.env.PORT || 3000;
+  const host = process.env.HOST || "0.0.0.0";
+  
+  const tlsOptions = app.get("env") === "production" ? ({
+    cert: fs.readFileSync(`${process.env.CA_PATH}/origin.crt`, 'utf8'),
+    key: fs.readFileSync(`${process.env.CA_PATH}/origin.key`,  'utf8'),
+  }) : undefined;
+
+  createServer(tlsOptions, app).listen(port, host, () => {
+    log(`serving on http://${host}:${port}`);
   });
+
 })();
